@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggleBtn = document.getElementById('theme-toggle');
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
+    
+    // Mobile Menu Elements
+    const menuToggleBtn = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
 
     // State management
     let isProcessing = false;
@@ -40,6 +46,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Setup event listeners
     function setupEventListeners() {
+        // Mobile Menu Events
+        if (menuToggleBtn && sidebar && sidebarOverlay) {
+            menuToggleBtn.addEventListener('click', toggleMobileMenu);
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+            if (sidebarCloseBtn) {
+                sidebarCloseBtn.addEventListener('click', closeMobileMenu);
+            }
+            
+            // Close menu when clicking a link
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+        }
+
         // Input field events
         [promptInput, contextInput].forEach(input => {
             if (input) {
@@ -73,6 +94,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 promptOutput.blur();
             }
         });
+    }
+
+    // Mobile Menu Functions
+    function toggleMobileMenu() {
+        sidebar.classList.toggle('open');
+        sidebarOverlay.classList.toggle('active');
+        document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+
+    function closeMobileMenu() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
     }
 
     // Helper to combine all input fields
