@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Enhance your prompts for better AI responses using UncloseAI technology">
+    <title>Prompt Enhancer Tool - Improve Your AI Prompts</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="app-main">
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="logo">Prompt Enhancer</h1>
+                <p class="tagline">Refine your ideas into powerful instructions</p>
+            </div>
+        </header>
+
+        <div class="main-wrapper">
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <div class="nav-section">
+                        <h3 class="sidebar-title">Resources</h3>
+                        <ul class="sidebar-menu">
+                            <li class="sidebar-menu-item">
+                                <a href="prompt-library.html" class="sidebar-link active">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                    </svg>
+                                    All Prompts
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-section">
+                        <h3 class="sidebar-title">Categories</h3>
+                        <ul class="sidebar-menu">
+                            <li class="sidebar-menu-item">
+                                <a href="prompt-library.html?category=creative" class="sidebar-link">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                        <path d="M2 2l7.586 7.586"></path>
+                                        <circle cx="11" cy="11" r="2"></circle>
+                                    </svg>
+                                    Creative
+                                </a>
+                            </li>
+                            <li class="sidebar-menu-item">
+                                <a href="prompt-library.html?category=business" class="sidebar-link">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                    </svg>
+                                    Business
+                                </a>
+                            </li>
+                            <li class="sidebar-menu-item">
+                                <a href="prompt-library.html?category=technical" class="sidebar-link">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="16 18 22 12 16 6"></polyline>
+                                        <polyline points="8 6 2 12 8 18"></polyline>
+                                    </svg>
+                                    Technical
+                                </a>
+                            </li>
+                            <li class="sidebar-menu-item">
+                                <a href="prompt-library.html?category=education" class="sidebar-link">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                    </svg>
+                                    Education
+                                </a>
+                            </li>
+                            <li class="sidebar-menu-item">
+                                <a href="prompt-library.html?category=productivity" class="sidebar-link">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    Productivity
+                                </a>
+                            </li>
+                            <li class="sidebar-menu-item">
+                                <a href="prompt-library.html?category=research" class="sidebar-link">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                    Research
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <main class="split-view">
+            <!-- Input Panel -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2>Original Prompt</h2>
+                    <div class="panel-actions">
+                        <div class="quality-score-container">
+                            <span class="quality-label">Quality</span>
+                            <div class="quality-score-box" id="input-quality-score">
+                                <span class="score-value">--</span>
+                                <div class="score-bar">
+                                    <div class="score-fill" id="input-score-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="copy-input-btn" class="icon-btn" title="Copy original prompt">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="prompt-input" 
+                        class="prompt-textarea" 
+                        placeholder="Enter your prompt here..."
+                        maxlength="5000"
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+
+                <div class="panel-footer">
+                    <div class="char-count">
+                        <span id="input-char-count">0</span> / 5000
+                    </div>
+                    <div class="primary-action">
+                        <button id="reset-btn" class="reset-btn" title="Reset session">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                <path d="M3 3v5h5"></path>
+                            </svg>
+                            Reset
+                        </button>
+                        <button id="enhance-btn" class="enhance-btn" disabled>
+                            <span class="btn-text">Enhance</span>
+                            <span class="loading-spinner" style="display: none;"></span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Output Panel -->
+            <section class="panel output-panel">
+                <div class="panel-header">
+                    <h2>Enhanced Version</h2>
+                    <div class="panel-actions">
+                        <div class="quality-score-container">
+                            <span class="quality-label">Quality</span>
+                            <div class="quality-score-box" id="output-quality-score">
+                                <span class="score-value">--</span>
+                                <div class="score-bar">
+                                    <div class="score-fill" id="output-score-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="copy-output-btn" class="icon-btn" title="Copy enhanced prompt" disabled>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="prompt-output" 
+                        class="prompt-textarea" 
+                        placeholder="Enhanced prompt will appear here..."
+                        readonly
+                        spellcheck="false"
+                    ></textarea>
+                </div>
+
+                <div class="panel-footer">
+                    <div class="output-info">
+                        <span id="enhancement-time"></span>
+                    </div>
+                    <div id="status-message" class="status-message"></div>
+                </div>
+            </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
