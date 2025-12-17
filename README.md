@@ -8,6 +8,7 @@ A web-based application designed to enhance and refine AI prompts for better res
 - **Prompt Enhancement**: Transform basic prompts into detailed, structured instructions
 - **Context Support**: Add background information to improve AI understanding
 - **Quality Scoring**: Real-time assessment of prompt quality with visual feedback
+- **Temperature Control**: Adjustable AI creativity level with slider and preset modes
 - **UncloseAI Integration**: Powered by Hermes AI model for intelligent prompt enhancement
 
 ### User Interface
@@ -28,6 +29,13 @@ A web-based application designed to enhance and refine AI prompts for better res
 - **Search & Filter**: Find relevant templates quickly with search and category filtering
 - **One-Click Use**: Load templates directly into the enhancer
 
+### AI Creativity Controls
+- **Temperature Slider**: Adjustable creativity level from 0.0 to 1.0
+- **Preset Modes**: Quick selection buttons (Precise, Balanced, Creative, Max)
+- **Visual Feedback**: Color-coded temperature display and track fill
+- **Optimal Ranges**: AI-suggested temperature settings for different use cases
+- **Persistent Settings**: Temperature preference saved across sessions
+
 ### Additional Features
 - **Keyboard Shortcuts**: Ctrl/Cmd + Enter to enhance, Escape to clear focus
 - **Character Counting**: Monitor prompt length with visual indicators
@@ -46,6 +54,7 @@ A web-based application designed to enhance and refine AI prompts for better res
 
 ### API Integration
 - **UncloseAI Hermes**: Advanced AI model for prompt enhancement
+- **Temperature Parameter**: Dynamic creativity control via API temperature settings
 - **RESTful API**: Direct API calls for enhancement processing
 - **Error Handling**: Comprehensive error management with fallback strategies
 
@@ -111,6 +120,12 @@ Then access the application at `http://localhost:8000`
 3. Click on any prompt card to view details
 4. Use "Copy" to copy to clipboard or "Use This Prompt" to load in enhancer
 5. Customize the template as needed
+
+### Temperature Controls
+- **Precise (0.1-0.3)**: Conservative responses, consistent output, technical content
+- **Balanced (0.3-0.7)**: Creative but structured responses, versatile applications
+- **Creative (0.7-0.9)**: Highly creative responses, innovative ideas, artistic content
+- **Max (0.9-1.0)**: Maximum creativity, experimental output, brainstorming
 
 ### Quality Scores
 - **Input Quality**: Real-time scoring of your original prompt

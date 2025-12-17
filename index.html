@@ -140,7 +140,7 @@
             <main class="split-view">
             <!-- Input Panel -->
             <section class="panel input-panel">
-                <div class="panel-header">
+<div class="panel-header">
                     <h2>Original Prompt</h2>
                     <div class="panel-actions">
                         <div class="quality-score-container">
@@ -158,6 +158,25 @@
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                             </svg>
                         </button>
+                    </div>
+                </div>
+                
+                <div class="temperature-controls">
+                    <div class="temperature-header">
+                        <label class="temperature-label">AI Creativity Level</label>
+                        <span class="temperature-value" id="temperature-value">0.3</span>
+                    </div>
+                    <div class="temperature-slider-wrapper">
+                        <input type="range" id="temperature-slider" class="temperature-slider" min="0" max="100" value="30" step="1">
+                        <div class="temperature-track">
+                            <div class="temperature-fill" id="temperature-fill"></div>
+                        </div>
+                    </div>
+                    <div class="temperature-presets">
+                        <button class="preset-btn" data-preset="precise">Precise</button>
+                        <button class="preset-btn active" data-preset="balanced">Balanced</button>
+                        <button class="preset-btn" data-preset="creative">Creative</button>
+                        <button class="preset-btn" data-preset="max">Max</button>
                     </div>
                 </div>
                 

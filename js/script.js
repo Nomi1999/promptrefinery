@@ -20,6 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
     
+    // Temperature Control Elements
+    const temperatureSlider = document.getElementById('temperature-slider');
+    const temperatureValue = document.getElementById('temperature-value');
+    const temperatureFill = document.getElementById('temperature-fill');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+    
     // Mobile Menu Elements
     const menuToggleBtn = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('.sidebar');
@@ -28,14 +34,140 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // State management
     let isProcessing = false;
+    let currentTemperature = 0.3;
+
+    // Temperature ranges for presets
+    const temperatureRanges = {
+        precise: { min: 0.0, max: 0.2, optimal: 0.1 },
+        balanced: { min: 0.3, max: 0.5, optimal: 0.4 },
+        creative: { min: 0.6, max: 0.8, optimal: 0.7 },
+        max: { min: 0.9, max: 1.0, optimal: 0.95 }
+    };
 
     // Initialize the application
     function init() {
         initTheme();
+        initTemperatureControl();
         setupEventListeners();
         checkUncloseAIAvailability();
         updateEnhanceButtonState();
         loadPromptFromLibrary();
+    }
+
+    // Initialize temperature control
+    function initTemperatureControl() {
+        // Always reset to default temperature on page refresh
+        currentTemperature = 0.3; // Default value
+        
+        updateTemperatureUI();
+        
+        // Add event listeners for temperature controls
+        if (temperatureSlider) {
+            temperatureSlider.addEventListener('input', handleTemperatureSliderChange);
+        }
+        
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', handlePresetClick);
+        });
+    }
+
+    // Handle temperature slider change
+    function handleTemperatureSliderChange() {
+        const sliderValue = parseInt(temperatureSlider.value);
+        currentTemperature = sliderValue / 100;
+        updateTemperatureUI();
+        saveTemperatureToStorage();
+        updateActivePreset();
+    }
+
+    // Handle preset button click
+    function handlePresetClick(e) {
+        const presetType = e.target.dataset.preset || e.target.textContent.toLowerCase();
+        let targetTemperature;
+        
+        // Find the optimal temperature for this preset type
+        switch(presetType) {
+            case 'precise':
+                targetTemperature = temperatureRanges.precise.optimal;
+                break;
+            case 'balanced':
+                targetTemperature = temperatureRanges.balanced.optimal;
+                break;
+            case 'creative':
+                targetTemperature = temperatureRanges.creative.optimal;
+                break;
+            case 'max':
+                targetTemperature = temperatureRanges.max.optimal;
+                break;
+            default:
+                // Fallback to data-temperature if available
+                targetTemperature = parseFloat(e.target.dataset.temperature) || 0.3;
+        }
+        
+        currentTemperature = targetTemperature;
+        updateTemperatureUI();
+        saveTemperatureToStorage();
+        updateActivePreset();
+    }
+
+    // Update temperature UI elements
+    function updateTemperatureUI() {
+        const sliderValue = Math.round(currentTemperature * 100);
+        
+        if (temperatureSlider) {
+            temperatureSlider.value = sliderValue;
+        }
+        
+        if (temperatureValue) {
+            temperatureValue.textContent = currentTemperature.toFixed(1);
+        }
+        
+        if (temperatureFill) {
+            temperatureFill.style.width = sliderValue + '%';
+        }
+    }
+
+    // Update active preset button based on temperature ranges
+    function updateActivePreset() {
+        presetBtns.forEach(btn => {
+            const presetType = btn.dataset.preset || btn.textContent.toLowerCase();
+            let isActive = false;
+            
+            // Check if current temperature falls within this preset's range
+            switch(presetType) {
+                case 'precise':
+                    isActive = currentTemperature >= temperatureRanges.precise.min && 
+                               currentTemperature <= temperatureRanges.precise.max;
+                    break;
+                case 'balanced':
+                    isActive = currentTemperature >= temperatureRanges.balanced.min && 
+                               currentTemperature <= temperatureRanges.balanced.max;
+                    break;
+                case 'creative':
+                    isActive = currentTemperature >= temperatureRanges.creative.min && 
+                               currentTemperature <= temperatureRanges.creative.max;
+                    break;
+                case 'max':
+                    isActive = currentTemperature >= temperatureRanges.max.min && 
+                               currentTemperature <= temperatureRanges.max.max;
+                    break;
+                default:
+                    // Fallback to exact match for any unrecognized presets
+                    const presetTemp = parseFloat(btn.dataset.temperature);
+                    isActive = Math.abs(presetTemp - currentTemperature) < 0.05;
+            }
+            
+            if (isActive) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // Save temperature to localStorage
+    function saveTemperatureToStorage() {
+        localStorage.setItem('temperature', currentTemperature.toString());
     }
 
     // Check if UncloseAI library is loaded
@@ -250,7 +382,7 @@ ${prompt}`;
                         }
                     ],
                     max_tokens: 300,
-                    temperature: 0.3
+                    temperature: currentTemperature
                 })
             });
 
