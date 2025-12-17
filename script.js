@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // DOM elements
     const promptInput = document.getElementById('prompt-input');
+    const contextInput = document.getElementById('context-input');
     const promptOutput = document.getElementById('prompt-output');
     const enhanceBtn = document.getElementById('enhance-btn');
     const resetBtn = document.getElementById('reset-btn');
@@ -36,15 +37,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup event listeners
     function setupEventListeners() {
         // Input field events
-        promptInput.addEventListener('input', handleInputChange);
-        promptInput.addEventListener('paste', () => {
-            setTimeout(updateEnhanceButtonState, 10);
+        [promptInput, contextInput].forEach(input => {
+            if (input) {
+                input.addEventListener('input', handleInputChange);
+                input.addEventListener('paste', () => {
+                    setTimeout(updateEnhanceButtonState, 10);
+                });
+            }
         });
 
         // Button events
         enhanceBtn.addEventListener('click', handleEnhancePrompt);
         resetBtn.addEventListener('click', handleResetSession);
-        copyInputBtn.addEventListener('click', () => copyToClipboard(promptInput.value, 'input'));
+        copyInputBtn.addEventListener('click', () => copyToClipboard(getCombinedPrompt(), 'input'));
         copyOutputBtn.addEventListener('click', () => copyToClipboard(promptOutput.value, 'output'));
         
         // Keyboard shortcuts
@@ -57,9 +62,23 @@ document.addEventListener('DOMContentLoaded', function() {
             // Escape to clear focus
             if (e.key === 'Escape') {
                 promptInput.blur();
+                contextInput.blur();
                 promptOutput.blur();
             }
         });
+    }
+
+    // Helper to combine all input fields
+    function getCombinedPrompt() {
+        let parts = [];
+        
+        const core = promptInput.value.trim();
+        const context = contextInput ? contextInput.value.trim() : '';
+        
+        if (core) parts.push(core);
+        if (context) parts.push(`\nContext:\n${context}`);
+        
+        return parts.join('\n');
     }
 
     // Handle input field changes
@@ -72,13 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update character count
     function updateCharCount() {
-        const count = promptInput.value.length;
+        const fullText = getCombinedPrompt();
+        const count = fullText.length;
         inputCharCount.textContent = count;
         
         // Change color based on character count
-        if (count > 4500) {
+        if (count > 8000) {
             inputCharCount.style.color = 'var(--error)';
-        } else if (count > 4000) {
+        } else if (count > 6000) {
             inputCharCount.style.color = 'var(--warning)';
         } else {
             inputCharCount.style.color = 'var(--text-muted)';
@@ -93,10 +113,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle prompt enhancement
     async function handleEnhancePrompt() {
-        const originalPrompt = promptInput.value.trim();
+        const originalPrompt = getCombinedPrompt();
         
-        if (!originalPrompt) {
-            showError('Please enter a prompt to enhance.');
+        if (!promptInput.value.trim()) {
+            showError('Please enter a core instruction to enhance.');
             return;
         }
 
@@ -352,10 +372,12 @@ ${prompt}`;
             btnText.style.display = 'none';
             loadingSpinner.style.display = 'block';
             promptInput.disabled = true;
+            if(contextInput) contextInput.disabled = true;
         } else {
             btnText.style.display = 'inline';
             loadingSpinner.style.display = 'none';
             promptInput.disabled = false;
+            if(contextInput) contextInput.disabled = false;
         }
     }
 
@@ -496,7 +518,7 @@ ${prompt}`;
 
     // Update input quality score in real-time
     function updateInputQualityScore() {
-        const prompt = promptInput.value.trim();
+        const prompt = getCombinedPrompt(); // Calculate score based on total content
         const score = calculateQualityScore(prompt);
         updateQualityScoreDisplay(inputQualityScore, inputScoreFill, score);
     }
@@ -566,6 +588,7 @@ ${prompt}`;
 
         // Clear all input and output fields
         promptInput.value = '';
+        if(contextInput) contextInput.value = '';
         promptOutput.value = '';
         
         // Reset UI states

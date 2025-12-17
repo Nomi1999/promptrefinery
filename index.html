@@ -125,14 +125,30 @@
                     </div>
                 </div>
                 
-                <div class="textarea-wrapper">
-                    <textarea 
-                        id="prompt-input" 
-                        class="prompt-textarea" 
-                        placeholder="Enter your prompt here..."
-                        maxlength="5000"
-                        spellcheck="false"
-                    ></textarea>
+                <div class="input-form-wrapper">
+                    <div class="input-group">
+                        <label for="prompt-input" class="input-label">Core Instruction <span class="required">*</span></label>
+                        <p class="input-description">What is the main task you want the AI to perform?</p>
+                        <textarea 
+                            id="prompt-input" 
+                            class="prompt-textarea main-input" 
+                            placeholder="e.g., Write a blog post about sustainable gardening..."
+                            maxlength="5000"
+                            spellcheck="false"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="context-input" class="input-label">Context & Background <span class="optional">(Optional)</span></label>
+                        <p class="input-description">Provide relevant background information or data.</p>
+                        <textarea 
+                            id="context-input" 
+                            class="prompt-textarea secondary-input" 
+                            placeholder="e.g., The audience is beginner gardeners, focus on urban settings..."
+                            maxlength="2000"
+                            spellcheck="false"
+                        ></textarea>
+                    </div>
                 </div>
 
                 <div class="panel-footer">
