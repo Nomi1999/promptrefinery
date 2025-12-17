@@ -332,6 +332,588 @@ Ensure the agenda is realistic for the allotted time and focused on achieving sp
 7. Critical analysis or potential bias
 
 Provide a concise yet comprehensive summary that captures the essence of the source material.`
+        },
+        {
+            id: 19,
+            category: 'creative',
+            title: 'Character Dialogue Generation',
+            description: 'Write realistic and engaging dialogue between characters.',
+            content: `Write a dialogue between [Character A] and [Character B] in a [setting/situation] that reveals:
+
+1. Character A's current emotional state
+2. Character B's hidden agenda or secret
+3. The relationship dynamic between them
+4. A specific plot point or conflict
+
+Ensure the dialogue sounds natural, distinct for each character, and advances the story.`
+        },
+        {
+            id: 20,
+            category: 'business',
+            title: 'Job Interview Simulator',
+            description: 'Practice for job interviews with role-specific questions and feedback.',
+            content: `Act as an interviewer for a [Job Role] position at [Company Type/Industry].
+
+1. Ask me a series of 5 common interview questions for this role, one by one.
+2. Wait for my response after each question.
+3. After I respond, provide feedback on my answer, highlighting strengths and areas for improvement.
+4. At the end, give an overall assessment of my performance.
+
+Start by asking the first question.`
+        },
+        {
+            id: 21,
+            category: 'technical',
+            title: 'System Architecture Blueprint',
+            description: 'Design a high-level architecture for a software system.',
+            content: `Design a high-level system architecture for [System Name/Type] that handles [Key Functional Requirement]. Include:
+
+1. High-level diagram description (components and interactions)
+2. Database schema design (key tables and relationships)
+3. API endpoints definition (REST/GraphQL)
+4. Technology stack recommendations (Frontend, Backend, Database)
+5. Scalability and performance considerations
+6. Security measures and best practices
+
+Explain the reasoning behind your architectural choices.`
+        },
+        {
+            id: 22,
+            category: 'education',
+            title: 'Educational Quiz Generator',
+            description: 'Create quizzes to test knowledge on any subject.',
+            content: `Create a [Number of Questions]-question quiz on [Topic] for [Target Audience] level.
+
+1. Include a mix of multiple-choice, true/false, and short answer questions.
+2. Provide the correct answer and a brief explanation for each question.
+3. Organize the questions by difficulty (easy, medium, hard).
+4. Include a scoring guide or grading scale.
+
+Make the questions challenging but fair for the intended audience.`
+        },
+        {
+            id: 23,
+            category: 'productivity',
+            title: 'SMART Goal Framework',
+            description: 'Transform vague ideas into actionable SMART goals.',
+            content: `Help me refine the following goal into a SMART goal: "[Insert Vague Goal]".
+
+1. **Specific:** What exactly needs to be accomplished?
+2. **Measurable:** How will I track progress and measure success?
+3. **Achievable:** Is the goal realistic and attainable?
+4. **Relevant:** Why does this goal matter?
+5. **Time-bound:** When is the deadline?
+
+Break down the final SMART goal into a list of immediate next steps.`
+        },
+        {
+            id: 24,
+            category: 'research',
+            title: 'Research Survey Design',
+            description: 'Create effective surveys to gather reliable data.',
+            content: `Design a research survey to investigate [Research Topic/Question] targeting [Target Population]. Include:
+
+1. Survey introduction and consent statement.
+2. Demographic questions (e.g., age, gender, location).
+3. A mix of closed-ended (Likert scale, multiple choice) and open-ended questions.
+4. Questions designed to avoid bias and leading language.
+5. A closing statement thanking the participants.
+
+Ensure the questions directly address the research objectives and provide actionable data.`
+        },
+        // Creative Prompts (New)
+        {
+            id: 25,
+            category: 'creative',
+            title: 'Plot Twist Generator',
+            description: 'Generate unexpected plot twists to surprise your readers.',
+            content: `Generate 5 potential plot twists for a story about [premise/characters] where the main conflict is [conflict]. 
+
+For each twist:
+1. Describe the twist event.
+2. Explain how it changes the story's direction.
+3. Detail the impact on the protagonist.
+
+Ensure the twists are surprising but consistent with the established world.`
+        },
+        {
+            id: 26,
+            category: 'creative',
+            title: 'Setting Description Enhancer',
+            description: 'Add sensory details to bring your settings to life.',
+            content: `Rewrite the following setting description to include all five senses (sight, sound, smell, taste, touch):
+
+"[Insert current description]"
+
+Enhance the atmosphere to convey a feeling of [mood, e.g., dread, wonder, isolation].`
+        },
+        {
+            id: 27,
+            category: 'creative',
+            title: 'Villain Motivation',
+            description: 'Create complex and relatable villains.',
+            content: `Develop a backstory and motivation for a villain who wants to [villain's goal] because [reason], ensuring they are not purely evil. Include:
+
+1. A definitive "wound" or past trauma.
+2. A twisted justification for their actions.
+3. A redeeming quality or a line they won't cross.
+4. Their view of the protagonist.`
+        },
+        {
+            id: 28,
+            category: 'creative',
+            title: 'Magic System Design',
+            description: 'Create a unique and balanced magic system.',
+            content: `Design a magic system based on [core concept/element]. Detail:
+
+1. The source of the magic.
+2. How it is learned or acquired.
+3. Hard rules and limitations (what it CANNOT do).
+4. The cost or consequence of using it.
+5. How it affects society/culture.`
+        },
+        {
+            id: 29,
+            category: 'creative',
+            title: 'Dialogue Subtext',
+            description: 'Write dialogue that conveys meaning beyond the words.',
+            content: `Write a scene between two characters who are discussing [surface topic] but are actually angry about [hidden issue]. 
+
+Focus on:
+1. What they are NOT saying.
+2. Physical actions that betray their true feelings.
+3. Passive-aggressive comments.
+4. The tension rising without an explicit explosion.`
+        },
+        {
+            id: 30,
+            category: 'creative',
+            title: 'Story Starter',
+            description: 'Overcome writer\'s block with a compelling opening.',
+            content: `Write an opening paragraph for a story that begins with the sentence: "[Opening sentence]" and sets a tone of [tone]. 
+
+Introduce:
+1. The protagonist.
+2. The immediate setting.
+3. A hint of the inciting incident.`
+        },
+        // Business Prompts (New)
+        {
+            id: 31,
+            category: 'business',
+            title: 'SWOT Analysis',
+            description: 'Conduct a strategic analysis of a business or project.',
+            content: `Perform a SWOT analysis for [company/product] operating in the [industry] market. List 3-5 items for each:
+
+1. **Strengths:** Internal positive factors.
+2. **Weaknesses:** Internal negative factors.
+3. **Opportunities:** External positive factors.
+4. **Threats:** External negative factors.
+
+Conclude with a strategic recommendation based on the analysis.`
+        },
+        {
+            id: 32,
+            category: 'business',
+            title: 'Elevator Pitch',
+            description: 'Craft a persuasive short pitch for your idea.',
+            content: `Create a 30-second elevator pitch for [product/service]. The pitch should address:
+
+1. The specific problem you are solving.
+2. Your unique solution.
+3. The target market.
+4. The key benefit/value proposition.
+
+Make it punchy, memorable, and clear.`
+        },
+        {
+            id: 33,
+            category: 'business',
+            title: 'Competitor Analysis',
+            description: 'Analyze the competitive landscape.',
+            content: `Conduct a competitor analysis for [company] comparing it against [competitor 1] and [competitor 2]. Compare them on:
+
+1. Pricing strategy.
+2. Key features/product offering.
+3. Target audience overlap.
+4. Marketing strengths.
+5. Customer reviews/sentiment.`
+        },
+        {
+            id: 34,
+            category: 'business',
+            title: 'Product Launch Plan',
+            description: 'Plan a successful product launch.',
+            content: `Outline a 4-week product launch plan for [product name]. Include:
+
+1. **Week 1 (Tease):** Social media strategy and email warm-ups.
+2. **Week 2 (Hype):** Influencer outreach and content drops.
+3. **Week 3 (Launch):** Launch day checklist and events.
+4. **Week 4 (Sustain):** Follow-up and user engagement.
+
+Identify key metrics to track success.`
+        },
+        {
+            id: 35,
+            category: 'business',
+            title: 'Customer Persona',
+            description: 'Define your ideal customer.',
+            content: `Create a detailed customer persona for [product/service]. Include:
+
+1. **Demographics:** Age, location, job title, income.
+2. **Psychographics:** Interests, values, lifestyle.
+3. **Pain Points:** What keeps them up at night?
+4. **Goals:** What do they want to achieve?
+5. **Buying Behavior:** How do they make purchasing decisions?`
+        },
+        {
+            id: 36,
+            category: 'business',
+            title: 'Meeting Minutes Template',
+            description: 'Record meeting outcomes effectively.',
+            content: `Draft a template for meeting minutes for a [meeting type]. The template should have sections for:
+
+1. Meeting details (Date, Time, Location).
+2. Attendees and Absentees.
+3. Agenda Items.
+4. Discussion Summary per item.
+5. **Decisions Made:** Clear record of what was agreed.
+6. **Action Items:** Who, What, By When.
+7. Next Meeting Date.`
+        },
+        // Technical Prompts (New)
+        {
+            id: 37,
+            category: 'technical',
+            title: 'Regex Generator',
+            description: 'Create regular expressions for pattern matching.',
+            content: `Generate a Regular Expression (Regex) to match [pattern description, e.g., email, date format]. 
+
+1. Provide the Regex string.
+2. Explain what each part of the regex does.
+3. Provide 3 examples of strings that match.
+4. Provide 3 examples of strings that do NOT match.`
+        },
+        {
+            id: 38,
+            category: 'technical',
+            title: 'Git Workflow',
+            description: 'Standardize version control practices.',
+            content: `Describe a Git workflow for a team of [number] developers working on [project type]. Define:
+
+1. Branching strategy (e.g., Gitflow, trunk-based).
+2. Naming conventions for branches.
+3. Commit message standards.
+4. The Pull Request/Code Review process.
+5. Handling merge conflicts.`
+        },
+        {
+            id: 39,
+            category: 'technical',
+            title: 'API Endpoint Design',
+            description: 'Design RESTful API endpoints.',
+            content: `Design the API endpoints for a [resource name] resource. Include:
+
+1. **GET /resource:** List with pagination/filtering parameters.
+2. **GET /resource/{id}:** Single item retrieval.
+3. **POST /resource:** Creation payload and validation.
+4. **PUT/PATCH /resource/{id}:** Update logic.
+5. **DELETE /resource/{id}:** Deletion logic.
+
+Specify standard HTTP status codes for success and error scenarios.`
+        },
+        {
+            id: 40,
+            category: 'technical',
+            title: 'Docker Compose Setup',
+            description: 'Containerize applications with Docker Compose.',
+            content: `Create a \`docker-compose.yml\` structure for a stack consisting of:
+- [Service 1 (e.g., Node.js App)]
+- [Service 2 (e.g., Redis)]
+- [Database (e.g., PostgreSQL)]
+
+Include:
+1. Image/Build context.
+2. Port mappings.
+3. Environment variable injection.
+4. Volume mounts for persistence.
+5. Network configuration.`
+        },
+        {
+            id: 41,
+            category: 'technical',
+            title: 'Unit Test Case Generation',
+            description: 'Write comprehensive unit tests.',
+            content: `Generate a list of unit test cases for a function that [function description]. Include:
+
+1. **Happy Path:** Standard valid inputs.
+2. **Edge Cases:** Minimum/maximum values, empty inputs.
+3. **Error Handling:** Invalid types, null values.
+4. **Performance:** Large inputs (if applicable).
+
+Describe the expected input and output for each case.`
+        },
+        {
+            id: 42,
+            category: 'technical',
+            title: 'Security Audit Checklist',
+            description: 'Ensure application security.',
+            content: `Create a security audit checklist for a [web/mobile] application. Cover:
+
+1. **Authentication:** Password policies, MFA.
+2. **Authorization:** Role-based access control.
+3. **Data Protection:** Encryption at rest and in transit.
+4. **Input Validation:** SQL injection, XSS prevention.
+5. **Dependency Management:** Vulnerability scanning.`
+        },
+        // Education Prompts (New)
+        {
+            id: 43,
+            category: 'education',
+            title: 'Rubric Creator',
+            description: 'Design fair and clear grading rubrics.',
+            content: `Create a grading rubric for a [assignment type] assignment. 
+
+Define 4 levels of proficiency: Excellent (4), Proficient (3), Developing (2), Needs Improvement (1).
+Create rows for the following criteria:
+1. [Criteria 1]
+2. [Criteria 2]
+3. [Criteria 3]
+
+Provide a brief description of what constitutes each level for each criteria.`
+        },
+        {
+            id: 44,
+            category: 'education',
+            title: 'Flashcard Generator',
+            description: 'Create study flashcards for key concepts.',
+            content: `Generate a set of 10 study flashcards for the topic of [topic]. 
+
+Format as:
+**Front:** [Term/Concept]
+**Back:** [Clear, concise definition or explanation]
+
+Ensure the definitions are accurate and easy to memorize.`
+        },
+        {
+            id: 45,
+            category: 'education',
+            title: 'Essay Outline',
+            description: 'Structure academic essays.',
+            content: `Create a detailed outline for an argumentative essay on [topic]. Include:
+
+1. **Introduction:** Hook, background info, Thesis Statement.
+2. **Body Paragraph 1:** Main argument 1 + evidence.
+3. **Body Paragraph 2:** Main argument 2 + evidence.
+4. **Body Paragraph 3:** Counter-argument + refutation.
+5. **Conclusion:** Restate thesis, summary of points, closing thought.`
+        },
+        {
+            id: 46,
+            category: 'education',
+            title: 'Classroom Icebreaker',
+            description: 'Engage students with fun introductory activities.',
+            content: `Suggest 3 interactive icebreaker activities for a class of [age group] students. 
+
+The goal is to:
+1. Help them learn names.
+2. Introduce the topic of [topic].
+3. Build energy and comfort.
+
+Provide instructions and necessary materials for each.`
+        },
+        {
+            id: 47,
+            category: 'education',
+            title: 'Feedback Generator',
+            description: 'Provide constructive feedback to students.',
+            content: `Draft a feedback note for a student who submitted [assignment type].
+- **Strengths:** [Mention 1-2 things they did well].
+- **Areas for Improvement:** [Mention the specific struggle with concept].
+- **Actionable Advice:** [How can they fix it?].
+- **Encouragement:** A positive closing statement.
+
+Keep the tone supportive and growth-oriented.`
+        },
+        {
+            id: 48,
+            category: 'education',
+            title: 'Course Syllabus',
+            description: 'Outline a complete course.',
+            content: `Create a course syllabus for [course name] that runs for [duration]. Include:
+
+1. **Course Description:** Overview of the subject.
+2. **Learning Objectives:** What students will be able to do by the end.
+3. **Weekly Schedule:** Topic breakdown by week.
+4. **Assessment Methods:** How grades are calculated (exams, projects, etc.).
+5. **Required Resources:** Books, software, materials.`
+        },
+        // Productivity Prompts (New)
+        {
+            id: 49,
+            category: 'productivity',
+            title: 'Pomodoro Planner',
+            description: 'Plan tasks using the Pomodoro technique.',
+            content: `Break down the project [project name] into 25-minute Pomodoro intervals. 
+
+List 4-6 intervals. For each:
+1. **Task:** Specific action to take.
+2. **Goal:** What constitutes "done" for this interval.
+
+Include a 5-minute break activity between each.`
+        },
+        {
+            id: 50,
+            category: 'productivity',
+            title: 'Email Triage System',
+            description: 'Organize and prioritize your inbox.',
+            content: `Create a system for processing a full inbox. Define rules for:
+
+1. **Delete/Archive:** what goes here immediately?
+2. **Delegate:** criteria for forwarding to others.
+3. **Defer:** what gets scheduled for later?
+4. **Do:** what must be answered in <2 minutes?
+
+Provide a step-by-step workflow to clear the inbox in 30 minutes.`
+        },
+        {
+            id: 51,
+            category: 'productivity',
+            title: 'Habit Tracker Layout',
+            description: 'Track and build new habits.',
+            content: `Design a weekly habit tracker for [Habit 1], [Habit 2], and [Habit 3].
+
+Include:
+1. A checkbox grid for Mon-Sun.
+2. A "Trigger" column (when will you do it?).
+3. A "Reward" column (what do you get for completing it?).
+4. A reflection section for end-of-week analysis.`
+        },
+        {
+            id: 52,
+            category: 'productivity',
+            title: 'Decision Matrix',
+            description: 'Make objective decisions.',
+            content: `Create a decision matrix to choose between [Option A] and [Option B]. 
+
+1. List 5 key criteria (e.g., Cost, Time, Impact).
+2. Assign a weight (1-5) to each criteria based on importance.
+3. Explain how to score each option (1-10).
+4. Provide the formula to calculate the weighted score.`
+        },
+        {
+            id: 53,
+            category: 'productivity',
+            title: 'Weekly Review Checklist',
+            description: 'Reflect on the past week and plan the next.',
+            content: `Create a checklist for a Friday Weekly Review. Steps should include:
+
+1. **Clear:** Emptying physical and digital inboxes.
+2. **Review:** Checking calendar (past and upcoming 2 weeks).
+3. **Reflect:** What went well? What didn't?
+4. **Plan:** Top 3 priorities for next week.
+
+Ensure the process can be completed in 20-30 minutes.`
+        },
+        {
+            id: 54,
+            category: 'productivity',
+            title: 'Morning Routine Design',
+            description: 'Design a productive morning routine.',
+            content: `Design a morning routine for someone who wants to achieve [goal] and starts work at [time]. 
+
+The routine should include:
+1. Hydration/Nutrition.
+2. Movement/Exercise.
+3. Mindfulness/Meditation.
+4. Top Priority Planning.
+
+Provide a timeline (e.g., 6:00 AM - 6:15 AM) for each step.`
+        },
+        // Research Prompts (New)
+        {
+            id: 55,
+            category: 'research',
+            title: 'Literature Review Matrix',
+            description: 'Organize research sources.',
+            content: `Create a column structure for a Literature Review Matrix to organize sources on [topic]. Columns should include:
+
+1. **Citation:** (Author, Year).
+2. **Methodology:** (Qualitative/Quantitative, Sample size).
+3. **Key Findings:** Main results relevant to [topic].
+4. **Strengths/Weaknesses:** Critical analysis.
+5. **Relevance:** How it connects to your specific research question.`
+        },
+        {
+            id: 56,
+            category: 'research',
+            title: 'Interview Question Set',
+            description: 'Prepare for qualitative research interviews.',
+            content: `Draft 10 semi-structured interview questions for a study on [topic]. 
+
+1. Start with rapport-building questions.
+2. Move to core investigative questions.
+3. Include follow-up probes (e.g., "Can you tell me more about...?").
+4. End with a catch-all ("Is there anything else...?").
+
+Ensure questions are open-ended and non-leading.`
+        },
+        {
+            id: 57,
+            category: 'research',
+            title: 'Statistical Test Selector',
+            description: 'Choose the right statistical test.',
+            content: `Help me select the right statistical test.
+My Independent Variable is: [Type: Nominal/Ordinal/Interval/Ratio].
+My Dependent Variable is: [Type: Nominal/Ordinal/Interval/Ratio].
+Distribution: [Normal/Non-Normal].
+
+Based on this, suggest:
+1. The appropriate test (e.g., T-test, ANOVA, Chi-Square).
+2. Why this test fits the data types.
+3. The assumptions that must be met.`
+        },
+        {
+            id: 58,
+            category: 'research',
+            title: 'Abstract Generator',
+            description: 'Write a concise research abstract.',
+            content: `Draft a research abstract for a paper titled "[Title]". Limit to 250 words. Structure it as:
+
+1. **Background:** Context and problem statement (1-2 sentences).
+2. **Methods:** Brief description of approach (1-2 sentences).
+3. **Results:** Key findings and data (2-3 sentences).
+4. **Conclusion:** Implications and significance (1 sentence).`
+        },
+        {
+            id: 59,
+            category: 'research',
+            title: 'Citation Formatter',
+            description: 'Format citations correctly.',
+            content: `Format the following source details into [Citation Style, e.g., APA 7, MLA 8, Chicago]:
+
+Author: [Author Name]
+Title: [Title of Work]
+Publication: [Journal/Publisher]
+Year: [Year]
+Page Numbers: [Pages]
+URL/DOI: [Link]
+
+Provide both the **In-text Citation** format and the **Reference List** entry.`
+        },
+        {
+            id: 60,
+            category: 'research',
+            title: 'Research Proposal Outline',
+            description: 'Outline a research project proposal.',
+            content: `Outline a research proposal for [Topic]. Include:
+
+1. **Title:** Working title.
+2. **Problem Statement:** The gap in knowledge.
+3. **Research Questions:** Specific questions to answer.
+4. **Methodology:** Proposed design and methods.
+5. **Significance:** Why this research matters.
+6. **Timeline:** Key phases (e.g., Literature Review, Data Collection, Analysis).`
         }
     ];
 
@@ -349,9 +931,35 @@ Provide a concise yet comprehensive summary that captures the essence of the sou
             }
         }
         
+        // Update category counts
+        updateCategoryCounts();
+        
         // Initial render (will use the selected category)
         handleSearch();
         setupEventListeners();
+    }
+
+    // Update category counts in the dropdown
+    function updateCategoryCounts() {
+        // Calculate counts
+        const counts = promptTemplates.reduce((acc, prompt) => {
+            acc[prompt.category] = (acc[prompt.category] || 0) + 1;
+            return acc;
+        }, {});
+        
+        const totalCount = promptTemplates.length;
+
+        // Update dropdown options
+        Array.from(categorySelect.options).forEach(option => {
+            const currentText = option.textContent;
+            
+            if (option.value === 'all') {
+                option.textContent = `${currentText} (${totalCount})`;
+            } else {
+                const count = counts[option.value] || 0;
+                option.textContent = `${currentText} (${count})`;
+            }
+        });
     }
 
     // Modal elements
