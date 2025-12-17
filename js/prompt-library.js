@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-input');
     const categorySelect = document.getElementById('category-select');
     const promptsGrid = document.getElementById('prompts-grid');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
 
     // Prompt templates data
     const promptTemplates = [
@@ -919,6 +922,8 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
 
     // Initialize the library
     function init() {
+        initTheme();
+        
         // Check for URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const categoryParam = urlParams.get('category');
@@ -976,6 +981,10 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
     function setupEventListeners() {
         searchInput.addEventListener('input', handleSearch);
         categorySelect.addEventListener('change', handleCategoryFilter);
+        
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', toggleTheme);
+        }
         
         // Modal events
         modalCloseBtn.addEventListener('click', closeModal);
@@ -1165,25 +1174,12 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            background-color: ${type === 'success' ? 'var(--success)' : 'var(--error)'};
-            color: white;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            font-weight: 500;
-            animation: slideIn 0.3s ease;
-        `;
         
         document.body.appendChild(notification);
         
         // Remove after 3 seconds
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
+            notification.classList.add('slide-out');
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.parentNode.removeChild(notification);
@@ -1192,32 +1188,55 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         }, 3000);
     }
 
-    // Add animation keyframes
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+    // Theme Management
+    function initTheme() {
+        // Check for saved theme preference or system preference
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        let theme = 'light'; // Default
+        
+        if (savedTheme) {
+            theme = savedTheme;
+        } else if (systemPrefersDark) {
+            theme = 'dark';
         }
         
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
+        applyTheme(theme);
+        
+        // Listen for system theme changes if no user preference is set
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                applyTheme(e.matches ? 'dark' : 'light');
             }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
+        });
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // No success notification for theme toggle on library page to avoid clutter, 
+        // or we could add a simple console log if needed.
+        // If we want a notification, we can use the existing showNotification function
+        showNotification(`${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`, 'success');
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        // Update icons
+        if (theme === 'dark') {
+            if (sunIcon) sunIcon.style.display = 'block';
+            if (moonIcon) moonIcon.style.display = 'none';
+        } else {
+            if (sunIcon) sunIcon.style.display = 'none';
+            if (moonIcon) moonIcon.style.display = 'block';
         }
-    `;
-    document.head.appendChild(style);
+    }
 
     // Initialize the library
     init();

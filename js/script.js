@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetBtn = document.getElementById('reset-btn');
     const copyInputBtn = document.getElementById('copy-input-btn');
     const copyOutputBtn = document.getElementById('copy-output-btn');
-    const statusMessage = document.getElementById('status-message');
+    // Removed statusMessage element reference as we use floating notifications now
     const inputCharCount = document.getElementById('input-char-count');
     const enhancementTime = document.getElementById('enhancement-time');
     const loadingSpinner = document.querySelector('.loading-spinner');
@@ -16,12 +16,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const outputQualityScore = document.getElementById('output-quality-score');
     const inputScoreFill = document.getElementById('input-score-fill');
     const outputScoreFill = document.getElementById('output-score-fill');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const sunIcon = document.querySelector('.sun-icon');
+    const moonIcon = document.querySelector('.moon-icon');
 
     // State management
     let isProcessing = false;
 
     // Initialize the application
     function init() {
+        initTheme();
         setupEventListeners();
         checkUncloseAIAvailability();
         updateEnhanceButtonState();
@@ -48,6 +52,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Button events
         enhanceBtn.addEventListener('click', handleEnhancePrompt);
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', toggleTheme);
+        }
         resetBtn.addEventListener('click', handleResetSession);
         copyInputBtn.addEventListener('click', () => copyToClipboard(getCombinedPrompt(), 'input'));
         copyOutputBtn.addEventListener('click', () => copyToClipboard(promptOutput.value, 'output'));
@@ -76,7 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const context = contextInput ? contextInput.value.trim() : '';
         
         if (core) parts.push(core);
-        if (context) parts.push(`\nContext:\n${context}`);
+        if (context) parts.push(`
+Context:
+${context}`);
         
         return parts.join('\n');
     }
@@ -86,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCharCount();
         updateEnhanceButtonState();
         updateInputQualityScore();
-        clearStatus();
     }
 
     // Update character count
@@ -116,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalPrompt = getCombinedPrompt();
         
         if (!promptInput.value.trim()) {
-            showError('Please enter a core instruction to enhance.');
+            showNotification('Please enter a core instruction to enhance.', 'error');
             return;
         }
 
@@ -128,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Start processing
             isProcessing = true;
             setProcessingState(true);
-            showStatus('Enhancing your prompt...', 'processing');
+            // Processing status is now handled by the spinner
             
             // Clear previous output
             promptOutput.value = '';
@@ -160,14 +168,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Show improvement indicator
             showScoreImprovement(inputScore, outputScore);
             
-            showSuccess('Prompt enhanced successfully!');
+            showNotification('Prompt enhanced successfully!', 'success');
             
             // Scroll to output
             promptOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
         } catch (error) {
             console.error('Error enhancing prompt:', error);
-            showError(error.message || 'Failed to enhance prompt. Please try again.');
+            showNotification(error.message || 'Failed to enhance prompt. Please try again.', 'error');
         } finally {
             // End processing
             isProcessing = false;
@@ -253,7 +261,7 @@ ${prompt}`;
 
         } catch (error) {
             console.error('UncloseAI API error:', error);
-            showWarning('Using fallback enhancement due to API issues');
+            showNotification('Using fallback enhancement due to API issues', 'warning');
             
             // Fallback enhancement if API fails
             const fallbackEnhancement = createFallbackEnhancement(prompt);
@@ -307,17 +315,11 @@ ${prompt}`;
         
         return 'general';
     }
-    
-    // Show warning message
-    function showWarning(message) {
-        showStatus(message, 'warning');
-        setTimeout(clearStatus, 4000);
-    }
 
     // Copy text to clipboard
     async function copyToClipboard(text, source) {
         if (!text) {
-            showError('Nothing to copy.');
+            showNotification('Nothing to copy.', 'error');
             return;
         }
 
@@ -340,7 +342,7 @@ ${prompt}`;
                 button.classList.remove('copy-feedback');
             }, 2000);
 
-            showSuccess('Text copied to clipboard!');
+            showNotification('Text copied to clipboard!', 'success');
             
         } catch (error) {
             console.error('Failed to copy text:', error);
@@ -358,9 +360,9 @@ ${prompt}`;
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
                 
-                showSuccess('Text copied to clipboard!');
+                showNotification('Text copied to clipboard!', 'success');
             } catch (fallbackError) {
-                showError('Failed to copy text. Please select and copy manually.');
+                showNotification('Failed to copy text. Please select and copy manually.', 'error');
             }
         }
     }
@@ -381,25 +383,24 @@ ${prompt}`;
         }
     }
 
-    // Status message functions
-    function showStatus(message, type) {
-        statusMessage.textContent = message;
-        statusMessage.className = `status-message ${type}`;
-    }
-
-    function showSuccess(message) {
-        showStatus(message, 'success');
-        setTimeout(clearStatus, 3000);
-    }
-
-    function showError(message) {
-        showStatus(message, 'error');
-        setTimeout(clearStatus, 5000);
-    }
-
-    function clearStatus() {
-        statusMessage.textContent = '';
-        statusMessage.className = 'status-message';
+    // Show notification message
+    function showNotification(message, type = 'success') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.classList.add('slide-out');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
     }
 
     // Utility functions
@@ -495,7 +496,7 @@ ${prompt}`;
         score += Math.min(questionMarks * 2, 6);
 
         // Sentence structure (multiple sentences often indicate better structure)
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        const sentences = text.split(/[.!?]+/)
         if (sentences.length >= 2) {
             score += 5;
         }
@@ -582,7 +583,7 @@ ${prompt}`;
     // Handle session reset
     function handleResetSession() {
         if (isProcessing) {
-            showError('Cannot reset while processing. Please wait.');
+            showNotification('Cannot reset while processing. Please wait.', 'error');
             return;
         }
 
@@ -592,7 +593,6 @@ ${prompt}`;
         promptOutput.value = '';
         
         // Reset UI states
-        clearStatus();
         updateCharCount();
         updateEnhanceButtonState();
         updateInputQualityScore();
@@ -611,7 +611,7 @@ ${prompt}`;
         // Focus on input field for new entry
         promptInput.focus();
         
-        showSuccess('Session has been reset successfully.');
+        showNotification('Session has been reset successfully.', 'success');
     }
 
     // Load prompt from library if available
@@ -623,10 +623,56 @@ ${prompt}`;
             updateCharCount();
             updateEnhanceButtonState();
             updateInputQualityScore();
-            showSuccess('Prompt loaded from library!');
+            showNotification('Prompt loaded from library!', 'success');
             
             // Focus on the input field
             promptInput.focus();
+        }
+    }
+
+    // Theme Management
+    function initTheme() {
+        // Check for saved theme preference or system preference
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        let theme = 'light'; // Default
+        
+        if (savedTheme) {
+            theme = savedTheme;
+        } else if (systemPrefersDark) {
+            theme = 'dark';
+        }
+        
+        applyTheme(theme);
+        
+        // Listen for system theme changes if no user preference is set
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+        showNotification(`${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`, 'success');
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        // Update icons
+        if (theme === 'dark') {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        } else {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
         }
     }
 
