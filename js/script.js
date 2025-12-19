@@ -203,6 +203,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Output field events
+        if (promptOutput) {
+            promptOutput.addEventListener('input', handleOutputChange);
+        }
+
         // Button events
         enhanceBtn.addEventListener('click', handleEnhancePrompt);
         if (themeToggleBtn) {
@@ -263,6 +268,13 @@ ${context}`);
         updateInputQualityScore();
     }
 
+    // Handle output field changes
+    function handleOutputChange() {
+        const score = calculateQualityScore(promptOutput.value);
+        updateQualityScoreDisplay(outputQualityScore, outputScoreFill, score);
+        copyOutputBtn.disabled = promptOutput.value.trim().length === 0;
+    }
+
     // Update character count
     function updateCharCount() {
         const fullText = getCombinedPrompt();
@@ -321,6 +333,7 @@ ${context}`);
 
             // Display results
             promptOutput.value = enhancedPrompt;
+            promptOutput.readOnly = false; // Make it editable
             copyOutputBtn.disabled = false;
             enhancementTime.textContent = `Enhanced in ${processingTime}s`;
             
@@ -541,6 +554,7 @@ ${prompt}`;
             loadingSpinner.style.display = 'block';
             promptInput.disabled = true;
             if(contextInput) contextInput.disabled = true;
+            if(promptOutput) promptOutput.readOnly = true;
         } else {
             btnText.style.display = 'inline';
             loadingSpinner.style.display = 'none';
@@ -798,6 +812,7 @@ ${prompt}`;
         promptInput.value = '';
         if(contextInput) contextInput.value = '';
         promptOutput.value = '';
+        promptOutput.readOnly = true;
         
         // Reset UI states
         updateCharCount();

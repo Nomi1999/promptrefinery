@@ -438,7 +438,7 @@ body.library-page {
 
 .temperature-fill {
     height: 100%;
-    background: linear-gradient(to right, var(--text-muted), var(--primary));
+    background: var(--primary);
     border-radius: var(--radius-full);
     transition: width 0.2s ease;
     width: 30%; /* Initial 0.3 temperature */
@@ -483,13 +483,13 @@ body.library-page {
     transform: translateY(1px);
 }
 
-/* Temperature Gradient Colors */
+/* Temperature Colors */
 .temperature-slider::-webkit-slider-thumb {
-    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    background: var(--primary);
 }
 
 .temperature-slider::-moz-range-thumb {
-    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    background: var(--primary);
 }
 
 /* Input Form & Textareas */
