@@ -554,19 +554,60 @@ ${prompt}`;
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
-        notification.textContent = message;
+        
+        // Create message container
+        const messageContainer = document.createElement('span');
+        messageContainer.textContent = message;
+        messageContainer.style.flex = '1';
+        messageContainer.style.paddingRight = '0.5rem';
+        
+        // Create close button
+        const closeButton = document.createElement('button');
+        closeButton.className = 'notification-close';
+        closeButton.setAttribute('aria-label', 'Close notification');
+        closeButton.innerHTML = `
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        `;
+        
+        // Add close button click handler
+        closeButton.addEventListener('click', () => {
+            dismissNotification(notification);
+        });
+        
+        // Assemble the notification
+        notification.appendChild(messageContainer);
+        notification.appendChild(closeButton);
         
         document.body.appendChild(notification);
         
-        // Remove after 3 seconds
-        setTimeout(() => {
+        // Auto-remove after 3 seconds
+        const autoRemoveTimeout = setTimeout(() => {
+            dismissNotification(notification);
+        }, 3000);
+        
+        // Store timeout reference for cleanup
+        notification.dataset.timeoutId = autoRemoveTimeout;
+    }
+    
+    // Dismiss notification function
+    function dismissNotification(notification) {
+        // Clear the auto-remove timeout
+        if (notification.dataset.timeoutId) {
+            clearTimeout(parseInt(notification.dataset.timeoutId));
+        }
+        
+        // Check if notification still exists and hasn't been dismissed yet
+        if (notification && notification.parentNode && !notification.classList.contains('slide-out')) {
             notification.classList.add('slide-out');
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.parentNode.removeChild(notification);
                 }
             }, 300);
-        }, 3000);
+        }
     }
 
     // Utility functions
@@ -826,7 +867,7 @@ ${prompt}`;
         
         applyTheme(newTheme);
         localStorage.setItem('theme', newTheme);
-        showNotification(`${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`, 'success');
+        showNotification(`${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`, 'info');
     }
 
     function applyTheme(theme) {
