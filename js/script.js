@@ -839,24 +839,17 @@ ${prompt}`;
 
     // Theme Management
     function initTheme() {
-        // Check for saved theme preference or system preference
-        const savedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // Get the theme that was applied by the inline script
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         
-        let theme = 'light'; // Default
-        
-        if (savedTheme) {
-            theme = savedTheme;
-        } else if (systemPrefersDark) {
-            theme = 'dark';
-        }
-        
-        applyTheme(theme);
+        // Ensure icons are in sync with the current theme
+        updateThemeIcons(currentTheme);
         
         // Listen for system theme changes if no user preference is set
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
             if (!localStorage.getItem('theme')) {
-                applyTheme(e.matches ? 'dark' : 'light');
+                const newTheme = e.matches ? 'dark' : 'light';
+                applyTheme(newTheme);
             }
         });
     }
@@ -872,7 +865,10 @@ ${prompt}`;
 
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
-        
+        updateThemeIcons(theme);
+    }
+    
+    function updateThemeIcons(theme) {
         // Update icons
         if (theme === 'dark') {
             sunIcon.style.display = 'block';
