@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
 
+    // Notification system state
+    let activeNotification = null;
+    let notificationQueue = [];
+    let isNotificationAnimating = false;
+
     // Prompt templates data
     const promptTemplates = [
         {
@@ -1168,8 +1173,29 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         }
     }
 
-// Show notification message
+    // Show notification message
     function showNotification(message, type = 'success') {
+        // If we are currently animating a transition, queue the new notification
+        if (isNotificationAnimating) {
+            notificationQueue.push({ message, type });
+            return;
+        }
+        
+        // If there is an active notification, dismiss it first
+        if (activeNotification) {
+            notificationQueue.push({ message, type });
+            dismissNotification(activeNotification);
+            return;
+        }
+
+        // Otherwise show immediately
+        displayNotification(message, type);
+    }
+
+    // Internal function to display the notification
+    function displayNotification(message, type) {
+        isNotificationAnimating = true;
+
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
@@ -1201,6 +1227,16 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         notification.appendChild(closeButton);
         
         document.body.appendChild(notification);
+        activeNotification = notification;
+        
+        // Reset animation flag after slide-in (approx 300ms)
+        setTimeout(() => {
+            isNotificationAnimating = false;
+            // If queue built up during slide-in, process it
+            if (notificationQueue.length > 0) {
+                dismissNotification(notification);
+            }
+        }, 350);
         
         // Auto-remove after 3 seconds
         const autoRemoveTimeout = setTimeout(() => {
@@ -1213,22 +1249,34 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
     
     // Dismiss notification function
     function dismissNotification(notification) {
+        if (!notification || notification.classList.contains('slide-out')) return;
+
         // Clear the auto-remove timeout
         if (notification.dataset.timeoutId) {
             clearTimeout(parseInt(notification.dataset.timeoutId));
         }
         
-        // Check if notification still exists and hasn't been dismissed yet
-        if (notification && notification.parentNode && !notification.classList.contains('slide-out')) {
-            notification.classList.add('slide-out');
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 300);
-        }
-    }
+        isNotificationAnimating = true;
+        notification.classList.add('slide-out');
+        
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+            
+            if (activeNotification === notification) {
+                activeNotification = null;
+            }
+            
+            isNotificationAnimating = false;
 
+            // Process next notification in queue
+            if (notificationQueue.length > 0) {
+                const next = notificationQueue.shift();
+                displayNotification(next.message, next.type);
+            }
+        }, 300);
+    }
     // Theme Management
     function initTheme() {
         // Get the theme that was applied by the inline script
