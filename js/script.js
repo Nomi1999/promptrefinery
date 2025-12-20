@@ -473,15 +473,60 @@ RULES:
                 feedbackText = parsedResponse.feedback || '';
             } catch (e) {
                 console.error('Failed to parse JSON response:', e);
-                // Fallback: try to extract text if JSON parsing fails
-                // This is a simple fallback that assumes the model might have just outputted text
-                enhancedText = fullResponse;
-                feedbackText = {
-                    summary: "The prompt was enhanced to provide more clarity and structure.",
-                    improvements: [
-                        { category: "general", text: "Improved overall structure and clarity" }
-                    ]
-                };
+                
+                // Attempt to extract using Regex if JSON parse fails (common with LLMs putting newlines in strings)
+                // Regex matches: "enhanced_prompt": "..." handling escaped quotes
+                const promptMatch = fullResponse.match(/"enhanced_prompt"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+                
+                if (promptMatch && promptMatch[1]) {
+                    console.log('Successfully extracted prompt using regex fallback');
+                    enhancedText = promptMatch[1];
+                    
+                    // Unescape JSON string content manually since we didn't use JSON.parse
+                    enhancedText = enhancedText
+                        .replace(/\\n/g, '\n')
+                        .replace(/\\r/g, '\r')
+                        .replace(/\\t/g, '\t')
+                        .replace(/\\"/g, '"')
+                        .replace(/\\\\/g, '\\');
+                        
+                    // Try to extract feedback as well
+                    // We look for "feedback": { ... }
+                    // This is simple and might fail on nested braces, but covers most cases
+                    const feedbackMatch = fullResponse.match(/"feedback"\s*:\s*(\{[\s\S]*?\})\s*$/) ||
+                                          fullResponse.match(/"feedback"\s*:\s*(\{[\s\S]*?\})\s*\}/);
+                                          
+                    if (feedbackMatch && feedbackMatch[1]) {
+                        try {
+                            // Try to parse just the feedback object
+                            // We might need to clean it too if it has issues
+                            feedbackText = JSON.parse(feedbackMatch[1]);
+                        } catch (fe) {
+                            // If feedback parse fails, use default
+                            console.warn('Failed to parse extracted feedback JSON', fe);
+                        }
+                    }
+                    
+                    // If we didn't get feedbackText from the above, use default
+                    if (!feedbackText || typeof feedbackText !== 'object') {
+                         feedbackText = {
+                            summary: "The prompt was enhanced to provide more clarity and structure.",
+                            improvements: [
+                                { category: "general", text: "Improved overall structure and clarity" }
+                            ]
+                        };
+                    }
+                } else {
+                    // Fallback: try to extract text if JSON parsing fails and regex fails
+                    // This is a simple fallback that assumes the model might have just outputted text
+                    enhancedText = fullResponse;
+                    feedbackText = {
+                        summary: "The prompt was enhanced to provide more clarity and structure.",
+                        improvements: [
+                            { category: "general", text: "Improved overall structure and clarity" }
+                        ]
+                    };
+                }
             }
 
             // Clean up the prompt part
