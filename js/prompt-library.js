@@ -1055,14 +1055,15 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
             });
         });
 
-        document.querySelectorAll('.use-prompt-btn').forEach(btn => {
+// Only add listeners to grid buttons (not modal buttons)
+        document.querySelectorAll('.prompt-card .use-prompt-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent modal from opening
                 handleUsePrompt(e);
             });
         });
 
-        document.querySelectorAll('.copy-prompt-btn').forEach(btn => {
+        document.querySelectorAll('.prompt-card .copy-prompt-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent modal from opening
                 handleCopyPrompt(e);
