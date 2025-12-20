@@ -662,6 +662,8 @@ body.library-page {
 .feedback-section {
     border-top: 1px solid var(--border);
     background-color: var(--bg-card);
+    position: relative;
+    z-index: 10;
 }
 
 .feedback-toggle {
@@ -718,6 +720,73 @@ body.library-page {
 
 .feedback-body p:last-child {
     margin-bottom: 0;
+}
+
+/* Enhanced Feedback Styles */
+.feedback-summary {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.feedback-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.feedback-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.feedback-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    min-width: 110px;
+    text-align: center;
+}
+
+.feedback-text {
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* Feedback Category Colors */
+.tag-clarity { background-color: rgba(59, 130, 246, 0.1); color: #2563eb; }
+.tag-specificity { background-color: rgba(16, 185, 129, 0.1); color: #059669; }
+.tag-structure { background-color: rgba(139, 92, 246, 0.1); color: #7c3aed; }
+.tag-context { background-color: rgba(245, 158, 11, 0.1); color: #d97706; }
+.tag-constraints { background-color: rgba(239, 68, 68, 0.1); color: #dc2626; }
+.tag-style { background-color: rgba(236, 72, 153, 0.1); color: #db2777; }
+.tag-effectiveness { background-color: rgba(6, 182, 212, 0.1); color: #0891b2; } /* Cyan */
+.tag-user-experience { background-color: rgba(124, 58, 237, 0.1); color: #7c3aed; } /* Violet */
+.tag-general { background-color: var(--bg-subtle); color: var(--text-muted); }
+
+/* Dark Mode Tag Colors */
+@media (prefers-color-scheme: dark) {
+    .tag-clarity { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .tag-specificity { background-color: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .tag-structure { background-color: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+    .tag-context { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .tag-constraints { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
+    .tag-style { background-color: rgba(236, 72, 153, 0.2); color: #f472b6; }
+    .tag-effectiveness { background-color: rgba(6, 182, 212, 0.2); color: #22d3ee; }
+    .tag-user-experience { background-color: rgba(124, 58, 237, 0.2); color: #a78bfa; }
 }
 
 /* Panel Footer */

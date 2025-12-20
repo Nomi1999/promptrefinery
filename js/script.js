@@ -356,7 +356,7 @@ ${context}`);
             
             // Update feedback section
             if (feedback && feedbackBody) {
-                feedbackBody.innerHTML = feedback;
+                renderFeedback(feedback);
                 feedbackToggle.disabled = false;
                 // Automatically open feedback if it's the first time or user preference (optional)
                 // For now, we keep it closed by default as per design patterns
@@ -415,13 +415,22 @@ ${context}`);
 You MUST respond with a valid JSON object in the following format:
 {
   "enhanced_prompt": "The enhanced version of the prompt",
-  "feedback": "Brief explanation of changes and why they improve the prompt (2-3 sentences max)"
+  "feedback": {
+    "summary": "Brief overview of changes (1 sentence)",
+    "improvements": [
+      {
+        "category": "clarity|specificity|structure|context|constraints|style",
+        "text": "Specific improvement made"
+      }
+    ]
+  }
 }
 
 RULES:
 1. The "enhanced_prompt" must be the direct prompt text, ready to use.
-2. The "feedback" should be concise and helpful.
-3. NO conversational fillers or markdown formatting outside the JSON.`
+2. The "feedback" object must contain a summary and list of specific improvements.
+3. Provide 2-4 specific improvements.
+4. NO conversational fillers or markdown formatting outside the JSON.`
                         },
                         {
                             role: 'user',
@@ -467,7 +476,12 @@ RULES:
                 // Fallback: try to extract text if JSON parsing fails
                 // This is a simple fallback that assumes the model might have just outputted text
                 enhancedText = fullResponse;
-                feedbackText = "The prompt was enhanced to provide more clarity and structure.";
+                feedbackText = {
+                    summary: "The prompt was enhanced to provide more clarity and structure.",
+                    improvements: [
+                        { category: "general", text: "Improved overall structure and clarity" }
+                    ]
+                };
             }
 
             // Clean up the prompt part
@@ -513,28 +527,51 @@ RULES:
         const promptType = detectPromptType(originalPrompt);
         
         let enhancement = originalPrompt;
-        let feedback = "";
+        let feedback = {
+            summary: "",
+            improvements: []
+        };
         
         switch(promptType) {
             case 'creative':
                 enhancement += `\n\nPlease provide a creative and imaginative response with unique insights and original ideas. Use descriptive language and engaging storytelling techniques.`;
-                feedback = "Added directives for creativity, imagination, and descriptive language to encourage more engaging output.";
+                feedback.summary = "Enhanced for creativity and engagement.";
+                feedback.improvements = [
+                    { category: "style", text: "Added directives for imagination and descriptive language" },
+                    { category: "structure", text: "Requested unique insights and original ideas" }
+                ];
                 break;
             case 'technical':
                 enhancement += `\n\nPlease provide a technically accurate and detailed explanation. Include relevant code examples, technical specifications, and step-by-step instructions where applicable.`;
-                feedback = "Added requirements for technical accuracy, code examples, and specifications to ensure a robust technical response.";
+                feedback.summary = "Enhanced for technical accuracy and detail.";
+                feedback.improvements = [
+                    { category: "specificity", text: "Added requirements for technical accuracy and specifications" },
+                    { category: "structure", text: "Requested code examples and step-by-step instructions" }
+                ];
                 break;
             case 'explanatory':
                 enhancement += `\n\nPlease provide a comprehensive explanation with clear structure. Use headings, bullet points, and examples to make the content easy to understand.`;
-                feedback = "Added requests for structure, headings, and examples to make the explanation more comprehensive and easier to follow.";
+                feedback.summary = "Enhanced for clarity and comprehension.";
+                feedback.improvements = [
+                    { category: "structure", text: "Added requests for headings and bullet points" },
+                    { category: "clarity", text: "Requested examples to improve understanding" }
+                ];
                 break;
             case 'instructional':
                 enhancement += `\n\nPlease provide detailed, step-by-step instructions. Include prerequisites, common pitfalls, and best practices for successful implementation.`;
-                feedback = "Added structure for step-by-step instructions, including prerequisites and best practices to ensure successful implementation.";
+                feedback.summary = "Enhanced for actionable instruction.";
+                feedback.improvements = [
+                    { category: "structure", text: "Added step-by-step instruction requirements" },
+                    { category: "context", text: "Included prerequisites and best practices" }
+                ];
                 break;
             default:
                 enhancement += `\n\nPlease provide a detailed and comprehensive response that thoroughly addresses the topic. Include relevant examples, context, and practical applications.`;
-                feedback = "Expanded the prompt to request a more detailed and comprehensive response with relevant context and examples.";
+                feedback.summary = "Enhanced for comprehensiveness.";
+                feedback.improvements = [
+                    { category: "detail", text: "Expanded request for detailed coverage" },
+                    { category: "context", text: "Added requests for relevant examples and context" }
+                ];
         }
         
         return {
@@ -961,6 +998,41 @@ RULES:
         const isExpanded = feedbackToggle.getAttribute('aria-expanded') === 'true';
         feedbackToggle.setAttribute('aria-expanded', !isExpanded);
         feedbackContent.hidden = isExpanded;
+    }
+
+    // Render structured feedback
+    function renderFeedback(feedback) {
+        if (!feedbackBody) return;
+        
+        // Handle legacy string feedback (backward compatibility)
+        if (typeof feedback === 'string') {
+            feedbackBody.innerHTML = `<p>${feedback}</p>`;
+            return;
+        }
+        
+        const summary = feedback.summary || "Here's how your prompt was improved:";
+        const improvements = feedback.improvements || [];
+        
+        let html = `<div class="feedback-summary">${summary}</div>`;
+        
+        if (improvements.length > 0) {
+            html += `<ul class="feedback-list">`;
+            improvements.forEach(item => {
+                const categoryName = item.category ? item.category : 'General';
+                const normalizedCategory = categoryName.toLowerCase().replace(/\s+/g, '-');
+                const categoryClass = `tag-${normalizedCategory}`;
+                
+                html += `
+                    <li class="feedback-item">
+                        <span class="feedback-tag ${categoryClass}">${categoryName}</span>
+                        <span class="feedback-text">${item.text}</span>
+                    </li>
+                `;
+            });
+            html += `</ul>`;
+        }
+        
+        feedbackBody.innerHTML = html;
     }
 
     // Load prompt from library if available
