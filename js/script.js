@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
     
+    // Feedback Elements
+    const feedbackToggle = document.getElementById('feedback-toggle');
+    const feedbackContent = document.getElementById('feedback-content');
+    const feedbackBody = document.getElementById('feedback-body');
+
     // Temperature Control Elements
     const temperatureSlider = document.getElementById('temperature-slider');
     const temperatureValue = document.getElementById('temperature-value');
@@ -222,6 +227,11 @@ document.addEventListener('DOMContentLoaded', function() {
         copyInputBtn.addEventListener('click', () => copyToClipboard(getCombinedPrompt(), 'input'));
         copyOutputBtn.addEventListener('click', () => copyToClipboard(promptOutput.value, 'output'));
         
+        // Feedback toggle
+        if (feedbackToggle) {
+            feedbackToggle.addEventListener('click', toggleFeedback);
+        }
+
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             // Ctrl/Cmd + Enter to enhance
@@ -330,7 +340,9 @@ ${context}`);
             const startTime = performance.now();
 
             // Call UncloseAI Hermes model
-            const enhancedPrompt = await enhancePromptWithUncloseAI(originalPrompt);
+            const result = await enhancePromptWithUncloseAI(originalPrompt);
+            const enhancedPrompt = result.prompt;
+            const feedback = result.feedback;
 
             // Calculate processing time
             const endTime = performance.now();
@@ -342,6 +354,17 @@ ${context}`);
             copyOutputBtn.disabled = false;
             enhancementTime.textContent = `Enhanced in ${processingTime}s`;
             
+            // Update feedback section
+            if (feedback && feedbackBody) {
+                feedbackBody.innerHTML = feedback;
+                feedbackToggle.disabled = false;
+                // Automatically open feedback if it's the first time or user preference (optional)
+                // For now, we keep it closed by default as per design patterns
+            } else {
+                feedbackToggle.disabled = true;
+                if (feedbackBody) feedbackBody.innerHTML = '';
+            }
+
             // Calculate and display quality scores
             const inputScore = calculateQualityScore(originalPrompt);
             const outputScore = calculateQualityScore(enhancedPrompt);
@@ -373,11 +396,6 @@ ${context}`);
         console.log('Starting prompt enhancement for:', prompt);
         
         try {
-            // Create the enhancement prompt using the specified system prompt format
-            const enhancementPrompt = `Generate an enhanced version of this prompt (reply with only the enhanced prompt - no conversation, explanations, lead-in, bullet points, placeholders, or surrounding quotes):
-
-${prompt}`;
-
             console.log('Sending request to UncloseAI API...');
             
             // Call UncloseAI Hermes API directly with correct format
@@ -392,14 +410,25 @@ ${prompt}`;
                     messages: [
                         {
                             role: 'system',
-                            content: 'You are a prompt enhancement expert. Your task is to generate an enhanced version of the user\'s prompt. CRITICAL RULES: 1) Reply with ONLY the enhanced prompt text 2) NEVER include phrases like "Here is the enhanced prompt", "The enhanced prompt is", "Here\'s", or any similar introductions 3) NO explanations, conversations, or meta-commentary 4) NO bullet points or numbered lists 5) NO surrounding quotes 6) Start immediately with the enhanced prompt content'
+                            content: `You are a prompt enhancement expert. Your task is to generate an enhanced version of the user's prompt AND provide feedback on what was improved.
+
+You MUST respond with a valid JSON object in the following format:
+{
+  "enhanced_prompt": "The enhanced version of the prompt",
+  "feedback": "Brief explanation of changes and why they improve the prompt (2-3 sentences max)"
+}
+
+RULES:
+1. The "enhanced_prompt" must be the direct prompt text, ready to use.
+2. The "feedback" should be concise and helpful.
+3. NO conversational fillers or markdown formatting outside the JSON.`
                         },
                         {
                             role: 'user',
-                            content: `Generate an enhanced version of this prompt (reply with only the enhanced prompt - no conversation, explanations, lead-in, bullet points, placeholders, or surrounding quotes):\n\n${prompt}`
+                            content: `Enhance this prompt and provide feedback:\n\n${prompt}`
                         }
                     ],
-                    max_tokens: 300,
+                    max_tokens: 500, // Increased to ensure full JSON fits
                     temperature: currentTemperature
                 })
             });
@@ -415,24 +444,45 @@ ${prompt}`;
             const data = await response.json();
             console.log('API response data:', data);
             
-            let enhancedText = data.choices?.[0]?.message?.content || '';
+            let fullResponse = data.choices?.[0]?.message?.content || '';
 
-            if (!enhancedText || enhancedText.trim().length === 0) {
+            if (!fullResponse || fullResponse.trim().length === 0) {
                 console.error('Received empty response from AI');
                 throw new Error('Received empty response from AI');
             }
 
-            // Clean up the response
+            // Parse JSON response
+            let enhancedText = '';
+            let feedbackText = '';
+
+            try {
+                // Remove potential markdown code blocks if present
+                const cleanJson = fullResponse.replace(/```json\n?|\n?```/g, '').trim();
+                const parsedResponse = JSON.parse(cleanJson);
+                
+                enhancedText = parsedResponse.enhanced_prompt || '';
+                feedbackText = parsedResponse.feedback || '';
+            } catch (e) {
+                console.error('Failed to parse JSON response:', e);
+                // Fallback: try to extract text if JSON parsing fails
+                // This is a simple fallback that assumes the model might have just outputted text
+                enhancedText = fullResponse;
+                feedbackText = "The prompt was enhanced to provide more clarity and structure.";
+            }
+
+            // Clean up the prompt part
             enhancedText = enhancedText.trim();
             
-            // Remove any common prefixes if present (more comprehensive list)
+            // Remove any common prefixes if present (just in case)
             enhancedText = enhancedText.replace(/^(Enhanced prompt:|Here's the enhanced prompt:|Improved prompt:|Here is the enhanced prompt:|The enhanced prompt is:)\s*/i, '');
             
             // Remove any conversational lead-ins
             enhancedText = enhancedText.replace(/^(Here is|Here's|The following is|This is the)\s+(enhanced\s+)?prompt\s*:?\s*/i, '');
             
-            // Remove any quotes around the text
-            enhancedText = enhancedText.replace(/^["']|["']$/g, '');
+            // Remove any quotes around the text (only if they wrap the entire text)
+            if (enhancedText.startsWith('"') && enhancedText.endsWith('"')) {
+                enhancedText = enhancedText.slice(1, -1);
+            }
             
             console.log('Cleaned enhanced text:', enhancedText);
             
@@ -441,15 +491,19 @@ ${prompt}`;
             }
             
             console.log('Successfully enhanced prompt using Hermes API');
-            return enhancedText;
+            
+            return {
+                prompt: enhancedText,
+                feedback: feedbackText
+            };
 
         } catch (error) {
             console.error('UncloseAI API error:', error);
             showNotification('Using fallback enhancement due to API issues', 'warning');
             
             // Fallback enhancement if API fails
-            const fallbackEnhancement = createFallbackEnhancement(prompt);
-            return fallbackEnhancement;
+            const fallbackResult = createFallbackEnhancement(prompt);
+            return fallbackResult;
         }
     }
 
@@ -459,25 +513,34 @@ ${prompt}`;
         const promptType = detectPromptType(originalPrompt);
         
         let enhancement = originalPrompt;
+        let feedback = "";
         
         switch(promptType) {
             case 'creative':
                 enhancement += `\n\nPlease provide a creative and imaginative response with unique insights and original ideas. Use descriptive language and engaging storytelling techniques.`;
+                feedback = "Added directives for creativity, imagination, and descriptive language to encourage more engaging output.";
                 break;
             case 'technical':
                 enhancement += `\n\nPlease provide a technically accurate and detailed explanation. Include relevant code examples, technical specifications, and step-by-step instructions where applicable.`;
+                feedback = "Added requirements for technical accuracy, code examples, and specifications to ensure a robust technical response.";
                 break;
             case 'explanatory':
                 enhancement += `\n\nPlease provide a comprehensive explanation with clear structure. Use headings, bullet points, and examples to make the content easy to understand.`;
+                feedback = "Added requests for structure, headings, and examples to make the explanation more comprehensive and easier to follow.";
                 break;
             case 'instructional':
                 enhancement += `\n\nPlease provide detailed, step-by-step instructions. Include prerequisites, common pitfalls, and best practices for successful implementation.`;
+                feedback = "Added structure for step-by-step instructions, including prerequisites and best practices to ensure successful implementation.";
                 break;
             default:
                 enhancement += `\n\nPlease provide a detailed and comprehensive response that thoroughly addresses the topic. Include relevant examples, context, and practical applications.`;
+                feedback = "Expanded the prompt to request a more detailed and comprehensive response with relevant context and examples.";
         }
         
-        return enhancement;
+        return {
+            prompt: enhancement,
+            feedback: feedback
+        };
     }
     
     // Detect the type of prompt to provide better fallback enhancements
@@ -863,6 +926,14 @@ ${prompt}`;
         promptOutput.value = '';
         promptOutput.readOnly = true;
         
+        // Reset feedback
+        if (feedbackBody) feedbackBody.innerHTML = '';
+        if (feedbackToggle) {
+            feedbackToggle.disabled = true;
+            feedbackToggle.setAttribute('aria-expanded', 'false');
+            feedbackContent.hidden = true;
+        }
+
         // Reset UI states
         updateCharCount();
         updateEnhanceButtonState();
@@ -883,6 +954,13 @@ ${prompt}`;
         promptInput.focus();
         
         showNotification('Session has been reset successfully.', 'success');
+    }
+
+    // Toggle feedback visibility
+    function toggleFeedback() {
+        const isExpanded = feedbackToggle.getAttribute('aria-expanded') === 'true';
+        feedbackToggle.setAttribute('aria-expanded', !isExpanded);
+        feedbackContent.hidden = isExpanded;
     }
 
     // Load prompt from library if available

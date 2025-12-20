@@ -658,6 +658,68 @@ body.library-page {
     box-shadow: none;
 }
 
+/* Feedback Section */
+.feedback-section {
+    border-top: 1px solid var(--border);
+    background-color: var(--bg-card);
+}
+
+.feedback-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: var(--transition);
+    text-align: left;
+}
+
+.feedback-toggle:hover:not(:disabled) {
+    color: var(--text-main);
+    background-color: var(--bg-subtle);
+}
+
+.feedback-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.toggle-icon {
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.feedback-toggle[aria-expanded="true"] .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.feedback-content {
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.feedback-body {
+    padding: 0 var(--space-5) var(--space-4) var(--space-5);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.feedback-body p {
+    margin-bottom: 0.75rem;
+}
+
+.feedback-body p:last-child {
+    margin-bottom: 0;
+}
+
 /* Panel Footer */
 .panel-footer {
     padding: var(--space-3) var(--space-5);

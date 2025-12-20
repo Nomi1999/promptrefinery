@@ -271,6 +271,23 @@
                     ></textarea>
                 </div>
 
+                <!-- Feedback Section -->
+                <div class="feedback-section">
+                    <button class="feedback-toggle" id="feedback-toggle" aria-expanded="false" disabled>
+                        <span class="toggle-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                        <span class="toggle-text">Why this is better</span>
+                    </button>
+                    <div class="feedback-content" id="feedback-content" hidden>
+                        <div class="feedback-body" id="feedback-body">
+                            <!-- Feedback will be injected here -->
+                        </div>
+                    </div>
+                </div>
+
                 <div class="panel-footer">
                     <div class="output-info">
                         <span id="enhancement-time"></span>
