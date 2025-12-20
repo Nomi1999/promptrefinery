@@ -1,25 +1,25 @@
 /* Modern Minimalistic Theme - "The Architect" */
 :root {
     /* Color Palette - Tomato & Parchment */
-    --primary: #f06449; 
-    --primary-hover: #d95a42; 
+    --primary: #f06449;
+    --primary-hover: #d95a42;
     --primary-foreground: #ffffff;
-    
-    --bg-body: #ede6e3; 
+
+    --bg-body: #ede6e3;
     --bg-card: #ffffff;
     --bg-subtle: #dadad9;
     --bg-input: #ffffff;
-    
+
     --text-main: #36382e;
     --text-muted: #5a5d4d;
     --text-light: #828672;
-    
+
     --border: #dadad9;
     --border-hover: #828672;
-    
-    --success: #10b981; 
+
+    --success: #10b981;
     --success-bg: #ecfdf5;
-    --error: #ef4444; 
+    --error: #ef4444;
     --warning: #f59e0b;
     --info: #5bc3eb;
 
@@ -28,7 +28,7 @@
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-full: 9999px;
-    
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
@@ -42,21 +42,30 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --primary: #ffffff;
-        --primary-hover: #e4e4e7; /* Zinc 200 */
+        --primary-hover: #e4e4e7;
+        /* Zinc 200 */
         --primary-foreground: #09090b;
-        
-        --bg-body: #09090b; /* Zinc 950 */
-        --bg-card: #18181b; /* Zinc 900 */
-        --bg-subtle: #27272a; /* Zinc 800 */
+
+        --bg-body: #09090b;
+        /* Zinc 950 */
+        --bg-card: #18181b;
+        /* Zinc 900 */
+        --bg-subtle: #27272a;
+        /* Zinc 800 */
         --bg-input: #18181b;
-        
-        --text-main: #fafafa; /* Zinc 50 */
-        --text-muted: #a1a1aa; /* Zinc 400 */
-        --text-light: #52525b; /* Zinc 600 */
-        
-        --border: #27272a; /* Zinc 800 */
-        --border-hover: #3f3f46; /* Zinc 700 */
-        
+
+        --text-main: #fafafa;
+        /* Zinc 50 */
+        --text-muted: #a1a1aa;
+        /* Zinc 400 */
+        --text-light: #52525b;
+        /* Zinc 600 */
+
+        --border: #27272a;
+        /* Zinc 800 */
+        --border-hover: #3f3f46;
+        /* Zinc 700 */
+
         --success: #34d399;
         --success-bg: rgba(16, 185, 129, 0.1);
         --shadow-sm: none;
@@ -85,9 +94,11 @@ body {
 /* Layout Utilities */
 body.app-main {
     height: 100vh;
+    /* Fixed height on desktop */
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    /* No scrolling on desktop */
 }
 
 body.library-page {
@@ -97,11 +108,14 @@ body.library-page {
 .app-container {
     width: 100%;
     height: 100%;
+    /* Fixed height on desktop */
     display: flex;
     flex-direction: column;
     padding: 1rem 2rem;
     max-width: 1800px;
     margin: 0 auto;
+    overflow-x: auto;
+    /* Enable horizontal scroll at high zoom */
 }
 
 /* Header - Simplified */
@@ -133,11 +147,14 @@ body.library-page {
 
 /* Main Layout */
 .main-wrapper {
-    flex: 1;
+    flex: 1 1 auto;
+    /* Allow shrinking and growing */
     display: flex;
     gap: 3rem;
     min-height: 0;
     padding-bottom: 2rem;
+    overflow-x: auto;
+    /* Enable horizontal scroll at high zoom */
 }
 
 /* Sidebar - Floating, Minimal */
@@ -228,7 +245,8 @@ body.library-page {
     border-radius: var(--radius-lg);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: auto;
+    /* Changed from hidden to allow scrolling */
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
     box-shadow: var(--shadow-sm);
 }
@@ -305,14 +323,27 @@ body.library-page {
     border-radius: var(--radius-full);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease;
     width: 0%;
-    background-color: var(--text-muted); /* Default neutral */
+    background-color: var(--text-muted);
+    /* Default neutral */
 }
 
 /* Semantic Score Colors */
-.score-fill.low { background-color: var(--error); }
-.score-fill.medium { background-color: var(--warning); }
-.score-fill.good { background-color: var(--text-main); } /* Good is standard/black */
-.score-fill.excellent { background-color: var(--success); }
+.score-fill.low {
+    background-color: var(--error);
+}
+
+.score-fill.medium {
+    background-color: var(--warning);
+}
+
+.score-fill.good {
+    background-color: var(--text-main);
+}
+
+/* Good is standard/black */
+.score-fill.excellent {
+    background-color: var(--success);
+}
 
 /* Score Improvement Badge */
 .score-improvement {
@@ -441,7 +472,8 @@ body.library-page {
     background: var(--primary);
     border-radius: var(--radius-full);
     transition: width 0.2s ease;
-    width: 30%; /* Initial 0.3 temperature */
+    width: 30%;
+    /* Initial 0.3 temperature */
 }
 
 .temperature-presets {
@@ -499,13 +531,15 @@ body.library-page {
     display: flex;
     flex-direction: column;
     background-color: var(--bg-card);
-    min-height: 0; /* Important for scrolling */
+    min-height: 0;
+    /* Important for scrolling */
 }
 
 /* New Input Styles */
 .input-form-wrapper {
     flex: 1;
-    overflow-y: hidden; /* Prevent wrapper scroll, let textarea scroll */
+    overflow-y: auto;
+    /* Allow scrolling when content overflows */
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
@@ -576,9 +610,11 @@ body.library-page {
 }
 
 .main-input {
-    height: 160px; /* Fixed height for main input */
+    height: 160px;
+    /* Fixed height for main input */
     font-size: 1rem;
-    flex-shrink: 0; /* Don't shrink */
+    flex-shrink: 0;
+    /* Don't shrink */
 }
 
 .secondary-input {
@@ -695,7 +731,8 @@ body.library-page {
     border-color: var(--border-hover);
 }
 
-.char-count, .output-info {
+.char-count,
+.output-info {
     font-size: 0.75rem;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
@@ -709,14 +746,30 @@ body.library-page {
     animation: fadeIn 0.3s ease;
 }
 
-.status-message.success { color: var(--success); }
-.status-message.error { color: var(--error); }
-.status-message.processing { color: var(--text-muted); }
-.status-message.warning { color: var(--warning); }
+.status-message.success {
+    color: var(--success);
+}
+
+.status-message.error {
+    color: var(--error);
+}
+
+.status-message.processing {
+    color: var(--text-muted);
+}
+
+.status-message.warning {
+    color: var(--warning);
+}
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 /* Toast Notification Styles - Theme-Harmonized */
@@ -747,30 +800,42 @@ body.library-page {
 }
 
 .notification.success {
-    background-color: #dcfce7; /* Solid light green background */
-    color: #166534; /* Dark green text for contrast */
-    border-color: #22c55e; /* Green border */
+    background-color: #dcfce7;
+    /* Solid light green background */
+    color: #166534;
+    /* Dark green text for contrast */
+    border-color: #22c55e;
+    /* Green border */
     box-shadow: var(--shadow-lg);
 }
 
 .notification.error {
-    background-color: #fef2f2; /* Solid light red background */
-    color: #991b1b; /* Dark red text for contrast */
-    border-color: #ef4444; /* Red border */
+    background-color: #fef2f2;
+    /* Solid light red background */
+    color: #991b1b;
+    /* Dark red text for contrast */
+    border-color: #ef4444;
+    /* Red border */
     box-shadow: var(--shadow-lg);
 }
 
 .notification.warning {
-    background-color: #fffbeb; /* Solid light amber background */
-    color: #92400e; /* Dark amber text for contrast */
-    border-color: #f59e0b; /* Amber border */
+    background-color: #fffbeb;
+    /* Solid light amber background */
+    color: #92400e;
+    /* Dark amber text for contrast */
+    border-color: #f59e0b;
+    /* Amber border */
     box-shadow: var(--shadow-lg);
 }
 
 .notification.info {
-    background-color: var(--bg-card); /* Solid card background */
-    color: var(--text-main); /* Main text color */
-    border-color: var(--border); /* Standard border */
+    background-color: var(--bg-card);
+    /* Solid card background */
+    color: var(--text-main);
+    /* Main text color */
+    border-color: var(--border);
+    /* Standard border */
     box-shadow: var(--shadow-lg);
 }
 
@@ -782,28 +847,37 @@ body.library-page {
         color: var(--text-main);
         box-shadow: var(--shadow-lg);
     }
-    
+
     .notification.success {
-        background-color: #064e3b; /* Solid dark green background */
-        color: #6ee7b7; /* Light green text for contrast */
-        border-color: #10b981; /* Green border */
+        background-color: #064e3b;
+        /* Solid dark green background */
+        color: #6ee7b7;
+        /* Light green text for contrast */
+        border-color: #10b981;
+        /* Green border */
         box-shadow: none;
     }
-    
+
     .notification.error {
-        background-color: #7f1d1d; /* Solid dark red background */
-        color: #fca5a5; /* Light red text for contrast */
-        border-color: #ef4444; /* Red border */
+        background-color: #7f1d1d;
+        /* Solid dark red background */
+        color: #fca5a5;
+        /* Light red text for contrast */
+        border-color: #ef4444;
+        /* Red border */
         box-shadow: none;
     }
-    
+
     .notification.warning {
-        background-color: #78350f; /* Solid dark amber background */
-        color: #fcd34d; /* Light amber text for contrast */
-        border-color: #f59e0b; /* Amber border */
+        background-color: #78350f;
+        /* Solid dark amber background */
+        color: #fcd34d;
+        /* Light amber text for contrast */
+        border-color: #f59e0b;
+        /* Amber border */
         box-shadow: none;
     }
-    
+
     .notification.info {
         background-color: var(--bg-card);
         border-color: var(--border);
@@ -825,7 +899,8 @@ body.library-page {
     height: 28px;
     background: rgba(0, 0, 0, 0.2);
     border: 2px solid transparent;
-    color: #000000; /* Maximum visibility */
+    color: #000000;
+    /* Maximum visibility */
     cursor: pointer;
     padding: 4px;
     display: flex;
@@ -834,7 +909,8 @@ body.library-page {
     border-radius: var(--radius-full);
     transition: all 0.2s ease;
     flex-shrink: 0;
-    z-index: 1001; /* Ensure it's above notification content */
+    z-index: 1001;
+    /* Ensure it's above notification content */
 }
 
 .notification-close:hover {
@@ -850,7 +926,8 @@ body.library-page {
 .notification-close svg {
     width: 16px;
     height: 16px;
-    stroke-width: 4px; /* Maximum thickness for visibility */
+    stroke-width: 4px;
+    /* Maximum thickness for visibility */
     stroke-linecap: round;
     stroke-linejoin: round;
 }
@@ -858,7 +935,8 @@ body.library-page {
 /* Notification type-specific close button styling */
 .notification.success .notification-close {
     background: rgba(34, 197, 94, 0.15);
-    color: #064e3b; /* Darker green */
+    color: #064e3b;
+    /* Darker green */
     border-color: rgba(34, 197, 94, 0.3);
 }
 
@@ -870,7 +948,8 @@ body.library-page {
 
 .notification.error .notification-close {
     background: rgba(239, 68, 68, 0.15);
-    color: #7f1d1d; /* Darker red */
+    color: #7f1d1d;
+    /* Darker red */
     border-color: rgba(239, 68, 68, 0.3);
 }
 
@@ -882,7 +961,8 @@ body.library-page {
 
 .notification.warning .notification-close {
     background: rgba(245, 158, 11, 0.15);
-    color: #78350f; /* Darker amber */
+    color: #78350f;
+    /* Darker amber */
     border-color: rgba(245, 158, 11, 0.3);
 }
 
@@ -894,7 +974,8 @@ body.library-page {
 
 .notification.info .notification-close {
     background: transparent;
-    color: currentColor; /* Use currentColor to match text exactly */
+    color: currentColor;
+    /* Use currentColor to match text exactly */
     border-color: transparent;
     opacity: 0.7;
 }
@@ -908,7 +989,8 @@ body.library-page {
 
 /* Force dark icon for light mode explicitly to override system preference */
 [data-theme="light"] .notification.info .notification-close {
-    color: #09090b; /* Zinc 950 - Very Dark */
+    color: #09090b;
+    /* Zinc 950 - Very Dark */
     opacity: 0.7;
 }
 
@@ -920,73 +1002,74 @@ body.library-page {
 
 /* Dark Mode Close Button Enhancement */
 @media (prefers-color-scheme: dark) {
+
     /* Default rules for system dark mode */
     .notification-close {
         background: rgba(255, 255, 255, 0.1);
         color: #d1d5db;
         border-color: rgba(255, 255, 255, 0.2);
     }
-    
+
     /* Override if app is manually set to light mode while system is dark */
     [data-theme="light"] .notification-close {
         background: rgba(0, 0, 0, 0.08);
         color: #09090b;
         border-color: transparent;
     }
-    
+
     [data-theme="light"] .notification-close:hover {
         background: rgba(0, 0, 0, 0.15);
         color: #000000;
     }
-    
+
     .notification-close:hover {
         background: rgba(255, 255, 255, 0.2);
         color: #f3f4f6;
         border-color: rgba(255, 255, 255, 0.3);
     }
-    
+
     .notification.success .notification-close {
         background: rgba(16, 185, 129, 0.2);
         color: #6ee7b7;
         border-color: rgba(16, 185, 129, 0.4);
     }
-    
+
     .notification.success .notification-close:hover {
         background: rgba(16, 185, 129, 0.3);
         color: #86efac;
         border-color: rgba(16, 185, 129, 0.6);
     }
-    
+
     .notification.error .notification-close {
         background: rgba(239, 68, 68, 0.2);
         color: #fca5a5;
         border-color: rgba(239, 68, 68, 0.4);
     }
-    
+
     .notification.error .notification-close:hover {
         background: rgba(239, 68, 68, 0.3);
         color: #fecaca;
         border-color: rgba(239, 68, 68, 0.6);
     }
-    
+
     .notification.warning .notification-close {
         background: rgba(245, 158, 11, 0.2);
         color: #fcd34d;
         border-color: rgba(245, 158, 11, 0.4);
     }
-    
+
     .notification.warning .notification-close:hover {
         background: rgba(245, 158, 11, 0.3);
         color: #fde68a;
         border-color: rgba(245, 158, 11, 0.6);
     }
-    
+
     .notification.info .notification-close {
         background: rgba(255, 255, 255, 0.05);
         color: #e5e7eb;
         border-color: rgba(255, 255, 255, 0.1);
     }
-    
+
     .notification.info .notification-close:hover {
         background: rgba(255, 255, 255, 0.1);
         color: #f3f4f6;
@@ -999,6 +1082,7 @@ body.library-page {
         transform: translateX(100%);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -1010,6 +1094,7 @@ body.library-page {
         transform: translateX(0);
         opacity: 1;
     }
+
     to {
         transform: translateX(100%);
         opacity: 0;
@@ -1027,7 +1112,9 @@ body.library-page {
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Library Page Styles */
@@ -1368,7 +1455,7 @@ body.library-page {
     .app-container {
         padding: 1rem;
     }
-    
+
     /* Header Adjustments */
     .app-header {
         padding: 1rem 0;
@@ -1378,11 +1465,11 @@ body.library-page {
         display: flex !important;
         margin-right: 0.5rem;
     }
-    
+
     .main-wrapper {
         flex-direction: column;
         gap: 1.5rem;
-        position: relative; 
+        position: relative;
     }
 
     /* Sidebar - Mobile Slide-in */
@@ -1437,11 +1524,11 @@ body.library-page {
         overflow-x: visible;
         padding-bottom: 0;
     }
-    
+
     .sidebar-title {
         display: block;
     }
-    
+
     .sidebar-link {
         white-space: normal;
         padding: 0.75rem;
@@ -1452,6 +1539,30 @@ body.library-page {
         height: auto;
         min-height: 120px;
         max-height: 250px;
+    }
+
+    /* Mobile Overflow Fixes - Enable scrolling on mobile only */
+    body.app-main {
+        height: auto;
+        /* Allow expansion on mobile */
+        min-height: 100vh;
+        overflow-y: auto;
+        /* Enable vertical scrolling on mobile */
+        overflow-x: hidden;
+        /* Prevent horizontal scroll on mobile */
+    }
+
+    .app-container {
+        min-height: 100%;
+        /* Allow expansion on mobile */
+        height: auto;
+    }
+
+    .main-wrapper {
+        overflow-x: hidden;
+        /* Prevent horizontal scroll on mobile */
+        overflow-y: visible;
+        /* Allow vertical overflow */
     }
 }
 
@@ -1477,7 +1588,7 @@ body.library-page {
     .category-filter {
         width: 100%;
     }
-    
+
     .category-select {
         width: 100%;
     }
@@ -1489,18 +1600,19 @@ body.library-page {
     .split-view {
         grid-template-columns: 1fr;
     }
-    
+
     .panel {
         min-height: auto;
     }
-    
+
     /* Input Panel - specific mobile tweaks */
     .input-form-wrapper {
         padding: 1rem;
         gap: 1rem;
     }
-    
-    .panel-header, .panel-footer {
+
+    .panel-header,
+    .panel-footer {
         padding: 0.75rem 1rem;
     }
 
@@ -1528,15 +1640,15 @@ body.library-page {
         border-radius: 0;
         border: none;
     }
-    
+
     .modal-header {
         padding: 1rem;
     }
-    
+
     .modal-body {
         padding: 1rem;
     }
-    
+
     .modal-footer {
         padding: 1rem;
     }
@@ -1546,7 +1658,7 @@ body.library-page {
     .panel-actions {
         gap: 0.5rem;
     }
-    
+
     .quality-label {
         display: none;
     }
@@ -1555,28 +1667,28 @@ body.library-page {
 /* Manual Theme Overrides */
 [data-theme="light"] {
     /* Tomato & Parchment Palette */
-    --primary: #f06449; 
-    --primary-hover: #d95a42; 
+    --primary: #f06449;
+    --primary-hover: #d95a42;
     --primary-foreground: #ffffff;
-    
-    --bg-body: #ede6e3; 
+
+    --bg-body: #ede6e3;
     --bg-card: #ffffff;
     --bg-subtle: #dadad9;
     --bg-input: #ffffff;
-    
+
     --text-main: #36382e;
     --text-muted: #5a5d4d;
     --text-light: #828672;
-    
+
     --border: #dadad9;
     --border-hover: #828672;
-    
-    --success: #059669; 
+
+    --success: #059669;
     --success-bg: #d1fae5;
-    --error: #dc2626; 
+    --error: #dc2626;
     --warning: #d97706;
     --info: #5bc3eb;
-    
+
     /* Warm shadows matching Charcoal Brown */
     --shadow-sm: 0 1px 2px 0 rgba(54, 56, 46, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(54, 56, 46, 0.05), 0 2px 4px -2px rgba(54, 56, 46, 0.05);
@@ -1588,22 +1700,22 @@ body.library-page {
     --primary: #ffffff;
     --primary-hover: #e4e4e7;
     --primary-foreground: #09090b;
-    
+
     --bg-body: #09090b;
     --bg-card: #18181b;
     --bg-subtle: #27272a;
     --bg-input: #18181b;
-    
+
     --text-main: #fafafa;
     --text-muted: #a1a1aa;
     --text-light: #52525b;
-    
+
     --border: #27272a;
     --border-hover: #3f3f46;
-    
+
     --success: #34d399;
     --success-bg: rgba(16, 185, 129, 0.1);
-    
+
     --shadow-sm: none;
     --shadow-md: none;
     --shadow-focus: 0 0 0 2px rgba(255, 255, 255, 0.1);

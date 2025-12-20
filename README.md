@@ -1,11 +1,11 @@
-# Prompt Enhancer Tool
+# PromptRefinery
 
-A web-based application designed to enhance and refine AI prompts for better responses. Built with modern web technologies and featuring a clean, responsive interface.
+A web-based application designed to refine and polish AI prompts for better responses. Built with modern web technologies and featuring a clean, responsive interface.
 
 ## Features
 
 ### Core Functionality
-- **Prompt Enhancement**: Transform basic prompts into detailed, structured instructions
+- **Prompt Refinement**: Transform basic prompts into detailed, structured instructions
 - **Context Support**: Add background information to improve AI understanding
 - **Quality Scoring**: Real-time assessment of prompt quality with visual feedback
 - **Temperature Control**: Adjustable AI creativity level with slider and preset modes
@@ -65,7 +65,7 @@ A web-based application designed to enhance and refine AI prompts for better res
 ## Project Structure
 
 ```
-prompt-enhancer/
+promptrefinery/
 ├── index.html              # Main application page
 ├── prompt-library.html     # Prompt library browser
 ├── css/
