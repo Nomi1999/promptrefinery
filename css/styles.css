@@ -1565,6 +1565,11 @@ body.library-page {
         min-height: 140px;
         max-height: 300px;
     }
+    
+    /* Enhanced Output Adjustment for Mobile */
+    .output-panel .textarea-wrapper {
+        min-height: 250px;
+    }
 
     /* Mobile Overflow Fixes - Enable scrolling on mobile only */
     body.app-main {
