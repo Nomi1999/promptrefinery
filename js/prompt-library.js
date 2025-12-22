@@ -1313,8 +1313,8 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         updateThemeIcons(theme);
     }
     
-    function updateThemeIcons(theme) {
-        // Update icons
+function updateThemeIcons(theme) {
+        // Update theme toggle icons
         if (theme === 'dark') {
             if (sunIcon) sunIcon.style.display = 'block';
             if (moonIcon) moonIcon.style.display = 'none';
@@ -1322,6 +1322,33 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
             if (sunIcon) sunIcon.style.display = 'none';
             if (moonIcon) moonIcon.style.display = 'block';
         }
+        
+        // Update logo based on theme
+        updateThemeLogo(theme);
+    }
+
+    function updateThemeLogo(theme) {
+        const logoImg = document.getElementById('theme-logo');
+        if (!logoImg) return;
+        
+        // Add subtle animation
+        logoImg.classList.add('theme-changing');
+        
+        // Change logo source
+        const newSrc = theme === 'dark' 
+            ? 'assets/images/logo-dark-baclground.webp'
+            : 'assets/images/logo-light-background.webp';
+        
+        // Preload new image to prevent flicker
+        const tempImg = new Image();
+        tempImg.onload = function() {
+            logoImg.src = newSrc;
+            // Remove animation after transition
+            setTimeout(() => {
+                logoImg.classList.remove('theme-changing');
+            }, 300);
+        };
+        tempImg.src = newSrc;
     }
 
     // Initialize the library

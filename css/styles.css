@@ -140,15 +140,60 @@ body.library-page {
 
 .header-content {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: var(--space-4);
+    justify-content: space-between;
+    flex-grow: 1;
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: -0.03em;
+.logo-container {
+    display: flex;
+    align-items: center;
+    height: 48px; /* Fixed height to maintain layout */
+}
+
+.logo-img {
+    height: 48px;
+    width: auto;
+    max-width: 216px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    object-fit: contain;
+}
+
+/* Subtle animation on theme change */
+.logo-img.theme-changing {
+    opacity: 0.7;
+    transform: scale(0.98);
+}
+
+/* Responsive scaling */
+@media (max-width: 768px) {
+    .logo-img {
+        height: 38px;
+        max-width: 171px;
+    }
+    
+    .logo-container {
+        height: 38px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-img {
+        height: 34px;
+        max-width: 153px;
+    }
+    
+    .logo-container {
+        height: 34px;
+}
+}
+
+.tagline-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .tagline {
