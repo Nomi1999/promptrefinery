@@ -391,26 +391,36 @@ ${context}`);
         }
     }
 
+    // Get mode from temperature value
+    function getModeFromTemperature(temp) {
+        if (temp <= temperatureRanges.precise.max) return 'precise';
+        if (temp <= temperatureRanges.balanced.max) return 'balanced';
+        if (temp <= temperatureRanges.creative.max) return 'creative';
+        return 'max';
+    }
+
+    // Get mode-specific system prompt extension
+    function getModeSystemPromptExtension(mode) {
+        const extensions = {
+            precise: `\n\nENHANCEMENT STYLE: PRECISE\n- Focus on clarity, conciseness, and precision\n- Make minimal changes - only what's necessary\n- Preserve the original structure and wording where possible\n- Eliminate ambiguity without adding unnecessary complexity\n- Prioritize directness and efficiency`,
+            balanced: `\n\nENHANCEMENT STYLE: BALANCED\n- Improve clarity while maintaining the original intent\n- Add helpful context and structure without over-elaborating\n- Balance conciseness with comprehensiveness\n- Make moderate enhancements that respect the original prompt's tone`,
+            creative: `\n\nENHANCEMENT STYLE: CREATIVE\n- Add creative flair and imaginative restructuring\n- Introduce varied phrasing and engaging language\n- Enhance with contextual depth and vivid descriptions\n- Make the prompt more compelling while keeping it clear`,
+            max: `\n\nENHANCEMENT STYLE: MAXIMUM CREATIVITY\n- Completely rewrite with maximum creativity and originality\n- Introduce innovative perspectives and novel approaches\n- Use dynamic, imaginative language throughout\n- Transform the prompt into something truly unique and engaging`
+        };
+        return extensions[mode] || extensions.balanced;
+    }
+
     // Enhance prompt using UncloseAI
     async function enhancePromptWithUncloseAI(prompt) {
         console.log('Starting prompt enhancement for:', prompt);
-        
+
+        const currentMode = getModeFromTemperature(currentTemperature);
+        console.log('Current enhancement mode:', currentMode);
+
         try {
             console.log('Sending request to UncloseAI API...');
-            
-            // Call UncloseAI Hermes API directly with correct format
-            const response = await fetch('https://hermes.ai.unturf.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer dummy-api-key'
-                },
-                body: JSON.stringify({
-                    model: 'adamo1139/Hermes-3-Llama-3.1-8B-FP8-Dynamic',
-                    messages: [
-                        {
-                            role: 'system',
-                            content: `You are a prompt enhancement expert. Your task is to generate an enhanced version of the user's prompt AND provide feedback on what was improved.
+
+            const baseSystemPrompt = `You are a prompt enhancement expert. Your task is to generate an enhanced version of the user's prompt AND provide feedback on what was improved.
 
 You MUST respond with a valid JSON object in the following format:
 {
@@ -430,7 +440,24 @@ RULES:
 1. The "enhanced_prompt" must be the direct prompt text, ready to use.
 2. The "feedback" object must contain a summary and list of specific improvements.
 3. Provide 2-4 specific improvements.
-4. NO conversational fillers or markdown formatting outside the JSON.`
+4. NO conversational fillers or markdown formatting outside the JSON.`;
+
+            const modeExtension = getModeSystemPromptExtension(currentMode);
+            const systemPrompt = baseSystemPrompt + modeExtension;
+
+            // Call UncloseAI Hermes API directly with correct format
+            const response = await fetch('https://hermes.ai.unturf.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer dummy-api-key'
+                },
+                body: JSON.stringify({
+                    model: 'adamo1139/Hermes-3-Llama-3.1-8B-FP8-Dynamic',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: systemPrompt
                         },
                         {
                             role: 'user',
