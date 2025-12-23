@@ -197,8 +197,12 @@ body.library-page {
 }
 
 .tagline {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    font-weight: 500;
     color: var(--text-muted);
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    margin: 0;
 }
 
 /* Main Layout */
