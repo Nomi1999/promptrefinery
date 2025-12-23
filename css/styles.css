@@ -132,7 +132,7 @@ body.library-page {
 /* Header - Simplified */
 .app-header {
     flex-shrink: 0;
-    padding: var(--space-4) 0 var(--space-8) 0;
+    padding: var(--space-4) 0 var(--space-4) 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -210,7 +210,6 @@ body.library-page {
     flex: 1 1 auto;
     /* Allow shrinking and growing */
     display: flex;
-    gap: var(--space-12);
     min-height: 0;
     padding-bottom: var(--space-8);
     overflow-x: auto;
