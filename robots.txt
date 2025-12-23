@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nomi1999.github.io/promptrefinery/sitemap.xml
+Sitemap: https://promptrefinery.rf.gd/sitemap.xml
