@@ -146,6 +146,12 @@ body.library-page {
     flex-grow: 1;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
 .logo-container {
     display: flex;
     align-items: center;
@@ -180,12 +186,12 @@ body.library-page {
 
 @media (max-width: 480px) {
     .logo-img {
-        height: 34px;
-        max-width: 153px;
+        height: 48px;
+        max-width: 216px;
     }
     
     .logo-container {
-        height: 34px;
+        height: 48px;
 }
 }
 
@@ -1667,7 +1673,12 @@ body.library-page {
 
     .mobile-menu-btn {
         display: flex !important;
-        margin-right: var(--space-2);
+    }
+    
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
     }
 
     .main-wrapper {
