@@ -1,31 +1,27 @@
-/* Snow Blue Pink Color Scheme - Light Mode */
+/* Modern Minimalist Color Scheme - Light Mode */
 :root {
-    --bright-snow: #fafafa;
-    --alice-blue: #e3f2fd;
-    --lobster-pink: #db5461;
-
-    --primary: #db5461;
-    --primary-hover: #c04552;
+    --primary: #171717;
+    --primary-hover: #262626;
     --primary-foreground: #ffffff;
 
     --bg-body: #fafafa;
     --bg-card: #ffffff;
-    --bg-subtle: #e3f2fd;
+    --bg-subtle: #f4f4f5;
     --bg-input: #ffffff;
-    --bg-sidebar: #ffffff;
+    --bg-sidebar: #fafafa;
 
-    --text-main: #1a1a2e;
-    --text-muted: #64748b;
-    --text-light: #94a3b8;
+    --text-main: #171717;
+    --text-muted: #737373;
+    --text-light: #a3a3a3;
 
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
+    --border: #e5e5e5;
+    --border-hover: #d4d4d4;
 
-    --success: #10b981;
-    --success-bg: #ecfdf5;
-    --error: #db5461;
-    --warning: #f59e0b;
-    --info: #3b82f6;
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+    --error: #dc2626;
+    --warning: #d97706;
+    --info: #2563eb;
 
     /* Spacing Scale */
     --space-1: 0.25rem;
@@ -58,40 +54,36 @@
     --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Snow Blue Pink Color Scheme - Dark Mode */
+/* Modern Minimalist Color Scheme - Dark Mode */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bright-snow: #e3f2fd;
-        --alice-blue: #1e3a5f;
-        --lobster-pink: #e66b78;
+        --primary: #fafafa;
+        --primary-hover: #e5e5e5;
+        --primary-foreground: #171717;
 
-        --primary: #e66b78;
-        --primary-hover: #f0808c;
-        --primary-foreground: #ffffff;
+        --bg-body: #0a0a0a;
+        --bg-card: #171717;
+        --bg-subtle: #262626;
+        --bg-input: #171717;
+        --bg-sidebar: #0a0a0a;
 
-        --bg-body: #0f172a;
-        --bg-card: #1e293b;
-        --bg-subtle: #1e3a5f;
-        --bg-input: #1e293b;
-        --bg-sidebar: #0f172a;
+        --text-main: #ededed;
+        --text-muted: #a3a3a3;
+        --text-light: #525252;
 
-        --text-main: #e3f2fd;
-        --text-muted: #94a3b8;
-        --text-light: #64748b;
+        --border: #404040;
+        --border-hover: #525252;
 
-        --border: #334155;
-        --border-hover: #475569;
+        --success: #22c55e;
+        --success-bg: rgba(34, 197, 94, 0.1);
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --info: #3b82f6;
 
-        --success: #34d399;
-        --success-bg: rgba(16, 185, 129, 0.15);
-        --error: #e66b78;
-        --warning: #fbbf24;
-        --info: #60a5fa;
-
-        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
-        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-        --shadow-focus: 0 0 0 2px rgba(230, 107, 120, 0.5);
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+        --shadow-focus: 0 0 0 2px rgba(250, 250, 250, 0.3);
     }
 }
 
@@ -830,27 +822,27 @@ body.library-page {
     line-height: 1.5;
 }
 
-/* Feedback Category Colors - Snow Blue Pink Theme */
-.tag-clarity { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-.tag-specificity { background-color: rgba(16, 185, 129, 0.1); color: #059669; }
-.tag-structure { background-color: rgba(227, 242, 253, 0.6); color: #1e3a5f; }
-.tag-context { background-color: rgba(219, 84, 97, 0.1); color: #db5461; }
-.tag-constraints { background-color: rgba(219, 84, 97, 0.1); color: #db5461; }
-.tag-style { background-color: rgba(139, 92, 246, 0.1); color: #7c3aed; }
-.tag-effectiveness { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-.tag-user-experience { background-color: rgba(227, 242, 253, 0.7); color: #1e3a5f; }
+/* Feedback Category Colors - Modern Minimalist Theme */
+.tag-clarity { background-color: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.tag-specificity { background-color: rgba(22, 163, 74, 0.1); color: #16a34a; }
+.tag-structure { background-color: var(--bg-subtle); color: var(--text-main); border: 1px solid var(--border); }
+.tag-context { background-color: rgba(220, 38, 38, 0.1); color: #dc2626; }
+.tag-constraints { background-color: rgba(217, 119, 6, 0.1); color: #d97706; }
+.tag-style { background-color: rgba(147, 51, 234, 0.1); color: #9333ea; }
+.tag-effectiveness { background-color: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.tag-user-experience { background-color: var(--bg-subtle); color: var(--text-main); border: 1px solid var(--border); }
 .tag-general { background-color: var(--bg-subtle); color: var(--text-muted); }
 
-/* Dark Mode Tag Colors - Snow Blue Pink Theme */
+/* Dark Mode Tag Colors - Modern Minimalist Theme */
 @media (prefers-color-scheme: dark) {
-    .tag-clarity { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-    .tag-specificity { background-color: rgba(16, 185, 129, 0.2); color: #34d399; }
-    .tag-structure { background-color: rgba(227, 242, 253, 0.15); color: #e3f2fd; }
-    .tag-context { background-color: rgba(219, 84, 97, 0.2); color: #e66b78; }
-    .tag-constraints { background-color: rgba(219, 84, 97, 0.2); color: #e66b78; }
-    .tag-style { background-color: rgba(139, 92, 246, 0.2); color: #a78bfa; }
-    .tag-effectiveness { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-    .tag-user-experience { background-color: rgba(227, 242, 253, 0.15); color: #e3f2fd; }
+    .tag-clarity { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .tag-specificity { background-color: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .tag-structure { background-color: var(--bg-subtle); color: var(--text-main); border-color: var(--border); }
+    .tag-context { background-color: rgba(248, 113, 113, 0.15); color: #f87171; }
+    .tag-constraints { background-color: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    .tag-style { background-color: rgba(167, 139, 250, 0.15); color: #a78bfa; }
+    .tag-effectiveness { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .tag-user-experience { background-color: var(--bg-subtle); color: var(--text-main); }
 }
 
 /* Panel Footer */
@@ -1020,23 +1012,23 @@ body.library-page {
 }
 
 .notification.success {
-    background-color: #ecfdf5;
-    color: #059669;
-    border-color: #10b981;
+    background-color: #dcfce7;
+    color: #15803d;
+    border-color: #16a34a;
     box-shadow: var(--shadow-lg);
 }
 
 .notification.error {
-    background-color: #fef2f2;
-    color: #db5461;
-    border-color: #db5461;
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-color: #dc2626;
     box-shadow: var(--shadow-lg);
 }
 
 .notification.warning {
-    background-color: #fffbeb;
-    color: #d97706;
-    border-color: #f59e0b;
+    background-color: #fef3c7;
+    color: #b45309;
+    border-color: #d97706;
     box-shadow: var(--shadow-lg);
 }
 
@@ -1050,7 +1042,7 @@ body.library-page {
     box-shadow: var(--shadow-lg);
 }
 
-/* Dark Mode - Solid Backgrounds - Snow Blue Pink Theme */
+/* Dark Mode - Solid Backgrounds - Modern Minimalist Theme */
 @media (prefers-color-scheme: dark) {
     .notification {
         background-color: var(--bg-card);
@@ -1061,15 +1053,15 @@ body.library-page {
 
     .notification.success {
         background-color: #064e3b;
-        color: #34d399;
-        border-color: #10b981;
+        color: #4ade80;
+        border-color: #22c55e;
         box-shadow: none;
     }
 
     .notification.error {
-        background-color: #451a1a;
-        color: #fca5a5;
-        border-color: #e66b78;
+        background-color: #450a0a;
+        color: #f87171;
+        border-color: #ef4444;
         box-shadow: none;
     }
 
@@ -1134,41 +1126,41 @@ body.library-page {
     stroke-linejoin: round;
 }
 
-/* Notification type-specific close button styling - Snow Blue Pink Theme */
+/* Notification type-specific close button styling - Modern Minimalist Theme */
 .notification.success .notification-close {
-    background: rgba(16, 185, 129, 0.15);
-    color: #059669;
-    border-color: rgba(16, 185, 129, 0.3);
+    background: rgba(22, 163, 74, 0.15);
+    color: #15803d;
+    border-color: rgba(22, 163, 74, 0.3);
 }
 
 .notification.success .notification-close:hover {
-    background: rgba(16, 185, 129, 0.25);
-    color: #059669;
-    border-color: rgba(16, 185, 129, 0.5);
+    background: rgba(22, 163, 74, 0.25);
+    color: #15803d;
+    border-color: rgba(22, 163, 74, 0.5);
 }
 
 .notification.error .notification-close {
-    background: rgba(219, 84, 97, 0.15);
-    color: #992b37;
-    border-color: rgba(219, 84, 97, 0.3);
+    background: rgba(220, 38, 38, 0.15);
+    color: #b91c1c;
+    border-color: rgba(220, 38, 38, 0.3);
 }
 
 .notification.error .notification-close:hover {
-    background: rgba(219, 84, 97, 0.25);
-    color: #992b37;
-    border-color: rgba(219, 84, 97, 0.5);
+    background: rgba(220, 38, 38, 0.25);
+    color: #b91c1c;
+    border-color: rgba(220, 38, 38, 0.5);
 }
 
 .notification.warning .notification-close {
-    background: rgba(245, 158, 11, 0.15);
-    color: #92400e;
-    border-color: rgba(245, 158, 11, 0.3);
+    background: rgba(217, 119, 6, 0.15);
+    color: #b45309;
+    border-color: rgba(217, 119, 6, 0.3);
 }
 
 .notification.warning .notification-close:hover {
-    background: rgba(245, 158, 11, 0.25);
-    color: #92400e;
-    border-color: rgba(245, 158, 11, 0.5);
+    background: rgba(217, 119, 6, 0.25);
+    color: #b45309;
+    border-color: rgba(217, 119, 6, 0.5);
 }
 
 .notification.info .notification-close {
@@ -1186,7 +1178,7 @@ body.library-page {
     opacity: 1;
 }
 
-/* Force dark icon for light mode explicitly to override system preference - Snow Blue Pink Theme */
+/* Force dark icon for light mode explicitly to override system preference - Modern Minimalist Theme */
 [data-theme="light"] .notification.info .notification-close {
     color: #1a1a2e;
     opacity: 0.7;
@@ -1198,7 +1190,7 @@ body.library-page {
     opacity: 1;
 }
 
-/* Dark Mode Close Button Enhancement - Snow Blue Pink Theme */
+/* Dark Mode Close Button Enhancement - Modern Minimalist Theme */
 @media (prefers-color-scheme: dark) {
 
     /* Default rules for system dark mode */
@@ -1211,13 +1203,13 @@ body.library-page {
     /* Override if app is manually set to light mode while system is dark */
     [data-theme="light"] .notification-close {
         background: rgba(0, 0, 0, 0.08);
-        color: #1a1a2e;
+        color: #171717;
         border-color: transparent;
     }
 
     [data-theme="light"] .notification-close:hover {
         background: rgba(0, 0, 0, 0.15);
-        color: #1a1a2e;
+        color: #171717;
     }
 
     .notification-close:hover {
@@ -1227,27 +1219,27 @@ body.library-page {
     }
 
     .notification.success .notification-close {
-        background: rgba(16, 185, 129, 0.2);
-        color: #34d399;
-        border-color: rgba(16, 185, 129, 0.4);
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+        border-color: rgba(34, 197, 94, 0.4);
     }
 
     .notification.success .notification-close:hover {
-        background: rgba(16, 185, 129, 0.3);
-        color: #4ade80;
-        border-color: rgba(16, 185, 129, 0.6);
+        background: rgba(34, 197, 94, 0.3);
+        color: #86efac;
+        border-color: rgba(34, 197, 94, 0.6);
     }
 
     .notification.error .notification-close {
-        background: rgba(219, 84, 97, 0.2);
-        color: #e66b78;
-        border-color: rgba(219, 84, 97, 0.4);
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border-color: rgba(239, 68, 68, 0.4);
     }
 
     .notification.error .notification-close:hover {
-        background: rgba(219, 84, 97, 0.3);
+        background: rgba(239, 68, 68, 0.3);
         color: #fca5a5;
-        border-color: rgba(219, 84, 97, 0.6);
+        border-color: rgba(239, 68, 68, 0.6);
     }
 
     .notification.warning .notification-close {
@@ -1884,72 +1876,64 @@ body.library-page {
     }
 }
 
-/* Manual Theme Overrides - Light - Snow Blue Pink Theme */
+/* Manual Theme Overrides - Light - Modern Minimalist Theme */
 [data-theme="light"] {
-    --bright-snow: #fafafa;
-    --alice-blue: #e3f2fd;
-    --lobster-pink: #db5461;
-
-    --primary: #db5461;
-    --primary-hover: #c04552;
+    --primary: #171717;
+    --primary-hover: #262626;
     --primary-foreground: #ffffff;
 
     --bg-body: #fafafa;
     --bg-card: #ffffff;
-    --bg-subtle: #e3f2fd;
+    --bg-subtle: #f4f4f5;
     --bg-input: #ffffff;
-    --bg-sidebar: #ffffff;
+    --bg-sidebar: #fafafa;
 
-    --text-main: #1a1a2e;
-    --text-muted: #64748b;
-    --text-light: #94a3b8;
+    --text-main: #171717;
+    --text-muted: #737373;
+    --text-light: #a3a3a3;
 
-    --border: #e2e8f0;
-    --border-hover: #cbd5e1;
+    --border: #e5e5e5;
+    --border-hover: #d4d4d4;
 
-    --success: #10b981;
-    --success-bg: #ecfdf5;
-    --error: #db5461;
-    --warning: #f59e0b;
-    --info: #3b82f6;
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+    --error: #dc2626;
+    --warning: #d97706;
+    --info: #2563eb;
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-focus: 0 0 0 2px rgba(219, 84, 97, 0.4);
+    --shadow-focus: 0 0 0 2px rgba(23, 23, 23, 0.2);
 }
 
-/* Manual Theme Overrides - Dark - Snow Blue Pink Theme */
+/* Manual Theme Overrides - Dark - Modern Minimalist Theme */
 [data-theme="dark"] {
-    --bright-snow: #e3f2fd;
-    --alice-blue: #1e3a5f;
-    --lobster-pink: #e66b78;
+    --primary: #fafafa;
+    --primary-hover: #e5e5e5;
+    --primary-foreground: #171717;
 
-    --primary: #e66b78;
-    --primary-hover: #f0808c;
-    --primary-foreground: #ffffff;
+    --bg-body: #0a0a0a;
+    --bg-card: #171717;
+    --bg-subtle: #262626;
+    --bg-input: #171717;
+    --bg-sidebar: #0a0a0a;
 
-    --bg-body: #0f172a;
-    --bg-card: #1e293b;
-    --bg-subtle: #1e3a5f;
-    --bg-input: #1e293b;
-    --bg-sidebar: #0f172a;
+    --text-main: #ededed;
+    --text-muted: #a3a3a3;
+    --text-light: #525252;
 
-    --text-main: #e3f2fd;
-    --text-muted: #94a3b8;
-    --text-light: #64748b;
+    --border: #404040;
+    --border-hover: #525252;
 
-    --border: #334155;
-    --border-hover: #475569;
+    --success: #22c55e;
+    --success-bg: rgba(34, 197, 94, 0.1);
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
 
-    --success: #34d399;
-    --success-bg: rgba(16, 185, 129, 0.15);
-    --error: #e66b78;
-    --warning: #fbbf24;
-    --info: #60a5fa;
-
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-    --shadow-focus: 0 0 0 2px rgba(230, 107, 120, 0.5);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+    --shadow-focus: 0 0 0 2px rgba(250, 250, 250, 0.3);
 }
