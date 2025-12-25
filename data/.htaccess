@@ -1,0 +1,17 @@
+# Block direct access to database file and sensitive data
+<Files "users.db">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Block access to any .db files in this directory
+<Files ~ "\.db$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Block access to PHP files that shouldn't be accessed directly
+<Files ~ "\.php$">
+    Order allow,deny
+    Deny from all
+</Files>

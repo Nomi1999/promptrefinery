@@ -25,6 +25,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const feedbackContent = document.getElementById('feedback-content');
     const feedbackBody = document.getElementById('feedback-body');
 
+    // Saved Prompts Elements
+    const savePromptBtn = document.getElementById('save-prompt-btn');
+    
+    // Profile Management Elements
+    const profileBtn = document.getElementById('profile-btn');
+    const viewSavedPromptsLink = document.getElementById('view-saved-prompts');
+    const viewProfileLink = document.getElementById('view-profile');
+    
+    // Modal Elements
+    const savedPromptsModal = document.getElementById('saved-prompts-modal');
+    const savedPromptsList = document.getElementById('saved-prompts-list');
+    const noSavedPrompts = document.getElementById('no-saved-prompts');
+    const savedPromptsCount = document.getElementById('saved-prompts-count');
+    const profileModal = document.getElementById('profile-modal');
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    const closeSavedModalBtn = document.getElementById('close-saved-modal');
+    const closeProfileModalBtn = document.getElementById('close-profile-modal');
+    const closeDeleteModalBtn = document.getElementById('close-delete-modal');
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const passwordForm = document.getElementById('password-form');
+    const deleteAccountForm = document.getElementById('delete-account-form');
+
     // Temperature Control Elements
     const temperatureSlider = document.getElementById('temperature-slider');
     const temperatureValue = document.getElementById('temperature-value');
@@ -288,6 +311,11 @@ ${context}`);
         const score = calculateQualityScore(promptOutput.value);
         updateQualityScoreDisplay(outputQualityScore, outputScoreFill, score);
         copyOutputBtn.disabled = promptOutput.value.trim().length === 0;
+        
+        // Enable/disable save button based on prompt availability and authentication
+        if (savePromptBtn) {
+            savePromptBtn.disabled = promptOutput.value.trim().length === 0 || !isAuthenticated;
+        }
     }
 
     // Update character count
@@ -374,12 +402,17 @@ ${context}`);
             
             // Show improvement indicator
             showScoreImprovement(inputScore, outputScore);
-            
+             
             showNotification('Prompt enhanced successfully!', 'success');
-            
+             
+            // Check if this prompt is already saved (for authenticated users)
+            if (isAuthenticated) {
+                checkIfPromptSaved();
+            }
+             
             // Scroll to output
             promptOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
+             
         } catch (error) {
             console.error('Error enhancing prompt:', error);
             showNotification(error.message || 'Failed to enhance prompt. Please try again.', 'error');
@@ -732,11 +765,21 @@ RULES:
             promptInput.disabled = true;
             if(contextInput) contextInput.disabled = true;
             if(promptOutput) promptOutput.readOnly = true;
+            
+            // Disable save button during processing
+            if (savePromptBtn) {
+                savePromptBtn.disabled = true;
+            }
         } else {
             btnText.style.display = 'inline';
             loadingSpinner.style.display = 'none';
             promptInput.disabled = false;
             if(contextInput) contextInput.disabled = false;
+            
+            // Re-enable save button if there's content and user is authenticated
+            if (savePromptBtn && promptOutput && isAuthenticated) {
+                savePromptBtn.disabled = promptOutput.value.trim().length === 0;
+            }
         }
     }
 
@@ -1192,6 +1235,766 @@ function updateThemeIcons(theme) {
         tempImg.src = newSrc;
     }
 
-    // Initialize the application
+    // Authentication System
+    const authButtons = document.getElementById('auth-buttons');
+    const userMenu = document.getElementById('user-menu');
+    const userDisplay = document.getElementById('user-display');
+    const loginBtn = document.getElementById('login-btn');
+    const registerBtn = document.getElementById('register-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    
+    // Modal elements
+    const authModalOverlay = document.getElementById('auth-modal-overlay');
+    const loginModal = document.getElementById('login-modal');
+    const registerModal = document.getElementById('register-modal');
+    const closeLoginModal = document.getElementById('close-login-modal');
+    const closeRegisterModal = document.getElementById('close-register-modal');
+    const switchToRegister = document.getElementById('switch-to-register');
+    const switchToLogin = document.getElementById('switch-to-login');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    
+    // Authentication state
+    let isAuthenticated = false;
+    let currentUser = null;
+    
+    // Check authentication status on page load
+    async function checkAuthStatus() {
+        try {
+            const response = await fetch('api/auth-check.php');
+            const data = await response.json();
+            
+            if (response.ok && data.authenticated) {
+                isAuthenticated = true;
+                currentUser = data.user;
+                showUserMenu();
+                updateUserDisplay();
+            } else {
+                isAuthenticated = false;
+                currentUser = null;
+                showAuthButtons();
+            }
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            isAuthenticated = false;
+            currentUser = null;
+            showAuthButtons();
+        }
+    }
+    
+    // Show authentication buttons (logged out state)
+    function showAuthButtons() {
+        authButtons.style.display = 'flex';
+        userMenu.style.display = 'none';
+    }
+    
+    // Show user menu (logged in state)
+    function showUserMenu() {
+        if (currentUser) {
+            userDisplay.textContent = currentUser.username;
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'flex';
+        }
+    }
+    
+    // Override showUserMenu to check for profile button (already styled via user-menu-toggle class)
+    // The profile button shows icon + username via HTML structure, so we just need to set the username text
+    function updateUserDisplay() {
+        if (currentUser && userDisplay) {
+            userDisplay.textContent = currentUser.username;
+        }
+    }
+    
+    // Open modal
+    function openModal(modal) {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        
+        // Show auth overlay for auth modals
+        if (modal === loginModal || modal === registerModal) {
+            modal.style.display = 'block';
+            authModalOverlay.style.display = 'block';
+        }
+    }
+    
+    // Close modal
+    function closeModal(modalElement) {
+        // If no parameter, close all auth modals (backward compatibility)
+        if (!modalElement) {
+            authModalOverlay.style.display = 'none';
+            loginModal.style.display = 'none';
+            loginModal.classList.remove('open');
+            registerModal.style.display = 'none';
+            registerModal.classList.remove('open');
+            
+            // Clear form errors
+            clearFormErrors(loginForm);
+            clearFormErrors(registerForm);
+        } else {
+            // Remove open class from modal
+            modalElement.classList.remove('open');
+            
+            // Hide auth overlay if closing an auth modal
+            if (modalElement === loginModal || modalElement === registerModal) {
+                modalElement.style.display = 'none';
+                authModalOverlay.style.display = 'none';
+                
+                // Clear form errors
+                clearFormErrors(loginForm);
+                clearFormErrors(registerForm);
+            }
+        }
+        
+        document.body.style.overflow = '';
+    }
+    
+    // Clear form errors
+    function clearFormErrors(form) {
+        if (form) {
+            const errorElements = form.querySelectorAll('.error-message');
+            errorElements.forEach(el => el.remove());
+        }
+    }
+    
+    // Show form error
+    function showFormError(form, message) {
+        clearFormErrors(form);
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.color = 'var(--error)';
+        errorDiv.style.marginTop = '8px';
+        errorDiv.style.fontSize = '14px';
+        errorDiv.textContent = message;
+        form.appendChild(errorDiv);
+    }
+    
+    // Handle login form submission
+    async function handleLogin(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value;
+        
+        if (!username || !password) {
+            showFormError(loginForm, 'Please fill in all fields');
+            return;
+        }
+        
+        try {
+            const response = await fetch('api/login.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                isAuthenticated = true;
+                currentUser = data.user;
+                closeModal();
+                showUserMenu();
+                showNotification('Login successful!', 'success');
+            } else {
+                showFormError(loginForm, data.error || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showFormError(loginForm, 'Network error. Please try again.');
+        }
+    }
+    
+    // Handle registration form submission
+    async function handleRegister(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('register-username').value.trim();
+        const email = document.getElementById('register-email').value.trim();
+        const password = document.getElementById('register-password').value;
+        
+        if (!username || !email || !password) {
+            showFormError(registerForm, 'Please fill in all fields');
+            return;
+        }
+        
+        try {
+            const response = await fetch('api/register.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showNotification('Registration successful! Please login.', 'success');
+                // Switch to login form after successful registration
+                setTimeout(() => {
+                    closeModal();
+                    openModal(loginModal);
+                    // Pre-fill username/email if needed
+                    document.getElementById('login-username').value = username;
+                }, 1500);
+            } else {
+                showFormError(registerForm, data.error || 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            showFormError(registerForm, 'Network error. Please try again.');
+        }
+    }
+    
+    // Handle logout
+    async function handleLogout() {
+        try {
+            const response = await fetch('api/logout.php', {
+                method: 'POST'
+            });
+            
+            if (response.ok) {
+                isAuthenticated = false;
+                currentUser = null;
+                showAuthButtons();
+                showNotification('Logged out successfully', 'info');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Still clear local state even if server fails
+            isAuthenticated = false;
+            currentUser = null;
+            showAuthButtons();
+        }
+    }
+    
+    // Setup authentication event listeners
+    function setupAuthEventListeners() {
+        // Modal opening
+        if (loginBtn) loginBtn.addEventListener('click', () => openModal(loginModal));
+        if (registerBtn) registerBtn.addEventListener('click', () => openModal(registerModal));
+        
+        // Modal closing
+        if (closeLoginModal) closeLoginModal.addEventListener('click', () => closeModal(loginModal));
+        if (closeRegisterModal) closeRegisterModal.addEventListener('click', () => closeModal(registerModal));
+        if (authModalOverlay) authModalOverlay.addEventListener('click', closeModal);
+        
+        // Form switching
+        if (switchToRegister) switchToRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal();
+            openModal(registerModal);
+        });
+        if (switchToLogin) switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal();
+            openModal(loginModal);
+        });
+        
+        // Form submissions
+        if (loginForm) loginForm.addEventListener('submit', handleLogin);
+        if (registerForm) registerForm.addEventListener('submit', handleRegister);
+        
+        // Logout
+        if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+        
+        // Close modals with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                // Check all modals
+                if (loginModal.style.display === 'block' || registerModal.style.display === 'block') {
+                    closeModal();
+                } else if (savedPromptsModal && savedPromptsModal.style.display === 'block') {
+                    closeModal(savedPromptsModal);
+                } else if (profileModal && profileModal.style.display === 'block') {
+                    closeModal(profileModal);
+                } else if (deleteConfirmModal && deleteConfirmModal.style.display === 'block') {
+                    closeModal(deleteConfirmModal);
+                }
+            }
+        });
+    }
+    
+    // Initialize authentication system
+    async function initAuth() {
+        await checkAuthStatus();
+        setupAuthEventListeners();
+    }
+    
+    // Initialize saved prompts and profile event listeners
+    function setupSavedPromptsAndProfileEventListeners() {
+        console.log('Setting up saved prompts and profile event listeners...');
+        
+        // Debug: Check if elements exist
+        console.log('viewSavedPromptsLink:', viewSavedPromptsLink);
+        console.log('viewProfileLink:', viewProfileLink);
+        
+        // Save prompt button
+        if (savePromptBtn) {
+            savePromptBtn.addEventListener('click', savePrompt);
+            console.log('Attached listener to savePromptBtn');
+        }
+        
+        // Profile button (replaces simple username display)
+        if (profileBtn) {
+            profileBtn.addEventListener('click', () => {
+                loadProfile();
+                openModal(profileModal);
+            });
+            console.log('Attached listener to profileBtn');
+        }
+        
+        // View saved prompts link
+        if (viewSavedPromptsLink) {
+            console.log('Attaching listener to viewSavedPromptsLink');
+            viewSavedPromptsLink.addEventListener('click', (e) => {
+                console.log('viewSavedPromptsLink clicked!');
+                e.preventDefault();
+                e.stopPropagation();
+                loadSavedPrompts();
+                openModal(savedPromptsModal);
+            });
+        } else {
+            console.error('viewSavedPromptsLink NOT FOUND!');
+        }
+        
+        // View profile link
+        if (viewProfileLink) {
+            console.log('Attaching listener to viewProfileLink');
+            viewProfileLink.addEventListener('click', (e) => {
+                console.log('viewProfileLink clicked!');
+                e.preventDefault();
+                e.stopPropagation();
+                loadProfile();
+                openModal(profileModal);
+            });
+        } else {
+            console.error('viewProfileLink NOT FOUND!');
+        }
+        
+        // Saved prompts modal close
+        if (closeSavedModalBtn) {
+            closeSavedModalBtn.addEventListener('click', () => {
+                closeModal(savedPromptsModal);
+            });
+        }
+        
+        // Click outside to close saved prompts modal
+        if (savedPromptsModal) {
+            savedPromptsModal.addEventListener('click', (e) => {
+                if (e.target === savedPromptsModal) {
+                    closeModal(savedPromptsModal);
+                }
+            });
+        }
+        
+        // Profile modal close
+        if (closeProfileModalBtn) {
+            closeProfileModalBtn.addEventListener('click', () => {
+                closeModal(profileModal);
+            });
+        }
+        
+        // Click outside to close profile modal
+        if (profileModal) {
+            profileModal.addEventListener('click', (e) => {
+                if (e.target === profileModal) {
+                    closeModal(profileModal);
+                }
+            });
+        }
+        
+        // Delete account modal open
+        if (deleteAccountBtn) {
+            deleteAccountBtn.addEventListener('click', () => {
+                openModal(deleteConfirmModal);
+            });
+        }
+        
+        // Delete confirmation modal close
+        if (closeDeleteModalBtn) {
+            closeDeleteModalBtn.addEventListener('click', () => {
+                closeModal(deleteConfirmModal);
+            });
+        }
+        
+        // Click outside to close delete confirmation modal
+        if (deleteConfirmModal) {
+            deleteConfirmModal.addEventListener('click', (e) => {
+                if (e.target === deleteConfirmModal) {
+                    closeModal(deleteConfirmModal);
+                }
+            });
+        }
+        
+        // Cancel delete button
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', () => {
+                closeModal(deleteConfirmModal);
+            });
+        }
+        
+        // Password form submit
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', handlePasswordChange);
+        }
+        
+        // Delete account form submit
+        if (deleteAccountForm) {
+            deleteAccountForm.addEventListener('submit', handleDeleteAccount);
+        }
+    }
+    
+    // Save current enhanced prompt
+    async function savePrompt() {
+        const originalPrompt = getCombinedPrompt();
+        const enhancedPrompt = promptOutput.value.trim();
+        
+        if (!enhancedPrompt) {
+            showNotification('No enhanced prompt to save', 'error');
+            return;
+        }
+        
+        try {
+            const response = await fetch('api/save-prompt.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    original_prompt: originalPrompt,
+                    enhanced_prompt: enhancedPrompt
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showNotification('Prompt saved successfully!', 'success');
+                updateSaveButtonState(true);
+            } else {
+                showNotification(data.error || 'Failed to save prompt', 'error');
+            }
+        } catch (error) {
+            console.error('Save error:', error);
+            showNotification('Failed to save prompt', 'error');
+        }
+    }
+    
+    // Load and display saved prompts
+    async function loadSavedPrompts() {
+        console.log('Loading saved prompts...');
+        try {
+            const response = await fetch('api/get-saved-prompts.php');
+            const data = await response.json();
+            
+            if (response.ok) {
+                displaySavedPrompts(data.prompts, data.count);
+            } else {
+                showNotification('Failed to load saved prompts', 'error');
+            }
+        } catch (error) {
+            console.error('Load error:', error);
+            showNotification('Failed to load saved prompts', 'error');
+        }
+    }
+    
+    // Display saved prompts in modal
+    function displaySavedPrompts(prompts, count) {
+        savedPromptsCount.textContent = `${count} / 100 prompts saved`;
+        
+        if (prompts.length === 0) {
+            savedPromptsList.innerHTML = '';
+            noSavedPrompts.style.display = 'block';
+            return;
+        }
+        
+        noSavedPrompts.style.display = 'none';
+        
+        savedPromptsList.innerHTML = prompts.map(prompt => `
+            <div class="saved-prompt-item">
+                <div class="saved-prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
+                ${prompt.notes ? `<div class="saved-prompt-notes">${escapeHtml(prompt.notes)}</div>` : ''}
+                <div class="saved-prompt-meta">
+                    <span>Saved ${formatDate(prompt.created_at)}</span>
+                    <div class="saved-prompt-actions">
+                        <button class="icon-btn" onclick="useSavedPrompt(${prompt.id}, '${escapeHtml(prompt.original_prompt).replace(/'/g, "\\'")}', '${escapeHtml(prompt.enhanced_prompt).replace(/'/g, "\\'")}', '${escapeHtml(prompt.notes || '').replace(/'/g, "\\'")}')" title="Use this prompt">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                            </svg>
+                        </button>
+                        <button class="icon-btn" onclick="deleteSavedPrompt(${prompt.id})" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Use a saved prompt
+    function useSavedPrompt(promptId, originalPrompt, enhancedPrompt, notes) {
+        if (notes) {
+            showNotification('Use the prompt with your preferred notes field', 'info');
+            return;
+        }
+        
+        closeModal(savedPromptsModal);
+        
+        // Set the original prompt
+        promptInput.value = originalPrompt || '';
+        
+        // Load into localStorage for the enhancer to process it
+        localStorage.setItem('selectedPrompt', enhancedPrompt || '');
+        
+        // Update character count
+        updateCharCount();
+        
+        // Update quality score
+        updateInputQualityScore();
+        
+        // Enable the enhance button
+        updateEnhanceButtonState();
+        
+        // Focus on the input field
+        promptInput.focus();
+        
+        showNotification('Prompt loaded! You can enhance it or use it directly.', 'info');
+    }
+    
+    // Delete a saved prompt
+    async function deleteSavedPrompt(promptId) {
+        if (!confirm('Are you sure you want to delete this saved prompt?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch('api/delete-saved-prompt.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt_id: promptId })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showNotification('Prompt deleted successfully', 'success');
+                loadSavedPrompts(); // Reload the list
+                checkIfPromptSaved(); // Check if current output was saved
+            } else {
+                showNotification(data.error || 'Failed to delete prompt', 'error');
+            }
+        } catch (error) {
+            console.error('Delete error:', error);
+            showNotification('Failed to delete prompt', 'error');
+        }
+    }
+    
+    // Update save button visual state
+    function updateSaveButtonState(isSaved) {
+        if (!savePromptBtn) return;
+        
+        if (isSaved) {
+            savePromptBtn.classList.add('saved');
+            savePromptBtn.title = 'Already saved';
+        } else {
+            savePromptBtn.classList.remove('saved');
+            savePromptBtn.title = 'Save this prompt';
+        }
+    }
+    
+    // Check if current enhanced prompt is already saved
+    async function checkIfPromptSaved() {
+        const enhancedPrompt = promptOutput.value.trim();
+        if (!enhancedPrompt || !isAuthenticated) {
+            updateSaveButtonState(false);
+            return;
+        }
+        
+        try {
+            const response = await fetch('api/check-prompt-saved.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ enhanced_prompt: enhancedPrompt })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.saved) {
+                updateSaveButtonState(true);
+            } else {
+                updateSaveButtonState(false);
+            }
+        } catch (error) {
+            console.error('Check saved error:', error);
+            updateSaveButtonState(false);
+        }
+    }
+    
+    // Load and display user profile
+    async function loadProfile() {
+        console.log('Loading profile...');
+        try {
+            const response = await fetch('api/get-profile.php');
+            const data = await response.json();
+            
+            if (response.ok) {
+                document.getElementById('profile-username').value = data.username;
+                document.getElementById('profile-email').value = data.email;
+                document.getElementById('profile-created').value = new Date(data.created_at).toLocaleDateString();
+                document.getElementById('profile-saved-count').value = `${data.saved_prompts_count} / 100`;
+            } else {
+                showNotification('Failed to load profile', 'error');
+            }
+        } catch (error) {
+            console.error('Profile load error:', error);
+            showNotification('Failed to load profile', 'error');
+        }
+    }
+    
+    // Handle password change
+    async function handlePasswordChange(e) {
+        e.preventDefault();
+        
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        
+        if (!currentPassword || !newPassword) {
+            showNotification('Please fill in all fields', 'error');
+            return;
+        }
+        
+        if (newPassword === currentPassword) {
+            showNotification('New password must be different from current password', 'error');
+            return;
+        }
+        
+        try {
+            const response = await fetch('api/change-password.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    current_password: currentPassword,
+                    new_password: newPassword
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showNotification('Password changed successfully!', 'success');
+                document.getElementById('password-form').reset();
+            } else {
+                showNotification(data.error || 'Failed to change password', 'error');
+            }
+        } catch (error) {
+            console.error('Password change error:', error);
+            showNotification('Failed to change password', 'error');
+        }
+    }
+    
+    // Handle account deletion
+    async function handleDeleteAccount(e) {
+        e.preventDefault();
+        
+        const password = document.getElementById('delete-password').value;
+        
+        if (!password) {
+            showNotification('Please enter your password', 'error');
+            return;
+        }
+        
+        if (!confirm('This action cannot be undone. Are you absolutely sure?')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch('api/delete-account.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: password })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                showNotification('Account deleted successfully', 'success');
+                closeModal(deleteConfirmModal);
+                closeModal(profileModal);
+                
+                // Redirect to home after logout
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                showNotification(data.error || 'Failed to delete account', 'error');
+            }
+        } catch (error) {
+            console.error('Delete account error:', error);
+            showNotification('Failed to delete account', 'error');
+        }
+    }
+    
+    // Format date for display
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = now - date;
+        
+        if (diff < 60000) return 'just now';
+        if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+        if (diff < 604800000) return `${Math.floor(diff / 86400000)} days ago`;
+        
+        return date.toLocaleDateString();
+    }
+    
+    // Escape HTML for safe rendering
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text || '';
+        return div.innerHTML;
+    }
+    
+    // Global functions for inline onclick handlers (backup method)
+    window.savedPromptsLinkClick = function() {
+        console.log('savedPromptsLinkClick called!');
+        loadSavedPrompts();
+        openModal(savedPromptsModal);
+    };
+    
+    window.profileLinkClick = function() {
+        console.log('profileLinkClick called!');
+        loadProfile();
+        openModal(profileModal);
+    };
+    
+    // Initialize application
+    async function init() {
+        initTheme();
+        initTemperatureControl();
+        setupEventListeners();
+        checkUncloseAIAvailability();
+        updateEnhanceButtonState();
+        loadPromptFromLibrary();
+        
+        // Setup saved prompts and profile event listeners BEFORE auth
+        setupSavedPromptsAndProfileEventListeners();
+        
+        await initAuth(); // Initialize authentication
+        
+        // Check if current enhanced prompt is already saved (for authenticated users)
+        if (isAuthenticated) {
+            checkIfPromptSaved();
+        }
+    }
+    
+    // Override the existing init call to be async
     init();
 });
+
