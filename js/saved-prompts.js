@@ -63,6 +63,7 @@
 
             if (response.ok) {
                 displaySavedPrompts(data.prompts, data.count);
+                checkAndMigrateTitles();
             } else {
                 showNotification('Failed to load saved prompts', 'error');
             }
@@ -74,7 +75,7 @@
 
     // Handle saved prompt action clicks (event delegation)
     function handlePromptAction(e) {
-        const button = e.target.closest('.saved-prompt-btn');
+        const button = e.target.closest('.saved-prompt-btn, .title-action-btn');
         if (!button) return;
 
         const action = button.dataset.action;
@@ -88,6 +89,14 @@
 
             case 'delete':
                 deleteSavedPrompt(promptId);
+                break;
+
+            case 'edit-title':
+                startEditTitle(promptId);
+                break;
+
+            case 'regenerate-title':
+                regenerateTitle(promptId);
                 break;
 
             default:
@@ -109,6 +118,35 @@
 
         savedPromptsList.innerHTML = prompts.map(prompt => `
             <div class="saved-prompt-item" data-prompt-id="${prompt.id}">
+                <div class="saved-prompt-header">
+                    <div class="saved-prompt-title-container">
+                        <h3 class="saved-prompt-title" data-prompt-id="${prompt.id}">
+                            ${escapeHtml(prompt.title || 'Untitled Prompt')}
+                        </h3>
+                        <input
+                            type="text"
+                            class="saved-prompt-title-input hidden"
+                            data-prompt-id="${prompt.id}"
+                            value="${escapeHtml(prompt.title || '')}"
+                            maxlength="100"
+                            placeholder="Enter title..."
+                        />
+                    </div>
+                    <div class="saved-prompt-title-actions">
+                        <button class="title-action-btn" data-action="edit-title" data-prompt-id="${prompt.id}" title="Edit title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="title-action-btn" data-action="regenerate-title" data-prompt-id="${prompt.id}" title="Regenerate title with AI">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
                 <div class="saved-prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
                 ${prompt.notes ? `<div class="saved-prompt-notes">${escapeHtml(prompt.notes)}</div>` : ''}
                 <div class="saved-prompt-meta">
@@ -347,6 +385,145 @@
         } else {
             if (sunIcon) sunIcon.style.display = 'none';
             if (moonIcon) moonIcon.style.display = 'block';
+        }
+    }
+
+    // Title management functions
+
+    function startEditTitle(promptId) {
+        const titleElement = document.querySelector(`.saved-prompt-title[data-prompt-id="${promptId}"]`);
+        const inputElement = document.querySelector(`.saved-prompt-title-input[data-prompt-id="${promptId}"]`);
+
+        if (!titleElement || !inputElement) return;
+
+        titleElement.classList.add('hidden');
+        inputElement.classList.remove('hidden');
+
+        inputElement.focus();
+        inputElement.select();
+
+        inputElement.addEventListener('blur', () => saveTitle(promptId));
+        inputElement.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                saveTitle(promptId);
+            } else if (e.key === 'Escape') {
+                cancelEditTitle(promptId);
+            }
+        });
+    }
+
+    async function saveTitle(promptId) {
+        const inputElement = document.querySelector(`.saved-prompt-title-input[data-prompt-id="${promptId}"]`);
+        if (!inputElement) return;
+
+        const newTitle = inputElement.value.trim();
+
+        try {
+            const response = await fetch('api/update-title.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt_id: promptId,
+                    custom_title: newTitle
+                })
+            });
+
+            if (response.ok) {
+                updateTitleDisplay(promptId, newTitle);
+                showNotification('Title updated!', 'success');
+            } else {
+                showNotification('Failed to update title', 'error');
+                cancelEditTitle(promptId);
+            }
+        } catch (error) {
+            console.error('Save title error:', error);
+            showNotification('Failed to update title', 'error');
+            cancelEditTitle(promptId);
+        }
+    }
+
+    function cancelEditTitle(promptId) {
+        const titleElement = document.querySelector(`.saved-prompt-title[data-prompt-id="${promptId}"]`);
+        const inputElement = document.querySelector(`.saved-prompt-title-input[data-prompt-id="${promptId}"]`);
+
+        if (!titleElement || !inputElement) return;
+
+        inputElement.value = titleElement.textContent.trim();
+
+        inputElement.classList.add('hidden');
+        titleElement.classList.remove('hidden');
+    }
+
+    function updateTitleDisplay(promptId, newTitle) {
+        const titleElement = document.querySelector(`.saved-prompt-title[data-prompt-id="${promptId}"]`);
+        const inputElement = document.querySelector(`.saved-prompt-title-input[data-prompt-id="${promptId}"]`);
+
+        if (!titleElement) return;
+
+        titleElement.textContent = newTitle || 'Untitled Prompt';
+        if (inputElement) {
+            inputElement.value = newTitle || '';
+        }
+    }
+
+    async function regenerateTitle(promptId) {
+        const button = document.querySelector(`.title-action-btn[data-action="regenerate-title"][data-prompt-id="${promptId}"]`);
+        if (button) {
+            button.disabled = true;
+            button.classList.add('loading');
+        }
+
+        try {
+            const response = await fetch('api/regenerate-title.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt_id: promptId })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                updateTitleDisplay(promptId, data.title);
+                showNotification('Title regenerated!', 'success');
+            } else {
+                showNotification(data.error || 'Failed to regenerate title', 'error');
+            }
+        } catch (error) {
+            console.error('Regenerate title error:', error);
+            showNotification('Failed to regenerate title', 'error');
+        } finally {
+            if (button) {
+                button.disabled = false;
+                button.classList.remove('loading');
+            }
+        }
+    }
+
+    async function checkAndMigrateTitles() {
+        if (sessionStorage.getItem('titleMigrationChecked')) return;
+
+        try {
+            const response = await fetch('api/migrate-titles.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                if (data.migrated > 0) {
+                    showNotification(`Generated titles for ${data.migrated} prompts!`, 'success');
+                    loadSavedPrompts();
+                }
+
+                if (data.remaining > 0) {
+                    setTimeout(() => checkAndMigrateTitles(), 2000);
+                }
+            }
+        } catch (error) {
+            console.error('Migration error:', error);
+        } finally {
+            sessionStorage.setItem('titleMigrationChecked', 'true');
         }
     }
 

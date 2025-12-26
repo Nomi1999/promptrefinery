@@ -22,7 +22,7 @@ try {
     $count = $countData['count'];
     
     // Fetch all saved prompts for this user, ordered by created_at DESC (newest first)
-    $stmt = $database->prepare("SELECT id, original_prompt, enhanced_prompt, notes, created_at FROM saved_prompts WHERE user_id = :user_id ORDER BY created_at DESC");
+    $stmt = $database->prepare("SELECT id, original_prompt, enhanced_prompt, notes, title, created_at FROM saved_prompts WHERE user_id = :user_id ORDER BY created_at DESC");
     $stmt->bindValue(':user_id', $userId, SQLITE3_INTEGER);
     $result = $stmt->execute();
     

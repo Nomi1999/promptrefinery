@@ -42,6 +42,7 @@ try {
         original_prompt TEXT NOT NULL,
         enhanced_prompt TEXT NOT NULL,
         notes TEXT,
+        title TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )";
@@ -52,6 +53,22 @@ try {
     
     // Create index on user_id for faster queries
     $database->exec("CREATE INDEX IF NOT EXISTS idx_user_id ON saved_prompts(user_id)");
+    
+    // Check if title column exists, add if not (for existing databases)
+    $checkColumnSQL = "PRAGMA table_info(saved_prompts)";
+    $result = $database->query($checkColumnSQL);
+    $hasTitleColumn = false;
+    
+    while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
+        if ($row['name'] === 'title') {
+            $hasTitleColumn = true;
+            break;
+        }
+    }
+    
+    if (!$hasTitleColumn) {
+        $database->exec("ALTER TABLE saved_prompts ADD COLUMN title TEXT");
+    }
     
 } catch (Exception $e) {
     http_response_code(500);

@@ -55,7 +55,66 @@ try {
     
     if ($insertStmt->execute()) {
         $promptId = $database->lastInsertRowid();
-        sendJsonResponse(['message' => 'Prompt saved successfully', 'id' => $promptId], 201);
+
+        // Try to generate title for the saved prompt (non-blocking)
+        $generatedTitle = null;
+        try {
+            $systemPrompt = "Generate a short, descriptive title (5-10 words, max 100 characters) for this prompt. The title should capture main topic or purpose. Return ONLY the title, no quotes, no markdown, no explanations.";
+
+            $response = @file_get_contents('https://hermes.ai.unturf.com/v1/chat/completions', false, stream_context_create([
+                'http' => [
+                    'method' => 'POST',
+                    'header' => "Content-Type: application/json\r\nAuthorization: Bearer dummy-api-key\r\n",
+                    'timeout' => 10,
+                    'content' => json_encode([
+                        'model' => 'adamo1139/Hermes-3-Llama-3.1-8B-FP8-Dynamic',
+                        'messages' => [
+                            [
+                                'role' => 'system',
+                                'content' => $systemPrompt
+                            ],
+                            [
+                                'role' => 'user',
+                                'content' => $enhancedPrompt
+                            ]
+                        ],
+                        'max_tokens' => 30,
+                        'temperature' => 0.3
+                    ])
+                ]
+            ]));
+
+            if ($response !== false) {
+                $data = json_decode($response, true);
+                $title = trim($data['choices'][0]['message']['content'] ?? '');
+
+                if (!empty($title)) {
+                    // Clean up title
+                    $title = preg_replace('/^[\'""]|[\'""]$/', '', $title);
+                    $title = preg_replace('/^(?:Title:|The title is:?|Generated title:?)\s*/i', '', $title);
+                    $title = trim($title);
+
+                    // Limit to 100 characters
+                    if (strlen($title) > 100) {
+                        $title = substr($title, 0, 97) . '...';
+                    }
+
+                    // Update database with generated title
+                    $updateStmt = $database->prepare("UPDATE saved_prompts SET title = :title WHERE id = :id AND user_id = :user_id");
+                    $updateStmt->bindValue(':title', $title, SQLITE3_TEXT);
+                    $updateStmt->bindValue(':id', $promptId, SQLITE3_INTEGER);
+                    $updateStmt->bindValue(':user_id', $userId, SQLITE3_INTEGER);
+                    $updateStmt->execute();
+
+                    $generatedTitle = $title;
+                }
+            }
+        } catch (Exception $e) {
+            // Log error but don't block save
+            error_log('Title generation error: ' . $e->getMessage());
+        }
+
+        sendJsonResponse(['message' => 'Prompt saved successfully', 'id' => $promptId, 'title' => $generatedTitle], 201);
     } else {
         sendJsonResponse(['error' => 'Failed to save prompt'], 500);
     }
