@@ -1242,6 +1242,10 @@ function updateThemeIcons(theme) {
     const sidebarAuthSection = document.getElementById('sidebar-auth-section');
     const sidebarLoginBtn = document.getElementById('sidebar-login-btn');
     const sidebarRegisterBtn = document.getElementById('sidebar-register-btn');
+    const sidebarUserSection = document.getElementById('sidebar-user-section');
+    const sidebarUserName = document.getElementById('sidebar-user-name');
+    const sidebarLogoutBtn = document.getElementById('sidebar-logout-btn');
+    const sidebarLogoutSection = document.getElementById('sidebar-logout-section');
 
     // Modal elements
     const authModalOverlay = document.getElementById('auth-modal-overlay');
@@ -1297,9 +1301,11 @@ function updateThemeIcons(theme) {
     function showUserMenu() {
         if (currentUser) {
             userDisplay.textContent = currentUser.username;
+            if (sidebarUserName) {
+                sidebarUserName.textContent = currentUser.username;
+            }
             authButtons.style.display = 'none';
             userMenu.style.removeProperty('display');
-            updateSidebarAuthState();
         }
     }
     
@@ -1313,26 +1319,41 @@ function updateThemeIcons(theme) {
             }
         }
 
-        // Show/hide sidebar auth section based on auth state using classes (not inline styles)
-        // This allows CSS media queries to control visibility
-        if (sidebarAuthSection) {
+        // Update sidebar auth sections using classes (more reliable than inline styles)
+        if (sidebarAuthSection && sidebarUserSection && sidebarLogoutSection) {
             if (isAuthenticated) {
-                sidebarAuthSection.style.display = 'none';
+                // User is logged in - show user section & logout, hide login/register
+                sidebarAuthSection.classList.remove('logged-out');
+                sidebarAuthSection.classList.add('logged-in');
+                sidebarUserSection.classList.remove('logged-out');
+                sidebarUserSection.classList.add('logged-in');
+                sidebarLogoutSection.classList.remove('logged-out');
+                sidebarLogoutSection.classList.add('logged-in');
             } else {
-                // Remove inline style to let CSS media query control visibility
-                sidebarAuthSection.style.removeProperty('display');
+                // User is logged out - show login/register, hide user section & logout
+                sidebarAuthSection.classList.remove('logged-in');
+                sidebarAuthSection.classList.add('logged-out');
+                sidebarUserSection.classList.remove('logged-in');
+                sidebarUserSection.classList.add('logged-out');
+                sidebarLogoutSection.classList.remove('logged-in');
+                sidebarLogoutSection.classList.add('logged-out');
             }
         }
     }
     
     // Override showUserMenu to check for profile button (already styled via user-menu-toggle class)
-    // The profile button shows icon + username via HTML structure, so we just need to set the username text
+    // The profile button shows icon + username via HTML structure, so we just need to set username text
     function updateUserDisplay() {
-        if (currentUser && userDisplay) {
-            userDisplay.textContent = currentUser.username;
+        if (currentUser) {
+            if (userDisplay) {
+                userDisplay.textContent = currentUser.username;
+            }
+            if (sidebarUserName) {
+                sidebarUserName.textContent = currentUser.username;
+            }
         }
     }
-    
+
     // Open modal
     function openModal(modal) {
         modal.classList.add('open');
@@ -1483,12 +1504,16 @@ function updateThemeIcons(theme) {
             const response = await fetch('api/logout.php', {
                 method: 'POST'
             });
-            
+
             if (response.ok) {
                 isAuthenticated = false;
                 currentUser = null;
                 showAuthButtons();
                 updateSidebarAuthState();
+                // Close mobile sidebar if open
+                if (sidebar && sidebar.classList.contains('open')) {
+                    closeMobileMenu();
+                }
                 showNotification('Logged out successfully', 'info');
             }
         } catch (error) {
@@ -1498,6 +1523,10 @@ function updateThemeIcons(theme) {
             currentUser = null;
             showAuthButtons();
             updateSidebarAuthState();
+            // Close mobile sidebar if open
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeMobileMenu();
+            }
         }
     }
     
@@ -1556,6 +1585,11 @@ function updateThemeIcons(theme) {
 
         // Logout
         if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+        if (sidebarLogoutBtn) sidebarLogoutBtn.addEventListener('click', () => {
+            handleLogout();
+            // Close sidebar after logout
+            closeMobileMenu();
+        });
 
         // Close modals with Escape key
         document.addEventListener('keydown', (e) => {
