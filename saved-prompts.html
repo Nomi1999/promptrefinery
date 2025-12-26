@@ -99,6 +99,43 @@
         </div>
     </div>
 
+    <div id="saved-prompt-modal" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-container">
+            <header class="modal-header">
+                <div class="modal-title-group">
+                    <h2 id="saved-modal-title" class="modal-title"></h2>
+                </div>
+                <button id="saved-modal-close-btn" class="icon-btn" aria-label="Close modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </header>
+            <div class="modal-body">
+                <div class="modal-prompt-wrapper">
+                    <pre><code id="saved-modal-content" class="modal-prompt-content"></code></pre>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button id="saved-modal-copy-btn" class="prompt-btn copy-prompt-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy
+                </button>
+                <button id="saved-modal-delete-btn" class="prompt-btn" style="background: var(--error); color: white;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    Delete
+                </button>
+            </footer>
+        </div>
+    </div>
+
     <script src="js/saved-prompts.js"></script>
 </body>
 </html>

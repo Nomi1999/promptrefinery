@@ -10,11 +10,49 @@
     const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
+    // Saved prompt modal elements
+    const savedPromptModal = document.getElementById('saved-prompt-modal');
+    const savedModalTitle = document.getElementById('saved-modal-title');
+    const savedModalContent = document.getElementById('saved-modal-content');
+    const savedModalCopyBtn = document.getElementById('saved-modal-copy-btn');
+    const savedModalDeleteBtn = document.getElementById('saved-modal-delete-btn');
+    const savedModalCloseBtn = document.getElementById('saved-modal-close-btn');
+
+    // Track current prompt being viewed in modal
+    let currentModalPromptId = null;
+
     // Notification system state
     let activeNotification = null;
     let notificationQueue = [];
     let isNotificationAnimating = false;
     let promptToDelete = null;
+
+    // Store loaded prompts for modal access
+    let savedPromptsData = [];
+
+    // Open saved prompt modal
+    function openSavedPromptModal(prompt) {
+        currentModalPromptId = prompt.id;
+        savedModalTitle.textContent = prompt.title || 'Untitled Prompt';
+        savedModalContent.textContent = prompt.enhanced_prompt;
+        savedModalCopyBtn.dataset.prompt = prompt.enhanced_prompt;
+        savedPromptModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Load and open prompt modal from saved prompts
+    function loadAndOpenPromptModal(promptId) {
+        const prompt = savedPromptsData.find(p => p.id === promptId);
+        if (prompt) {
+            openSavedPromptModal(prompt);
+        }
+    }
+
+    // Close saved prompt modal
+    function closeSavedPromptModal() {
+        savedPromptModal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
 
     // Initialize the saved prompts page
     function init() {
@@ -52,6 +90,56 @@
                 }
             });
         }
+
+        // Saved prompt modal handlers
+        if (savedModalCloseBtn) {
+            savedModalCloseBtn.addEventListener('click', closeSavedPromptModal);
+        }
+
+        if (savedPromptModal) {
+            savedPromptModal.addEventListener('click', (e) => {
+                if (e.target === savedPromptModal) {
+                    closeSavedPromptModal();
+                }
+            });
+        }
+
+        if (savedModalCopyBtn) {
+            savedModalCopyBtn.addEventListener('click', (e) => {
+                const text = e.currentTarget.dataset.prompt || '';
+                copySavedPrompt(text);
+            });
+        }
+
+        if (savedModalDeleteBtn) {
+            savedModalDeleteBtn.addEventListener('click', () => {
+                if (currentModalPromptId) {
+                    closeSavedPromptModal();
+                    deleteSavedPrompt(currentModalPromptId);
+                }
+            });
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && savedPromptModal?.classList.contains('open')) {
+                closeSavedPromptModal();
+            }
+        });
+
+        // Click on saved prompt card to open modal
+        if (savedPromptsList) {
+            savedPromptsList.addEventListener('click', (e) => {
+                const card = e.target.closest('.saved-prompt-item');
+                if (!card) return;
+
+                // Ignore if clicking on buttons
+                if (e.target.closest('.saved-prompt-btn, .title-action-btn')) return;
+
+                const promptId = parseInt(card.dataset.promptId);
+                loadAndOpenPromptModal(promptId);
+            });
+        }
     }
 
     // Load and display saved prompts
@@ -62,6 +150,7 @@
             const data = await response.json();
 
             if (response.ok) {
+                savedPromptsData = data.prompts;
                 displaySavedPrompts(data.prompts, data.count);
                 checkAndMigrateTitles();
             } else {
