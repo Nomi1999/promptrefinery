@@ -374,6 +374,123 @@
     font-weight: 500;
 }
 
+/* Sidebar Auth Section - Mobile */
+.sidebar-auth-section {
+    display: none; /* Hidden by default on desktop */
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0;
+    margin-bottom: 1.5rem;
+    background: transparent;
+    border: none;
+}
+
+/* Desktop (>=1025px): Remove !important so JavaScript can control auth state */
+@media (min-width: 1025px) {
+    .sidebar-auth-section {
+        display: none !important;
+    }
+}
+
+/* Mobile/tablet (<=1024px): Show sidebar auth, hide header auth */
+@media (max-width: 1024px) {
+    .sidebar-auth-section {
+        display: flex !important;
+    }
+
+    .auth-buttons {
+        display: none !important;
+    }
+
+    .user-menu {
+        display: none !important;
+    }
+}
+
+.sidebar-auth-title {
+    display: none;
+}
+
+.sidebar-auth-btn {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Login button - subtle outline style */
+.sidebar-auth-btn.login {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.sidebar-auth-btn.login::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.sidebar-auth-btn.login:hover {
+    background: var(--bg-subtle);
+    border-color: var(--primary);
+    padding-left: 12px;
+}
+
+.sidebar-auth-btn.login:hover::before {
+    opacity: 1;
+}
+
+.sidebar-auth-btn.login:active {
+    background: var(--bg-subtle);
+    transform: scale(0.98);
+}
+
+/* Register button - subtle ghost style */
+.sidebar-auth-btn.register {
+    background: transparent;
+    color: var(--primary);
+    border: none;
+    font-weight: 600;
+}
+
+.sidebar-auth-btn.register:hover {
+    background: rgba(var(--primary), 0.08);
+}
+
+.sidebar-auth-btn.register:active {
+    background: rgba(var(--primary), 0.12);
+    transform: scale(0.98);
+}
+
+/* Icon styling for auth buttons */
+.sidebar-auth-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+}
+
+/* Divider between auth section and nav */
+.sidebar-auth-section + .nav-section {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+}
+
 /* Modal Styles */
 .modal-overlay {
     position: fixed;
@@ -536,6 +653,25 @@
 
 [data-theme="dark"] .form-group input:focus {
     border-color: var(--primary);
+}
+
+/* Dark mode sidebar auth buttons */
+[data-theme="dark"] .sidebar-auth-btn.login {
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+[data-theme="dark"] .sidebar-auth-btn.login:hover {
+    background: var(--bg-subtle);
+    border-color: var(--primary);
+}
+
+[data-theme="dark"] .sidebar-auth-btn.register {
+    color: var(--primary);
+}
+
+[data-theme="dark"] .sidebar-auth-btn.register:hover {
+    background: rgba(250, 250, 250, 0.08);
 }
 }
 
@@ -2110,7 +2246,7 @@ body.library-page {
     .mobile-menu-btn {
         display: flex !important;
     }
-    
+
     .header-actions {
         display: flex;
         align-items: center;

@@ -1237,7 +1237,12 @@ function updateThemeIcons(theme) {
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
     const logoutBtn = document.getElementById('logout-btn');
-    
+
+    // Sidebar auth elements
+    const sidebarAuthSection = document.getElementById('sidebar-auth-section');
+    const sidebarLoginBtn = document.getElementById('sidebar-login-btn');
+    const sidebarRegisterBtn = document.getElementById('sidebar-register-btn');
+
     // Modal elements
     const authModalOverlay = document.getElementById('auth-modal-overlay');
     const loginModal = document.getElementById('login-modal');
@@ -1282,28 +1287,40 @@ function updateThemeIcons(theme) {
     
     // Show authentication buttons (logged out state)
     function showAuthButtons() {
-        authButtons.style.display = 'flex';
+        // Remove inline styles to let CSS media queries control visibility
+        authButtons.style.removeProperty('display');
         userMenu.style.display = 'none';
         updateSidebarAuthState();
     }
-    
+
     // Show user menu (logged in state)
     function showUserMenu() {
         if (currentUser) {
             userDisplay.textContent = currentUser.username;
             authButtons.style.display = 'none';
-            userMenu.style.display = 'flex';
+            userMenu.style.removeProperty('display');
             updateSidebarAuthState();
         }
     }
     
-    // Update sidebar auth state - show/hide "My Account" section
+    // Update sidebar auth state - show/hide "My Account" section and auth buttons
     function updateSidebarAuthState() {
         if (sidebarMyAccount) {
             if (isAuthenticated) {
                 sidebarMyAccount.style.display = 'block';
             } else {
                 sidebarMyAccount.style.display = 'none';
+            }
+        }
+
+        // Show/hide sidebar auth section based on auth state using classes (not inline styles)
+        // This allows CSS media queries to control visibility
+        if (sidebarAuthSection) {
+            if (isAuthenticated) {
+                sidebarAuthSection.style.display = 'none';
+            } else {
+                // Remove inline style to let CSS media query control visibility
+                sidebarAuthSection.style.removeProperty('display');
             }
         }
     }
@@ -1486,15 +1503,27 @@ function updateThemeIcons(theme) {
     
     // Setup authentication event listeners
     function setupAuthEventListeners() {
-        // Modal opening
+        // Modal opening - header buttons
         if (loginBtn) loginBtn.addEventListener('click', () => openModal(loginModal));
         if (registerBtn) registerBtn.addEventListener('click', () => openModal(registerModal));
-        
+
+        // Modal opening - sidebar buttons
+        if (sidebarLoginBtn) sidebarLoginBtn.addEventListener('click', () => {
+            openModal(loginModal);
+            // Close sidebar on mobile after clicking auth button
+            closeMobileMenu();
+        });
+        if (sidebarRegisterBtn) sidebarRegisterBtn.addEventListener('click', () => {
+            openModal(registerModal);
+            // Close sidebar on mobile after clicking auth button
+            closeMobileMenu();
+        });
+
         // Modal closing
         if (closeLoginModal) closeLoginModal.addEventListener('click', () => closeModal(loginModal));
         if (closeRegisterModal) closeRegisterModal.addEventListener('click', () => closeModal(registerModal));
         if (authModalOverlay) authModalOverlay.addEventListener('click', closeModal);
-        
+
         // Form switching
         if (switchToRegister) switchToRegister.addEventListener('click', (e) => {
             e.preventDefault();
@@ -1506,14 +1535,14 @@ function updateThemeIcons(theme) {
             closeModal();
             openModal(loginModal);
         });
-        
+
         // Form submissions
         if (loginForm) loginForm.addEventListener('submit', handleLogin);
         if (registerForm) registerForm.addEventListener('submit', handleRegister);
-        
+
         // Logout
         if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-        
+
         // Close modals with Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
