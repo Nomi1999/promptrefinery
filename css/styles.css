@@ -1,27 +1,27 @@
-/* Modern Minimalist Color Scheme - Light Mode (Warm) */
+/* Modern Slate & Teal Color Scheme - Light Mode */
 :root {
-    --primary: #1a1a1a;
-    --primary-hover: #333333;
+    --primary: #0f766e; /* Deep Teal */
+    --primary-hover: #115e59;
     --primary-foreground: #ffffff;
 
-    --bg-body: #faf9f7;
+    --bg-body: #f8fafc; /* Slate 50 */
     --bg-card: #ffffff;
-    --bg-subtle: #f5f3f0;
+    --bg-subtle: #f1f5f9; /* Slate 100 */
     --bg-input: #ffffff;
-    --bg-sidebar: #faf9f7;
+    --bg-sidebar: #f8fafc;
 
-    --text-main: #1a1a1a;
-    --text-muted: #6b6b6b;
-    --text-light: #9a9a9a;
+    --text-main: #0f172a; /* Slate 900 */
+    --text-muted: #475569; /* Slate 600 */
+    --text-light: #94a3b8; /* Slate 400 */
 
-    --border: #e8e6e3;
-    --border-hover: #d4d2cf;
+    --border: #e2e8f0; /* Slate 200 */
+    --border-hover: #cbd5e1; /* Slate 300 */
 
-    --success: #0a7d5a;
-    --success-bg: #e8f5f0;
-    --error: #c41e3a;
+    --success: #059669;
+    --success-bg: #ecfdf5;
+    --error: #be123c; /* Rose for sophistication */
     --warning: #b45309;
-    --info: #1d6cb8;
+    --info: #0f766e;
 
     /* Spacing Scale */
     --space-1: 0.25rem;
@@ -41,11 +41,8 @@
     --radius-xl: 1rem;
     --radius-full: 9999px;
 
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-focus: 0 0 0 2px rgba(26, 26, 26, 0.2);
+    --shadow-focus: 0 0 0 2px rgba(15, 118, 110, 0.2);
 
     /* Typography */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -54,36 +51,36 @@
     --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Modern Minimalist Color Scheme - Dark Mode (Warm) */
+/* Modern Slate & Teal Color Scheme - Dark Mode */
 @media (prefers-color-scheme: dark) {
     :root {
-        --primary: #f5f4f2;
-        --primary-hover: #e8e7e4;
-        --primary-foreground: #1a1a1a;
+        --primary: #2dd4bf; /* Teal 400 */
+        --primary-hover: #5eead4; /* Teal 300 */
+        --primary-foreground: #0f172a; /* Slate 900 for contrast on bright teal */
 
-        --bg-body: #141413;
-        --bg-card: #1c1c1b;
-        --bg-subtle: #272625;
-        --bg-input: #1c1c1b;
-        --bg-sidebar: #141413;
+        --bg-body: #0f172a; /* Slate 900 */
+        --bg-card: #1e293b; /* Slate 800 */
+        --bg-subtle: #334155; /* Slate 700 */
+        --bg-input: #1e293b;
+        --bg-sidebar: #0f172a;
 
-        --text-main: #f5f4f2;
-        --text-muted: #a1a0a0;
-        --text-light: #5c5c5b;
+        --text-main: #f8fafc; /* Slate 50 */
+        --text-muted: #cbd5e1; /* Slate 300 */
+        --text-light: #94a3b8; /* Slate 400 */
 
-        --border: #363432;
-        --border-hover: #4a4946;
+        --border: #334155; /* Slate 700 */
+        --border-hover: #475569; /* Slate 600 */
 
-        --success: #4ade80;
-        --success-bg: rgba(74, 222, 128, 0.1);
-        --error: #f87171;
+        --success: #34d399;
+        --success-bg: rgba(52, 211, 153, 0.1);
+        --error: #fb7185; /* Soft Rose */
         --warning: #fbbf24;
-        --info: #60a5fa;
+        --info: #2dd4bf;
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-    --shadow-focus: 0 0 0 2px rgba(245, 244, 242, 0.3);
+    --shadow-focus: 0 0 0 2px rgba(59, 130, 246, 0.3);
 }
 
 .saved-prompt-header {
@@ -1573,26 +1570,26 @@ body.library-page {
     line-height: 1.5;
 }
 
-/* Feedback Category Colors - Modern Minimalist Theme */
-.tag-clarity { background-color: rgba(29, 108, 184, 0.1); color: #1d6cb8; }
-.tag-specificity { background-color: rgba(10, 125, 90, 0.1); color: #0a7d5a; }
+/* Feedback Category Colors - Modern Slate & Teal Theme */
+.tag-clarity { background-color: rgba(15, 118, 110, 0.1); color: var(--info); }
+.tag-specificity { background-color: var(--success-bg); color: var(--success); }
 .tag-structure { background-color: var(--bg-subtle); color: var(--text-main); border: 1px solid var(--border); }
-.tag-context { background-color: rgba(196, 30, 58, 0.1); color: #c41e3a; }
-.tag-constraints { background-color: rgba(180, 83, 9, 0.1); color: #b45309; }
-.tag-style { background-color: rgba(147, 51, 234, 0.1); color: #9333ea; }
-.tag-effectiveness { background-color: rgba(29, 108, 184, 0.1); color: #1d6cb8; }
+.tag-context { background-color: #fff1f2; color: var(--error); }
+.tag-constraints { background-color: #fffbeb; color: var(--warning); }
+.tag-style { background-color: rgba(15, 118, 110, 0.1); color: var(--primary); }
+.tag-effectiveness { background-color: rgba(15, 118, 110, 0.1); color: var(--info); }
 .tag-user-experience { background-color: var(--bg-subtle); color: var(--text-main); border: 1px solid var(--border); }
 .tag-general { background-color: var(--bg-subtle); color: var(--text-muted); }
 
-/* Dark Mode Tag Colors - Modern Minimalist Theme */
+/* Dark Mode Tag Colors - Modern Slate & Teal Theme */
 @media (prefers-color-scheme: dark) {
-    .tag-clarity { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-    .tag-specificity { background-color: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .tag-clarity { background-color: rgba(45, 212, 191, 0.15); color: var(--info); }
+    .tag-specificity { background-color: var(--success-bg); color: var(--success); }
     .tag-structure { background-color: var(--bg-subtle); color: var(--text-main); border-color: var(--border); }
-    .tag-context { background-color: rgba(248, 113, 113, 0.15); color: #f87171; }
-    .tag-constraints { background-color: rgba(251, 191, 36, 0.15); color: #fbbf24; }
-    .tag-style { background-color: rgba(167, 139, 250, 0.15); color: #a78bfa; }
-    .tag-effectiveness { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .tag-context { background-color: rgba(251, 113, 133, 0.15); color: var(--error); }
+    .tag-constraints { background-color: rgba(251, 191, 36, 0.15); color: var(--warning); }
+    .tag-style { background-color: rgba(45, 212, 191, 0.15); color: var(--primary); }
+    .tag-effectiveness { background-color: rgba(45, 212, 191, 0.15); color: var(--info); }
     .tag-user-experience { background-color: var(--bg-subtle); color: var(--text-main); }
 }
 
@@ -1763,37 +1760,37 @@ body.library-page {
 }
 
 .notification.success {
-    background-color: #e8f5f0;
-    color: #0a7d5a;
-    border-color: #0a7d5a;
+    background-color: var(--success-bg);
+    color: var(--success);
+    border-color: var(--success);
     box-shadow: var(--shadow-lg);
 }
 
 .notification.error {
-    background-color: #fce8ec;
-    color: #c41e3a;
-    border-color: #c41e3a;
+    background-color: var(--error-bg);
+    color: var(--error);
+    border-color: var(--error);
     box-shadow: var(--shadow-lg);
 }
 
 .notification.warning {
-    background-color: #fef5e6;
-    color: #b45309;
-    border-color: #b45309;
+    background-color: var(--warning-bg);
+    color: var(--warning);
+    border-color: var(--warning);
     box-shadow: var(--shadow-lg);
 }
 
 .notification.info {
     background-color: var(--bg-card);
     /* Solid card background */
-    color: var(--text-main);
+    color: var(--info);
     /* Main text color */
-    border-color: var(--border);
+    border-color: var(--info);
     /* Standard border */
     box-shadow: var(--shadow-lg);
 }
 
-/* Dark Mode - Solid Backgrounds - Modern Minimalist Theme */
+/* Dark Mode - Solid Backgrounds - Modern Slate & Teal Theme */
 @media (prefers-color-scheme: dark) {
     .notification {
         background-color: var(--bg-card);
@@ -1803,30 +1800,30 @@ body.library-page {
     }
 
     .notification.success {
-        background-color: #0f2922;
-        color: #4ade80;
-        border-color: #0a7d5a;
+        background-color: var(--success-bg);
+        color: var(--success);
+        border-color: var(--success);
         box-shadow: none;
     }
 
     .notification.error {
-        background-color: #2a0f12;
-        color: #f87171;
-        border-color: #c41e3a;
+        background-color: var(--error-bg);
+        color: var(--error);
+        border-color: var(--error);
         box-shadow: none;
     }
 
     .notification.warning {
-        background-color: #2a1d0a;
-        color: #fbbf24;
-        border-color: #b45309;
+        background-color: var(--warning-bg);
+        color: var(--warning);
+        border-color: var(--warning);
         box-shadow: none;
     }
 
     .notification.info {
         background-color: var(--bg-card);
-        border-color: var(--border);
-        color: var(--text-main);
+        border-color: var(--info);
+        color: var(--info);
         box-shadow: none;
     }
 }
@@ -2631,64 +2628,67 @@ body.library-page {
     }
 }
 
-/* Manual Theme Overrides - Light - Modern Minimalist Theme */
+/* Manual Theme Overrides - Light - Modern Slate & Teal Theme */
 [data-theme="light"] {
-    --primary: #1a1a1a;
-    --primary-hover: #333333;
+    --primary: #0f766e;
+    --primary-hover: #115e59;
     --primary-foreground: #ffffff;
 
-    --bg-body: #faf9f7;
+    --bg-body: #f8fafc;
     --bg-card: #ffffff;
-    --bg-subtle: #f5f3f0;
+    --bg-subtle: #f1f5f9;
     --bg-input: #ffffff;
-    --bg-sidebar: #faf9f7;
+    --bg-sidebar: #f8fafc;
 
-    --text-main: #1a1a1a;
-    --text-muted: #6b6b6b;
-    --text-light: #9a9a9a;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --text-light: #94a3b8;
 
-    --border: #e8e6e3;
-    --border-hover: #d4d2cf;
+    --border: #e2e8f0;
+    --border-hover: #cbd5e1;
 
-    --success: #0a7d5a;
-    --success-bg: #e8f5f0;
-    --error: #c41e3a;
+    --success: #059669;
+    --success-bg: #ecfdf5;
+    --error: #be123c;
+    --error-bg: #fff1f2;
     --warning: #b45309;
-    --info: #1d6cb8;
+    --warning-bg: #fffbeb;
+    --info: #0f766e;
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-focus: 0 0 0 2px rgba(23, 23, 23, 0.2);
+    --shadow-focus: 0 0 0 2px rgba(15, 118, 110, 0.2);
 }
 
-/* Manual Theme Overrides - Dark - Modern Minimalist Theme */
+/* Manual Theme Overrides - Dark - Modern Slate & Teal Theme */
 [data-theme="dark"] {
-    --primary: #f5f4f2;
-    --primary-hover: #e8e7e4;
-    --primary-foreground: #1a1a1a;
+    --primary: #2dd4bf;
+    --primary-hover: #5eead4;
+    --primary-foreground: #0f172a;
 
-    --bg-body: #141413;
-    --bg-card: #1c1c1b;
-    --bg-subtle: #272625;
-    --bg-input: #1c1c1b;
-    --bg-sidebar: #141413;
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --bg-subtle: #334155;
+    --bg-input: #1e293b;
+    --bg-sidebar: #0f172a;
 
-    --text-main: #f5f4f2;
-    --text-muted: #a1a0a0;
-    --text-light: #5c5c5b;
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --text-light: #94a3b8;
 
-    --border: #363432;
-    --border-hover: #4a4946;
+    --border: #334155;
+    --border-hover: #475569;
 
-    --success: #4ade80;
-    --success-bg: rgba(74, 222, 128, 0.1);
-    --error: #f87171;
-    --warning: #fbbf24;
-    --info: #60a5fa;
-
+            --success: #34d399;
+            --success-bg: #162c2a;
+            --error: #fb7185;
+            --error-bg: #2d161b;
+            --warning: #fbbf24;
+            --warning-bg: #2d2212;
+            --info: #2dd4bf;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-    --shadow-focus: 0 0 0 2px rgba(245, 244, 242, 0.3);
+    --shadow-focus: 0 0 0 2px rgba(45, 212, 191, 0.3);
 }
