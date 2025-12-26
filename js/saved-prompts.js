@@ -5,11 +5,16 @@
     const themeToggleBtn = document.getElementById('theme-toggle');
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    const closeDeleteModalBtn = document.getElementById('close-delete-modal');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
     // Notification system state
     let activeNotification = null;
     let notificationQueue = [];
     let isNotificationAnimating = false;
+    let promptToDelete = null;
 
     // Initialize the saved prompts page
     function init() {
@@ -26,6 +31,26 @@
 
         if (savedPromptsList) {
             savedPromptsList.addEventListener('click', handlePromptAction);
+        }
+
+        if (closeDeleteModalBtn) {
+            closeDeleteModalBtn.addEventListener('click', hideDeleteModal);
+        }
+
+        if (cancelDeleteBtn) {
+            cancelDeleteBtn.addEventListener('click', hideDeleteModal);
+        }
+
+        if (confirmDeleteBtn) {
+            confirmDeleteBtn.addEventListener('click', confirmDelete);
+        }
+
+        if (deleteConfirmModal) {
+            deleteConfirmModal.addEventListener('click', (e) => {
+                if (e.target === deleteConfirmModal) {
+                    hideDeleteModal();
+                }
+            });
         }
     }
 
@@ -49,7 +74,7 @@
 
     // Handle saved prompt action clicks (event delegation)
     function handlePromptAction(e) {
-        const button = e.target.closest('.prompt-action-btn');
+        const button = e.target.closest('.saved-prompt-btn');
         if (!button) return;
 
         const action = button.dataset.action;
@@ -122,21 +147,46 @@
 
     // Delete a saved prompt
     async function deleteSavedPrompt(promptId) {
-        if (!confirm('Are you sure you want to delete this saved prompt?')) {
-            return;
+        promptToDelete = promptId;
+        showDeleteModal();
+    }
+
+    async function showDeleteModal() {
+        if (deleteConfirmModal) {
+            deleteConfirmModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                deleteConfirmModal.classList.add('open');
+            }, 10);
         }
+    }
+
+    function hideDeleteModal() {
+        if (deleteConfirmModal) {
+            deleteConfirmModal.classList.remove('open');
+            setTimeout(() => {
+                deleteConfirmModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }, 200);
+        }
+        promptToDelete = null;
+    }
+
+    async function confirmDelete() {
+        if (!promptToDelete) return;
 
         try {
             const response = await fetch('api/delete-saved-prompt.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt_id: promptId })
+                body: JSON.stringify({ prompt_id: promptToDelete })
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 showNotification('Prompt deleted successfully', 'success');
+                hideDeleteModal();
                 loadSavedPrompts();
             } else {
                 showNotification(data.error || 'Failed to delete prompt', 'error');

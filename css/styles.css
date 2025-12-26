@@ -495,7 +495,7 @@ body.library-page {
 /* Header - Simplified */
 .app-header {
     flex-shrink: 0;
-    padding: var(--space-4) 0 var(--space-4) 0;
+    padding: var(--space-2) 0 var(--space-2) 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
