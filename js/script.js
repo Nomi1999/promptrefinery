@@ -1509,14 +1509,28 @@ function updateThemeIcons(theme) {
 
         // Modal opening - sidebar buttons
         if (sidebarLoginBtn) sidebarLoginBtn.addEventListener('click', () => {
-            openModal(loginModal);
-            // Close sidebar on mobile after clicking auth button
+            // Show overlay immediately to block page interactions
+            if (authModalOverlay) authModalOverlay.style.display = 'block';
+            // Close sidebar
             closeMobileMenu();
+            // Wait for sidebar animation to complete (300ms), then show modal
+            setTimeout(() => {
+                loginModal.style.display = 'block';
+                loginModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }, 300);
         });
         if (sidebarRegisterBtn) sidebarRegisterBtn.addEventListener('click', () => {
-            openModal(registerModal);
-            // Close sidebar on mobile after clicking auth button
+            // Show overlay immediately to block page interactions
+            if (authModalOverlay) authModalOverlay.style.display = 'block';
+            // Close sidebar
             closeMobileMenu();
+            // Wait for sidebar animation to complete (300ms), then show modal
+            setTimeout(() => {
+                registerModal.style.display = 'block';
+                registerModal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }, 300);
         });
 
         // Modal closing
