@@ -30,17 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Profile Management Elements
     const profileBtn = document.getElementById('profile-btn');
-    const viewSavedPromptsLink = document.getElementById('view-saved-prompts');
     const viewProfileLink = document.getElementById('view-profile');
-    
+
     // Modal Elements
-    const savedPromptsModal = document.getElementById('saved-prompts-modal');
-    const savedPromptsList = document.getElementById('saved-prompts-list');
-    const noSavedPrompts = document.getElementById('no-saved-prompts');
-    const savedPromptsCount = document.getElementById('saved-prompts-count');
     const profileModal = document.getElementById('profile-modal');
     const deleteConfirmModal = document.getElementById('delete-confirm-modal');
-    const closeSavedModalBtn = document.getElementById('close-saved-modal');
     const closeProfileModalBtn = document.getElementById('close-profile-modal');
     const closeDeleteModalBtn = document.getElementById('close-delete-modal');
     const deleteAccountBtn = document.getElementById('delete-account-btn');
@@ -1506,8 +1500,6 @@ function updateThemeIcons(theme) {
                 // Check all modals
                 if (loginModal.style.display === 'block' || registerModal.style.display === 'block') {
                     closeModal();
-                } else if (savedPromptsModal && savedPromptsModal.style.display === 'block') {
-                    closeModal(savedPromptsModal);
                 } else if (profileModal && profileModal.style.display === 'block') {
                     closeModal(profileModal);
                 } else if (deleteConfirmModal && deleteConfirmModal.style.display === 'block') {
@@ -1528,7 +1520,6 @@ function updateThemeIcons(theme) {
         console.log('Setting up saved prompts and profile event listeners...');
         
         // Debug: Check if elements exist
-        console.log('viewSavedPromptsLink:', viewSavedPromptsLink);
         console.log('viewProfileLink:', viewProfileLink);
         
         // Save prompt button
@@ -1545,21 +1536,7 @@ function updateThemeIcons(theme) {
             });
             console.log('Attached listener to profileBtn');
         }
-        
-        // View saved prompts link
-        if (viewSavedPromptsLink) {
-            console.log('Attaching listener to viewSavedPromptsLink');
-            viewSavedPromptsLink.addEventListener('click', (e) => {
-                console.log('viewSavedPromptsLink clicked!');
-                e.preventDefault();
-                e.stopPropagation();
-                loadSavedPrompts();
-                openModal(savedPromptsModal);
-            });
-        } else {
-            console.error('viewSavedPromptsLink NOT FOUND!');
-        }
-        
+
         // View profile link
         if (viewProfileLink) {
             console.log('Attaching listener to viewProfileLink');
@@ -1573,23 +1550,7 @@ function updateThemeIcons(theme) {
         } else {
             console.error('viewProfileLink NOT FOUND!');
         }
-        
-        // Saved prompts modal close
-        if (closeSavedModalBtn) {
-            closeSavedModalBtn.addEventListener('click', () => {
-                closeModal(savedPromptsModal);
-            });
-        }
-        
-        // Click outside to close saved prompts modal
-        if (savedPromptsModal) {
-            savedPromptsModal.addEventListener('click', (e) => {
-                if (e.target === savedPromptsModal) {
-                    closeModal(savedPromptsModal);
-                }
-            });
-        }
-        
+
         // Profile modal close
         if (closeProfileModalBtn) {
             closeProfileModalBtn.addEventListener('click', () => {
@@ -1680,121 +1641,7 @@ function updateThemeIcons(theme) {
             showNotification('Failed to save prompt', 'error');
         }
     }
-    
-    // Load and display saved prompts
-    async function loadSavedPrompts() {
-        console.log('Loading saved prompts...');
-        try {
-            const response = await fetch('api/get-saved-prompts.php');
-            const data = await response.json();
-            
-            if (response.ok) {
-                displaySavedPrompts(data.prompts, data.count);
-            } else {
-                showNotification('Failed to load saved prompts', 'error');
-            }
-        } catch (error) {
-            console.error('Load error:', error);
-            showNotification('Failed to load saved prompts', 'error');
-        }
-    }
-    
-    // Display saved prompts in modal
-    function displaySavedPrompts(prompts, count) {
-        savedPromptsCount.textContent = `${count} / 100 prompts saved`;
-        
-        if (prompts.length === 0) {
-            savedPromptsList.innerHTML = '';
-            noSavedPrompts.style.display = 'block';
-            return;
-        }
-        
-        noSavedPrompts.style.display = 'none';
-        
-        savedPromptsList.innerHTML = prompts.map(prompt => `
-            <div class="saved-prompt-item">
-                <div class="saved-prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
-                ${prompt.notes ? `<div class="saved-prompt-notes">${escapeHtml(prompt.notes)}</div>` : ''}
-                <div class="saved-prompt-meta">
-                    <span>Saved ${formatDate(prompt.created_at)}</span>
-                    <div class="saved-prompt-actions">
-                        <button class="icon-btn" onclick="useSavedPrompt(${prompt.id}, '${escapeHtml(prompt.original_prompt).replace(/'/g, "\\'")}', '${escapeHtml(prompt.enhanced_prompt).replace(/'/g, "\\'")}', '${escapeHtml(prompt.notes || '').replace(/'/g, "\\'")}')" title="Use this prompt">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                            </svg>
-                        </button>
-                        <button class="icon-btn" onclick="deleteSavedPrompt(${prompt.id})" title="Delete">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--error)" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    // Use a saved prompt
-    function useSavedPrompt(promptId, originalPrompt, enhancedPrompt, notes) {
-        if (notes) {
-            showNotification('Use the prompt with your preferred notes field', 'info');
-            return;
-        }
-        
-        closeModal(savedPromptsModal);
-        
-        // Set the original prompt
-        promptInput.value = originalPrompt || '';
-        
-        // Load into localStorage for the enhancer to process it
-        localStorage.setItem('selectedPrompt', enhancedPrompt || '');
-        
-        // Update character count
-        updateCharCount();
-        
-        // Update quality score
-        updateInputQualityScore();
-        
-        // Enable the enhance button
-        updateEnhanceButtonState();
-        
-        // Focus on the input field
-        promptInput.focus();
-        
-        showNotification('Prompt loaded! You can enhance it or use it directly.', 'info');
-    }
-    
-    // Delete a saved prompt
-    async function deleteSavedPrompt(promptId) {
-        if (!confirm('Are you sure you want to delete this saved prompt?')) {
-            return;
-        }
-        
-        try {
-            const response = await fetch('api/delete-saved-prompt.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt_id: promptId })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                showNotification('Prompt deleted successfully', 'success');
-                loadSavedPrompts(); // Reload the list
-                checkIfPromptSaved(); // Check if current output was saved
-            } else {
-                showNotification(data.error || 'Failed to delete prompt', 'error');
-            }
-        } catch (error) {
-            console.error('Delete error:', error);
-            showNotification('Failed to delete prompt', 'error');
-        }
-    }
-    
+
     // Update save button visual state
     function updateSaveButtonState(isSaved) {
         if (!savePromptBtn) return;
@@ -1960,19 +1807,6 @@ function updateThemeIcons(theme) {
         div.textContent = text || '';
         return div.innerHTML;
     }
-    
-    // Global functions for inline onclick handlers (backup method)
-    window.savedPromptsLinkClick = function() {
-        console.log('savedPromptsLinkClick called!');
-        loadSavedPrompts();
-        openModal(savedPromptsModal);
-    };
-    
-    window.profileLinkClick = function() {
-        console.log('profileLinkClick called!');
-        loadProfile();
-        openModal(profileModal);
-    };
     
     // Initialize application
     async function init() {

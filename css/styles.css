@@ -171,7 +171,50 @@
 
 .saved-prompt-actions {
     display: flex;
-    gap: 8px;
+    gap: 0.5rem;
+}
+
+.saved-prompt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    height: 32px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.copy-saved-btn {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.copy-saved-btn:hover {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.delete-saved-btn {
+    background-color: var(--bg-card);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+.delete-saved-btn:hover {
+    background-color: var(--error);
+    color: #ffffff;
+    border-color: var(--error);
+}
+
+.delete-saved-btn svg {
+    color: currentColor;
 }
 
 /* Modal count badge */
@@ -1682,6 +1725,10 @@ body.library-page {
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--border);
+}
+
+#saved-prompts-info {
+    justify-content: flex-start;
 }
 
 .search-container {

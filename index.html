@@ -178,7 +178,7 @@
                         <h3 class="sidebar-title">My Account</h3>
                         <ul class="sidebar-menu">
                             <li class="sidebar-menu-item">
-                                <a href="#" id="view-saved-prompts" class="sidebar-link" onclick="window.savedPromptsLinkClick ? window.savedPromptsLinkClick() : null; return false;">
+                                <a href="saved-prompts.html" class="sidebar-link">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
@@ -187,7 +187,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-menu-item">
-                                <a href="#" id="view-profile" class="sidebar-link" onclick="window.profileLinkClick ? window.profileLinkClick() : null; return false;">
+                                <a href="#" id="view-profile" class="sidebar-link">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                         <circle cx="12" cy="7" r="4"></circle>
@@ -413,35 +413,7 @@
     </div>
     
     <!-- Saved Prompts Modal -->
-    <div id="saved-prompts-modal" class="modal-backdrop" aria-hidden="true">
-        <div class="modal-container" style="max-width: 800px;">
-            <header class="modal-header">
-                <div class="modal-title-group">
-                    <h2>My Saved Prompts</h2>
-                    <span id="saved-prompts-count" class="modal-description"></span>
-                </div>
-                <button id="close-saved-modal" class="icon-btn" aria-label="Close modal">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </header>
-            <div class="modal-body">
-                <div id="saved-prompts-list">
-                    <!-- Dynamically populated -->
-                </div>
-                <div id="no-saved-prompts" class="no-results" style="display: none; text-align: center; padding: 3rem;">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-light);">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                    </svg>
-                    <p style="margin-top: 1rem; color: var(--text-muted);">No saved prompts yet.</p>
-                    <p style="color: var(--text-muted);">Enhance a prompt and save it to your collection!</p>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Profile Modal -->
     <div id="profile-modal" class="modal-backdrop" aria-hidden="true">
