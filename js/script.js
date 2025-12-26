@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Profile Management Elements
     const profileBtn = document.getElementById('profile-btn');
     const viewProfileLink = document.getElementById('view-profile');
+    const sidebarMyAccount = document.getElementById('sidebar-my-account');
 
     // Modal Elements
     const profileModal = document.getElementById('profile-modal');
@@ -1263,16 +1264,19 @@ function updateThemeIcons(theme) {
                 currentUser = data.user;
                 showUserMenu();
                 updateUserDisplay();
+                updateSidebarAuthState();
             } else {
                 isAuthenticated = false;
                 currentUser = null;
                 showAuthButtons();
+                updateSidebarAuthState();
             }
         } catch (error) {
             console.error('Auth check failed:', error);
             isAuthenticated = false;
             currentUser = null;
             showAuthButtons();
+            updateSidebarAuthState();
         }
     }
     
@@ -1280,6 +1284,7 @@ function updateThemeIcons(theme) {
     function showAuthButtons() {
         authButtons.style.display = 'flex';
         userMenu.style.display = 'none';
+        updateSidebarAuthState();
     }
     
     // Show user menu (logged in state)
@@ -1288,6 +1293,18 @@ function updateThemeIcons(theme) {
             userDisplay.textContent = currentUser.username;
             authButtons.style.display = 'none';
             userMenu.style.display = 'flex';
+            updateSidebarAuthState();
+        }
+    }
+    
+    // Update sidebar auth state - show/hide "My Account" section
+    function updateSidebarAuthState() {
+        if (sidebarMyAccount) {
+            if (isAuthenticated) {
+                sidebarMyAccount.style.display = 'block';
+            } else {
+                sidebarMyAccount.style.display = 'none';
+            }
         }
     }
     
@@ -1390,6 +1407,7 @@ function updateThemeIcons(theme) {
                 currentUser = data.user;
                 closeModal();
                 showUserMenu();
+                updateSidebarAuthState();
                 showNotification('Login successful!', 'success');
             } else {
                 showFormError(loginForm, data.error || 'Login failed');
@@ -1453,6 +1471,7 @@ function updateThemeIcons(theme) {
                 isAuthenticated = false;
                 currentUser = null;
                 showAuthButtons();
+                updateSidebarAuthState();
                 showNotification('Logged out successfully', 'info');
             }
         } catch (error) {
@@ -1461,6 +1480,7 @@ function updateThemeIcons(theme) {
             isAuthenticated = false;
             currentUser = null;
             showAuthButtons();
+            updateSidebarAuthState();
         }
     }
     
