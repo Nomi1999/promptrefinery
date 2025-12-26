@@ -402,11 +402,14 @@
         inputElement.focus();
         inputElement.select();
 
-        inputElement.addEventListener('blur', () => saveTitle(promptId));
+        const handleBlur = () => saveTitle(promptId);
+        inputElement.addEventListener('blur', handleBlur);
         inputElement.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
+                inputElement.removeEventListener('blur', handleBlur);
                 saveTitle(promptId);
             } else if (e.key === 'Escape') {
+                inputElement.removeEventListener('blur', handleBlur);
                 cancelEditTitle(promptId);
             }
         });
@@ -414,7 +417,8 @@
 
     async function saveTitle(promptId) {
         const inputElement = document.querySelector(`.saved-prompt-title-input[data-prompt-id="${promptId}"]`);
-        if (!inputElement) return;
+        const titleElement = document.querySelector(`.saved-prompt-title[data-prompt-id="${promptId}"]`);
+        if (!inputElement || !titleElement) return;
 
         const newTitle = inputElement.value.trim();
 
@@ -431,6 +435,8 @@
             if (response.ok) {
                 updateTitleDisplay(promptId, newTitle);
                 showNotification('Title updated!', 'success');
+                inputElement.classList.add('hidden');
+                titleElement.classList.remove('hidden');
             } else {
                 showNotification('Failed to update title', 'error');
                 cancelEditTitle(promptId);
