@@ -55,6 +55,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
 
+    // Mobile Tab Elements
+    const mobileTabNav = document.getElementById('mobile-tab-nav');
+    const tabInput = document.getElementById('tab-input');
+    const tabOutput = document.getElementById('tab-output');
+    const inputPanel = document.querySelector('.input-panel');
+    const outputPanel = document.querySelector('.output-panel');
+
     // State management
     let isProcessing = false;
     let currentTemperature = 0.3;
@@ -279,6 +286,97 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     }
 
+    // Mobile Tab Navigation Functions
+    function initMobileTabs() {
+        // Only initialize if mobile tab elements exist
+        if (!mobileTabNav || !tabInput || !tabOutput || !inputPanel || !outputPanel) {
+            return;
+        }
+
+        // Set initial state - show input panel by default
+        updateMobileTabView('input');
+
+        // Add click listeners for tabs
+        tabInput.addEventListener('click', () => switchMobileTab('input'));
+        tabOutput.addEventListener('click', () => switchMobileTab('output'));
+
+        // Handle window resize to reset panel visibility on desktop
+        window.addEventListener('resize', handleMobileTabResize);
+    }
+
+    function switchMobileTab(tabName) {
+        if (!mobileTabNav) return;
+
+        // Update active tab button
+        if (tabName === 'input') {
+            tabInput.classList.add('active');
+            tabOutput.classList.remove('active');
+        } else {
+            tabOutput.classList.add('active');
+            tabInput.classList.remove('active');
+        }
+
+        // Update panel visibility
+        updateMobileTabView(tabName);
+    }
+
+    function updateMobileTabView(activeTab) {
+        if (!inputPanel || !outputPanel) return;
+
+        // Check if we're in mobile view
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            if (activeTab === 'input') {
+                inputPanel.classList.add('mobile-visible');
+                outputPanel.classList.remove('mobile-visible');
+            } else {
+                outputPanel.classList.add('mobile-visible');
+                inputPanel.classList.remove('mobile-visible');
+            }
+        } else {
+            // On desktop, both panels should be visible (remove mobile classes)
+            inputPanel.classList.remove('mobile-visible');
+            outputPanel.classList.remove('mobile-visible');
+        }
+    }
+
+    function handleMobileTabResize() {
+        const isMobile = window.innerWidth <= 768;
+
+        if (!isMobile) {
+            // On desktop, ensure both panels are visible
+            if (inputPanel) inputPanel.classList.remove('mobile-visible');
+            if (outputPanel) outputPanel.classList.remove('mobile-visible');
+        } else {
+            // On mobile, apply current tab state
+            const activeTab = tabInput && tabInput.classList.contains('active') ? 'input' : 'output';
+            updateMobileTabView(activeTab);
+        }
+    }
+
+    // Switch to output tab and add indicator when enhanced content is available
+    function showEnhancedOutputTab() {
+        if (!mobileTabNav) return;
+
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            // Switch to output tab
+            switchMobileTab('output');
+            
+            // Add visual indicator that there's new content
+            if (tabOutput) {
+                tabOutput.classList.add('has-content');
+                
+                // Remove the indicator after a few seconds
+                setTimeout(() => {
+                    tabOutput.classList.remove('has-content');
+                }, 5000);
+            }
+        }
+    }
+
     // Helper to combine all input fields
     function getCombinedPrompt() {
         let parts = [];
@@ -398,7 +496,10 @@ ${context}`);
             // Show improvement indicator
             showScoreImprovement(inputScore, outputScore);
              
-            showNotification('Prompt enhanced successfully!', 'success');
+             showNotification('Prompt enhanced successfully!', 'success');
+             
+            // Switch to output tab on mobile
+            showEnhancedOutputTab();
              
             // Check if this prompt is already saved (for authenticated users)
             if (isAuthenticated) {
@@ -1909,6 +2010,7 @@ function updateThemeIcons(theme) {
     async function init() {
         initTheme();
         initTemperatureControl();
+        initMobileTabs(); // Initialize mobile tab navigation
         setupEventListeners();
         checkUncloseAIAvailability();
         updateEnhanceButtonState();
