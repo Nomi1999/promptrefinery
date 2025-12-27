@@ -133,8 +133,8 @@
                 const card = e.target.closest('.saved-prompt-item');
                 if (!card) return;
 
-                // Ignore if clicking on buttons
-                if (e.target.closest('.saved-prompt-btn, .title-action-btn')) return;
+                // Ignore if clicking on buttons or the title input field
+                if (e.target.closest('.saved-prompt-btn, .title-action-btn, .saved-prompt-title-input')) return;
 
                 const promptId = parseInt(card.dataset.promptId);
                 loadAndOpenPromptModal(promptId);
@@ -485,23 +485,36 @@
 
         if (!titleElement || !inputElement) return;
 
-        titleElement.classList.add('hidden');
-        inputElement.classList.remove('hidden');
+        // Prevent multiple listeners if already editing
+        if (!titleElement.classList.contains('hidden')) {
+            titleElement.classList.add('hidden');
+            inputElement.classList.remove('hidden');
+            inputElement.focus();
+            inputElement.select();
 
-        inputElement.focus();
-        inputElement.select();
-
-        const handleBlur = () => saveTitle(promptId);
-        inputElement.addEventListener('blur', handleBlur);
-        inputElement.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
+            const cleanup = () => {
                 inputElement.removeEventListener('blur', handleBlur);
+                inputElement.removeEventListener('keydown', handleKeyDown);
+            };
+
+            const handleBlur = () => {
+                cleanup();
                 saveTitle(promptId);
-            } else if (e.key === 'Escape') {
-                inputElement.removeEventListener('blur', handleBlur);
-                cancelEditTitle(promptId);
-            }
-        });
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter') {
+                    cleanup();
+                    saveTitle(promptId);
+                } else if (e.key === 'Escape') {
+                    cleanup();
+                    cancelEditTitle(promptId);
+                }
+            };
+
+            inputElement.addEventListener('blur', handleBlur);
+            inputElement.addEventListener('keydown', handleKeyDown);
+        }
     }
 
     async function saveTitle(promptId) {

@@ -165,6 +165,74 @@
     animation: spin 1s linear infinite;
 }
 
+/* Mobile optimization for saved prompt title header (phones only) */
+@media (max-width: 640px) {
+    /* Align buttons to top when title wraps */
+    .saved-prompt-header {
+        align-items: flex-start;
+    }
+
+    /* Reduce spacing between title and action buttons */
+    .saved-prompt-title-actions {
+        gap: 0.125rem; /* Reduced from 0.25rem */
+        margin-left: 0.25rem; /* Reduced from 0.5rem */
+    }
+    
+    /* Optimize button sizing for mobile while maintaining touch targets */
+    .saved-prompt-title-actions .title-action-btn {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 0.5rem; /* Increased from 0.25rem for better touch */
+    }
+    
+    /* Reduce icon size slightly on mobile */
+    .saved-prompt-title-actions .title-action-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+    
+    /* Ensure title container can shrink below content size */
+    .saved-prompt-title-container {
+        min-width: 0; /* Critical: allows flex item to shrink */
+    }
+    
+    /* Allow title to wrap instead of truncating */
+    .saved-prompt-title {
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+    
+    /* Ensure title input doesn't overflow when editing */
+    .saved-prompt-title-input {
+        max-width: 100%;
+        min-width: 0;
+    }
+}
+
+/* Extra small phones - tighter constraints */
+@media (max-width: 375px) {
+    /* Further reduce spacing */
+    .saved-prompt-title-actions {
+        gap: 0.0625rem; /* ~1px */
+        margin-left: 0.125rem; /* ~2px */
+    }
+    
+    /* Smaller buttons while maintaining minimum touch target */
+    .saved-prompt-title-actions .title-action-btn {
+        min-width: 32px;
+        min-height: 32px;
+        padding: 0.375rem;
+    }
+    
+    /* Smaller icons */
+    .saved-prompt-title-actions .title-action-btn svg {
+        width: 11px;
+        height: 11px;
+    }
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
