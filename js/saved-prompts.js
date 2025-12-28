@@ -130,11 +130,11 @@
         // Click on saved prompt card to open modal
         if (savedPromptsList) {
             savedPromptsList.addEventListener('click', (e) => {
-                const card = e.target.closest('.saved-prompt-item');
+                const card = e.target.closest('.prompt-card');
                 if (!card) return;
 
-                // Ignore if clicking on buttons or the title input field
-                if (e.target.closest('.saved-prompt-btn, .title-action-btn, .saved-prompt-title-input')) return;
+                // Ignore if clicking on buttons
+                if (e.target.closest('.prompt-btn, .title-action-btn')) return;
 
                 const promptId = parseInt(card.dataset.promptId);
                 loadAndOpenPromptModal(promptId);
@@ -164,8 +164,11 @@
 
     // Handle saved prompt action clicks (event delegation)
     function handlePromptAction(e) {
-        const button = e.target.closest('.saved-prompt-btn, .title-action-btn');
+        const button = e.target.closest('.prompt-btn, .title-action-btn');
         if (!button) return;
+
+        // Stop propagation to prevent modal from opening when clicking buttons
+        e.stopPropagation();
 
         const action = button.dataset.action;
         const promptId = parseInt(button.dataset.promptId);
@@ -193,7 +196,7 @@
         }
     }
 
-    // Display saved prompts in the list
+    // Display saved prompts in the grid (matching prompt library layout)
     function displaySavedPrompts(prompts, count) {
         savedPromptsCount.textContent = `${count} / 100 prompts saved`;
 
@@ -206,56 +209,26 @@
         noSavedPrompts.style.display = 'none';
 
         savedPromptsList.innerHTML = prompts.map(prompt => `
-            <div class="saved-prompt-item" data-prompt-id="${prompt.id}">
-                <div class="saved-prompt-header">
-                    <div class="saved-prompt-title-container">
-                        <h3 class="saved-prompt-title" data-prompt-id="${prompt.id}">
-                            ${escapeHtml(prompt.title || 'Untitled Prompt')}
-                        </h3>
-                        <input
-                            type="text"
-                            class="saved-prompt-title-input hidden"
-                            data-prompt-id="${prompt.id}"
-                            value="${escapeHtml(prompt.title || '')}"
-                            maxlength="100"
-                            placeholder="Enter title..."
-                        />
-                    </div>
-                    <div class="saved-prompt-title-actions">
-                        <button class="title-action-btn" data-action="edit-title" data-prompt-id="${prompt.id}" title="Edit title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                        </button>
-                        <button class="title-action-btn" data-action="regenerate-title" data-prompt-id="${prompt.id}" title="Regenerate title with AI">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="23 4 23 10 17 10"></polyline>
-                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <div class="saved-prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
-                ${prompt.notes ? `<div class="saved-prompt-notes">${escapeHtml(prompt.notes)}</div>` : ''}
-                <div class="saved-prompt-meta">
-                    <span>Saved ${formatDate(prompt.created_at)}</span>
-                    <div class="saved-prompt-actions">
-                        <button class="saved-prompt-btn copy-saved-btn" data-action="copy" data-prompt-id="${prompt.id}" data-enhanced-prompt="${escapeHtml(prompt.enhanced_prompt).replace(/"/g, '&quot;')}" title="Copy to clipboard">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                            </svg>
-                            Copy
-                        </button>
-                        <button class="saved-prompt-btn delete-saved-btn" data-action="delete" data-prompt-id="${prompt.id}" title="Delete">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                            Delete
-                        </button>
-                    </div>
+            <div class="prompt-card saved-prompt-item" data-prompt-id="${prompt.id}">
+                <div class="prompt-category">Saved ${formatDate(prompt.created_at)}</div>
+                <h3 class="prompt-title">${escapeHtml(prompt.title || 'Untitled Prompt')}</h3>
+                ${prompt.notes ? `<p class="prompt-description">${escapeHtml(prompt.notes)}</p>` : '<p class="prompt-description">Enhanced prompt</p>'}
+                <div class="prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
+                <div class="prompt-actions">
+                    <button class="prompt-btn copy-prompt-btn" data-action="copy" data-prompt-id="${prompt.id}" data-enhanced-prompt="${escapeHtml(prompt.enhanced_prompt).replace(/"/g, '&quot;')}" title="Copy to clipboard">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        Copy
+                    </button>
+                    <button class="prompt-btn delete-prompt-btn" data-action="delete" data-prompt-id="${prompt.id}" title="Delete">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Delete
+                    </button>
                 </div>
             </div>
         `).join('');

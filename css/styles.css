@@ -2397,6 +2397,18 @@ body.library-page {
     border-color: var(--border-hover);
 }
 
+.delete-prompt-btn {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+.delete-prompt-btn:hover {
+    background-color: var(--error);
+    color: #ffffff;
+    border-color: var(--error);
+}
+
 /* Modal Styles */
 .modal-backdrop {
     position: fixed;
