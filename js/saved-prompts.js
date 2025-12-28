@@ -30,6 +30,9 @@
     // Store loaded prompts for modal access
     let savedPromptsData = [];
 
+    // Track if currently editing a title (to prevent modal opening)
+    let isEditingTitle = false;
+
     // Open saved prompt modal
     function openSavedPromptModal(prompt) {
         currentModalPromptId = prompt.id;
@@ -133,8 +136,13 @@
                 const card = e.target.closest('.prompt-card');
                 if (!card) return;
 
-                // Ignore if clicking on buttons
-                if (e.target.closest('.prompt-btn, .title-action-btn')) return;
+                // Ignore if clicking on buttons or input fields
+                if (e.target.closest('.prompt-btn, .title-action-btn, .saved-prompt-title-input')) return;
+
+                // If currently editing a title, just return - the blur event will save it
+                if (isEditingTitle) {
+                    return;
+                }
 
                 const promptId = parseInt(card.dataset.promptId);
                 loadAndOpenPromptModal(promptId);
@@ -211,7 +219,28 @@
         savedPromptsList.innerHTML = prompts.map(prompt => `
             <div class="prompt-card saved-prompt-item" data-prompt-id="${prompt.id}">
                 <div class="prompt-category">Saved ${formatDate(prompt.created_at)}</div>
-                <h3 class="prompt-title">${escapeHtml(prompt.title || 'Untitled Prompt')}</h3>
+                <div class="saved-prompt-header">
+                    <div class="saved-prompt-title-container">
+                        <span class="saved-prompt-title" data-prompt-id="${prompt.id}">${escapeHtml(prompt.title || 'Untitled Prompt')}</span>
+                        <input type="text" class="saved-prompt-title-input hidden" data-prompt-id="${prompt.id}" value="${escapeHtml(prompt.title || '')}" maxlength="100" placeholder="Enter title...">
+                    </div>
+                    <div class="saved-prompt-title-actions">
+                        <button class="title-action-btn" data-action="edit-title" data-prompt-id="${prompt.id}" title="Edit title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="title-action-btn" data-action="regenerate-title" data-prompt-id="${prompt.id}" title="Regenerate title with AI">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 2v6h-6"></path>
+                                <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+                                <path d="M3 22v-6h6"></path>
+                                <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
                 ${prompt.notes ? `<p class="prompt-description">${escapeHtml(prompt.notes)}</p>` : '<p class="prompt-description">Enhanced prompt</p>'}
                 <div class="prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
                 <div class="prompt-actions">
@@ -460,6 +489,9 @@
 
         // Prevent multiple listeners if already editing
         if (!titleElement.classList.contains('hidden')) {
+            // Set the editing flag
+            isEditingTitle = true;
+            
             titleElement.classList.add('hidden');
             inputElement.classList.remove('hidden');
             inputElement.focus();
@@ -520,6 +552,11 @@
             console.error('Save title error:', error);
             showNotification('Failed to update title', 'error');
             cancelEditTitle(promptId);
+        } finally {
+            // Clear the editing flag after a short delay to prevent immediate modal opening
+            setTimeout(() => {
+                isEditingTitle = false;
+            }, 100);
         }
     }
 
@@ -533,6 +570,11 @@
 
         inputElement.classList.add('hidden');
         titleElement.classList.remove('hidden');
+        
+        // Clear the editing flag after a short delay to prevent immediate modal opening
+        setTimeout(() => {
+            isEditingTitle = false;
+        }, 100);
     }
 
     function updateTitleDisplay(promptId, newTitle) {
