@@ -777,7 +777,7 @@
 .form-group input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid var(--border);
+    border: 3px solid var(--border);
     border-radius: 6px;
     background: var(--bg-input);
     color: var(--text-main);
@@ -785,9 +785,54 @@
     transition: border-color 0.2s ease;
 }
 
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    padding-right: 48px;
+}
+
+.password-input-wrapper input:focus + .password-toggle-btn {
+    border-color: var(--primary);
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    color: var(--text-muted);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.password-toggle-btn:hover {
+    color: var(--text-main);
+    background: var(--bg-subtle);
+}
+
+.password-toggle-btn:focus {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+}
+
+.password-toggle-btn .eye-icon {
+    transition: var(--transition);
+}
+
 .form-group input:focus {
     outline: none;
     border-color: var(--primary);
+    border-width: 3px;
 }
 
 .form-group small {

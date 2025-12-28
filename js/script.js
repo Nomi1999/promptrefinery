@@ -1455,7 +1455,7 @@ function updateThemeIcons(theme) {
         }
     }
 
-    // Open modal
+// Open modal
     function openModal(modal) {
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -1465,6 +1465,27 @@ function updateThemeIcons(theme) {
             modal.style.display = 'block';
             authModalOverlay.style.display = 'block';
         }
+        
+        // Setup password toggles for this modal
+        setTimeout(() => {
+            const modalToggleButtons = modal.querySelectorAll('.password-toggle-btn');
+            modalToggleButtons.forEach(button => {
+                // Remove existing listeners to prevent duplicates
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+                
+                newButton.addEventListener('click', function() {
+                    togglePasswordVisibility(this);
+                });
+                
+                newButton.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        togglePasswordVisibility(this);
+                    }
+                });
+            });
+        }, 50);
     }
     
     // Close modal
@@ -1707,11 +1728,56 @@ function updateThemeIcons(theme) {
         });
     }
     
+// Password visibility toggle functionality
+    function setupPasswordToggles() {
+        const toggleButtons = document.querySelectorAll('.password-toggle-btn');
+        
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                togglePasswordVisibility(this);
+            });
+            
+            // Add keyboard support
+            button.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    togglePasswordVisibility(this);
+                }
+            });
+        });
+    }
+    
+    function togglePasswordVisibility(toggleButton) {
+        const passwordInput = toggleButton.previousElementSibling;
+        const openEye = toggleButton.querySelector('.eye-icon.open');
+        const closedEye = toggleButton.querySelector('.eye-icon.closed');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            openEye.style.display = 'block';
+            closedEye.style.display = 'none';
+            toggleButton.setAttribute('aria-label', 'Hide password');
+        } else {
+            passwordInput.type = 'password';
+            openEye.style.display = 'none';
+            closedEye.style.display = 'block';
+            toggleButton.setAttribute('aria-label', 'Show password');
+        }
+    }
+
     // Initialize authentication system
     async function initAuth() {
         await checkAuthStatus();
         setupAuthEventListeners();
+        setupPasswordToggles();
     }
+    
+    // Document ready function
+    document.addEventListener('DOMContentLoaded', function() {
+        initAuth();
+        setupSavedPromptsAndProfileEventListeners();
+        setupPasswordToggles(); // Also setup for any password fields on initial load
+    });
     
     // Initialize saved prompts and profile event listeners
     function setupSavedPromptsAndProfileEventListeners() {
