@@ -4,11 +4,11 @@
     --primary-hover: #115e59;
     --primary-foreground: #ffffff;
 
-    --bg-body: #f8fafc; /* Slate 50 */
-    --bg-card: #ffffff;
-    --bg-subtle: #f1f5f9; /* Slate 100 */
-    --bg-input: #ffffff;
-    --bg-sidebar: #f8fafc;
+    --bg-body: #f2efe6; /* Soft Cream */
+    --bg-card: #f8f5ed; /* Warm Linen */
+    --bg-subtle: #e8e4db; /* Muted Sand */
+    --bg-input: #f8f5ed; /* Warm Linen */
+    --bg-sidebar: #f2efe6; /* Soft Cream */
 
     --text-main: #0f172a; /* Slate 900 */
     --text-muted: #475569; /* Slate 600 */
@@ -2702,11 +2702,11 @@ body.library-page {
     --primary-hover: #115e59;
     --primary-foreground: #ffffff;
 
-    --bg-body: #f8fafc;
-    --bg-card: #ffffff;
-    --bg-subtle: #f1f5f9;
-    --bg-input: #ffffff;
-    --bg-sidebar: #f8fafc;
+    --bg-body: #f2efe6; /* Soft Cream */
+    --bg-card: #f8f5ed; /* Warm Linen */
+    --bg-subtle: #e8e4db; /* Muted Sand */
+    --bg-input: #f8f5ed; /* Warm Linen */
+    --bg-sidebar: #f2efe6; /* Soft Cream */
 
     --text-main: #0f172a;
     --text-muted: #475569;
