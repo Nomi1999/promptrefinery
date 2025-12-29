@@ -56,7 +56,7 @@ if (!preg_match('/[^A-Za-z0-9]/', $password)) {
 
 try {
     // Check if username or email already exists
-    $checkStmt = $database->prepare("SELECT id FROM users WHERE username = :username OR email = :email");
+    $checkStmt = $database->prepare("SELECT id FROM users WHERE LOWER(username) = LOWER(:username) OR LOWER(email) = LOWER(:email)");
     $checkStmt->bindValue(':username', $username, SQLITE3_TEXT);
     $checkStmt->bindValue(':email', $email, SQLITE3_TEXT);
     $checkResult = $checkStmt->execute();

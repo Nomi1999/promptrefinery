@@ -40,7 +40,7 @@ if ($failedAttempts >= 5) {
 
 try {
     // Find user by username or email
-    $stmt = $database->prepare("SELECT id, username, password_hash FROM users WHERE username = :identifier OR email = :identifier");
+    $stmt = $database->prepare("SELECT id, username, password_hash FROM users WHERE LOWER(username) = LOWER(:identifier) OR LOWER(email) = LOWER(:identifier)");
     $stmt->bindValue(':identifier', $username, SQLITE3_TEXT);
     $result = $stmt->execute();
     
