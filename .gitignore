@@ -10,3 +10,14 @@ Thumbs.db
 # Dependencies
 vendor/
 node_modules/
+specs/
+
+# Environment and Logs
+.env
+*.log
+
+# IDE and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
