@@ -1331,8 +1331,7 @@ function updateThemeIcons(theme) {
         const logoImg = document.getElementById('theme-logo');
         if (!logoImg) return;
         
-        // Add subtle animation
-        logoImg.classList.add('theme-changing');
+
         
         // Change logo source
         const newSrc = theme === 'dark' 
@@ -1342,11 +1341,7 @@ function updateThemeIcons(theme) {
         // Preload new image to prevent flicker
         const tempImg = new Image();
         tempImg.onload = function() {
-            logoImg.src = newSrc;
-            // Remove animation after transition
-            setTimeout(() => {
-                logoImg.classList.remove('theme-changing');
-            }, 300);
+logoImg.src = newSrc;
         };
         tempImg.src = newSrc;
     }

@@ -1025,15 +1025,10 @@ body.library-page {
     height: 48px;
     width: auto;
     max-width: 216px;
-    transition: opacity 0.3s ease, transform 0.3s ease;
     object-fit: contain;
 }
 
-/* Subtle animation on theme change */
-.logo-img.theme-changing {
-    opacity: 0.7;
-    transform: scale(0.98);
-}
+
 
 /* Responsive scaling */
 @media (max-width: 768px) {
