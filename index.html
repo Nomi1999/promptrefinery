@@ -26,7 +26,13 @@
     </script>
 </head>
 <body class="app-main">
-    <div class="app-container">
+    <!-- Skip Link for Keyboard Navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ARIA Live Region for Screen Reader Announcements -->
+    <div id="status-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+    <div class="app-container" id="main-content">
         <header class="app-header">
 <div class="header-content">
                 <div class="logo-container">
@@ -301,6 +307,7 @@
                         <div class="temperature-track">
                             <div class="temperature-fill" id="temperature-fill"></div>
                         </div>
+                        <div class="temperature-tooltip" id="temperature-tooltip">0.3</div>
                     </div>
                     <div class="temperature-presets">
                         <button class="preset-btn" data-preset="precise">Precise</button>
@@ -337,8 +344,13 @@
                 </div>
 
                 <div class="panel-footer">
-                    <div class="char-count">
-                        <span id="input-char-count">0</span> / 5000
+                    <div class="char-count-wrapper">
+                        <div class="char-progress">
+                            <div class="char-progress-fill" id="char-progress-fill"></div>
+                        </div>
+                        <div class="char-count">
+                            <span id="input-char-count">0</span> / 5000
+                        </div>
                     </div>
                     <div class="primary-action">
                         <button id="reset-btn" class="reset-btn" title="Reset session">
@@ -420,6 +432,8 @@
                     <div id="status-message" class="status-message"></div>
                 </div>
             </section>
+
+
             </main>
         </div>
     </div>

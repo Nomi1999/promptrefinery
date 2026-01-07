@@ -71,6 +71,80 @@ document.addEventListener('DOMContentLoaded', function() {
     let notificationQueue = [];
     let isNotificationAnimating = false;
 
+    // Swipe Handler Class
+    class SwipeHandler {
+        constructor(element, options = {}) {
+            this.element = element;
+            this.threshold = options.threshold || 50;
+            this.onSwipeLeft = options.onSwipeLeft || (() => {});
+            this.onSwipeRight = options.onSwipeRight || (() => {});
+
+            this.startX = 0;
+            this.startY = 0;
+
+            this.element.addEventListener('touchstart', this.handleStart.bind(this), { passive: true });
+            this.element.addEventListener('touchend', this.handleEnd.bind(this), { passive: true });
+        }
+
+        handleStart(e) {
+            this.startX = e.touches[0].clientX;
+            this.startY = e.touches[0].clientY;
+        }
+
+        handleEnd(e) {
+            const deltaX = e.changedTouches[0].clientX - this.startX;
+            const deltaY = e.changedTouches[0].clientY - this.startY;
+
+            // Only trigger if horizontal swipe is dominant
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > this.threshold) {
+                if (deltaX > 0) {
+                    this.onSwipeRight();
+                } else {
+                    this.onSwipeLeft();
+                }
+            }
+        }
+    }
+
+    // Focus Trap Class for Modal Accessibility
+    class FocusTrap {
+        constructor(element) {
+            this.element = element;
+            this.focusableElements = element.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            this.firstFocusable = this.focusableElements[0];
+            this.lastFocusable = this.focusableElements[this.focusableElements.length - 1];
+
+            this.handleKeyDown = this.handleKeyDown.bind(this);
+        }
+
+        activate() {
+            this.element.addEventListener('keydown', this.handleKeyDown);
+            this.firstFocusable?.focus();
+        }
+
+        deactivate() {
+            this.element.removeEventListener('keydown', this.handleKeyDown);
+        }
+
+        handleKeyDown(e) {
+            if (e.key !== 'Tab') return;
+
+            if (e.shiftKey) {
+                if (document.activeElement === this.firstFocusable) {
+                    e.preventDefault();
+                    this.lastFocusable?.focus();
+                }
+            } else {
+                if (document.activeElement === this.lastFocusable) {
+                    e.preventDefault();
+                    this.firstFocusable?.focus();
+                }
+            }
+        }
+    }
+
     // Temperature ranges for presets
     const temperatureRanges = {
         precise: { min: 0.0, max: 0.2, optimal: 0.1 },
@@ -148,17 +222,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update temperature UI elements
     function updateTemperatureUI() {
         const sliderValue = Math.round(currentTemperature * 100);
-        
+
         if (temperatureSlider) {
             temperatureSlider.value = sliderValue;
         }
-        
+
         if (temperatureValue) {
             temperatureValue.textContent = currentTemperature.toFixed(1);
         }
-        
+
         if (temperatureFill) {
-            temperatureFill.style.width = sliderValue + '%';
+            // Account for thumb width (20px) - fill should stop at thumb center
+            // At 0%, thumb center is at 10px; at 100%, thumb center is at (100% - 10px)
+            const thumbWidth = 20;
+            const halfThumb = thumbWidth / 2;
+            temperatureFill.style.width = `calc(${halfThumb}px + (100% - ${thumbWidth}px) * ${sliderValue / 100})`;
+            temperatureFill.style.setProperty('--fill-percent', (currentTemperature || 0.01).toString());
+        }
+
+        // Update tooltip
+        const tooltip = document.getElementById('temperature-tooltip');
+        if (tooltip) {
+            tooltip.textContent = currentTemperature.toFixed(1);
+            // Use calc to match thumb position accounting for thumb width
+            tooltip.style.setProperty('--thumb-position', `calc(10px + (100% - 20px) * ${sliderValue / 100})`);
         }
     }
 
@@ -300,6 +387,18 @@ document.addEventListener('DOMContentLoaded', function() {
         tabInput.addEventListener('click', () => switchMobileTab('input'));
         tabOutput.addEventListener('click', () => switchMobileTab('output'));
 
+        // Initialize tab indicator animation
+        updateTabIndicator();
+
+        // Initialize swipe gesture handling
+        if (mobileTabNav && window.innerWidth <= 768) {
+            const swipeHandler = new SwipeHandler(mobileTabNav, {
+                threshold: 50,
+                onSwipeLeft: () => switchMobileTab('output'),
+                onSwipeRight: () => switchMobileTab('input')
+            });
+        }
+
         // Handle window resize to reset panel visibility on desktop
         window.addEventListener('resize', handleMobileTabResize);
     }
@@ -318,6 +417,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update panel visibility
         updateMobileTabView(tabName);
+
+        // Update tab indicator animation
+        updateTabIndicator();
+    }
+
+    function updateTabIndicator() {
+        if (!mobileTabNav || !tabInput || !tabOutput) return;
+
+        const activeTab = tabInput.classList.contains('active') ? tabInput : tabOutput;
+        const navRect = mobileTabNav.getBoundingClientRect();
+        const tabRect = activeTab.getBoundingClientRect();
+
+        // Calculate position and width
+        const left = tabRect.left - navRect.left;
+        const width = tabRect.width;
+
+        // Set CSS variables for animation
+        mobileTabNav.style.setProperty('--tab-left', `${left}px`);
+        mobileTabNav.style.setProperty('--tab-width', `${width}px`);
     }
 
     function updateMobileTabView(activeTab) {
@@ -352,6 +470,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // On mobile, apply current tab state
             const activeTab = tabInput && tabInput.classList.contains('active') ? 'input' : 'output';
             updateMobileTabView(activeTab);
+
+            // Update tab indicator
+            updateTabIndicator();
         }
     }
 
@@ -415,8 +536,28 @@ ${context}`);
     function updateCharCount() {
         const fullText = getCombinedPrompt();
         const count = fullText.length;
+        const maxLength = 5000;
         inputCharCount.textContent = count;
-        
+
+        // Update progress bar
+        const charProgressFill = document.getElementById('char-progress-fill');
+        if (charProgressFill) {
+            const percentage = Math.min((count / maxLength) * 100, 100);
+            charProgressFill.style.width = percentage + '%';
+
+            // Reset classes
+            charProgressFill.classList.remove('warning', 'error');
+
+            // Warning state (80%+)
+            if (percentage >= 80 && percentage < 95) {
+                charProgressFill.classList.add('warning');
+            }
+            // Error state (95%+)
+            else if (percentage >= 95) {
+                charProgressFill.classList.add('error');
+            }
+        }
+
         // Change color based on character count
         if (count > 8000) {
             inputCharCount.style.color = 'var(--error)';
@@ -811,20 +952,20 @@ RULES:
         try {
             await navigator.clipboard.writeText(text);
             
-            // Add visual feedback
+            // Add visual feedback with animation class
             const button = source === 'input' ? copyInputBtn : copyOutputBtn;
             const originalContent = button.innerHTML;
+            button.classList.add('copied');
             button.innerHTML = `
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
                 Copied!
             `;
-            button.classList.add('copy-feedback');
             
             setTimeout(() => {
                 button.innerHTML = originalContent;
-                button.classList.remove('copy-feedback');
+                button.classList.remove('copied');
             }, 2000);
 
             showNotification('Text copied to clipboard!', 'success');
@@ -854,6 +995,8 @@ RULES:
 
     // Set processing state
     function setProcessingState(processing) {
+        const outputWrapper = document.querySelector('.output-panel .textarea-wrapper');
+        
         if (processing) {
             enhanceBtn.disabled = true;
             btnText.style.display = 'none';
@@ -866,6 +1009,21 @@ RULES:
             if (savePromptBtn) {
                 savePromptBtn.disabled = true;
             }
+            
+            // Show skeleton loading
+            if (outputWrapper && promptOutput) {
+                promptOutput.style.display = 'none';
+                const skeletonElement = document.createElement('div');
+                skeletonElement.className = 'output-skeleton';
+                skeletonElement.style.padding = '1.25rem';
+                skeletonElement.innerHTML = `
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                `;
+                outputWrapper.appendChild(skeletonElement);
+            }
         } else {
             btnText.style.display = 'inline';
             loadingSpinner.style.display = 'none';
@@ -876,17 +1034,29 @@ RULES:
             if (savePromptBtn && promptOutput && isAuthenticated) {
                 savePromptBtn.disabled = promptOutput.value.trim().length === 0;
             }
+            
+            // Remove skeleton and show textarea
+            if (outputWrapper && promptOutput) {
+                const skeleton = outputWrapper.querySelector('.output-skeleton');
+                if (skeleton) {
+                    skeleton.remove();
+                }
+                promptOutput.style.display = 'block';
+            }
         }
     }
 
     // Show notification message
     function showNotification(message, type = 'success') {
-        // If we are currently animating a transition, queue the new notification
+        // Announce to screen readers
+        announce(message);
+
+        // If we are currently animating a transition, queue new notification
         if (isNotificationAnimating) {
             notificationQueue.push({ message, type });
             return;
         }
-        
+
         // If there is an active notification, dismiss it first
         if (activeNotification) {
             notificationQueue.push({ message, type });
@@ -898,20 +1068,34 @@ RULES:
         displayNotification(message, type);
     }
 
+    // Initialize notification container
+    function initNotificationContainer() {
+        let container = document.querySelector('.notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.className = 'notification-container';
+            document.body.appendChild(container);
+        }
+        return container;
+    }
+
     // Internal function to display the notification
     function displayNotification(message, type) {
         isNotificationAnimating = true;
 
+        // Get or create notification container
+        const container = initNotificationContainer();
+
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
-        
+
         // Create message container
         const messageContainer = document.createElement('span');
         messageContainer.textContent = message;
         messageContainer.style.flex = '1';
         messageContainer.style.paddingRight = '0.5rem';
-        
+
         // Create close button
         const closeButton = document.createElement('button');
         closeButton.className = 'notification-close';
@@ -922,19 +1106,26 @@ RULES:
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
         `;
-        
+
         // Add close button click handler
         closeButton.addEventListener('click', () => {
             dismissNotification(notification);
         });
-        
+
+        // Create progress bar for auto-dismiss
+        const progress = document.createElement('div');
+        progress.className = 'notification-progress';
+        progress.style.setProperty('--dismiss-duration', '3s');
+
         // Assemble the notification
         notification.appendChild(messageContainer);
         notification.appendChild(closeButton);
-        
-        document.body.appendChild(notification);
+        notification.appendChild(progress);
+
+        // Add to container instead of body
+        container.appendChild(notification);
         activeNotification = notification;
-        
+
         // Reset animation flag after slide-in (approx 300ms)
         setTimeout(() => {
             isNotificationAnimating = false;
@@ -943,12 +1134,12 @@ RULES:
                 dismissNotification(notification);
             }
         }, 350);
-        
+
         // Auto-remove after 3 seconds
         const autoRemoveTimeout = setTimeout(() => {
             dismissNotification(notification);
         }, 3000);
-        
+
         // Store timeout reference for cleanup
         notification.dataset.timeoutId = autoRemoveTimeout;
     }
@@ -961,19 +1152,27 @@ RULES:
         if (notification.dataset.timeoutId) {
             clearTimeout(parseInt(notification.dataset.timeoutId));
         }
-        
+
         isNotificationAnimating = true;
         notification.classList.add('slide-out');
-        
+
         setTimeout(() => {
+            // Get the notification container
+            const container = document.querySelector('.notification-container');
+
             if (notification.parentNode) {
                 notification.parentNode.removeChild(notification);
             }
-            
+
+            // Remove container if it's empty
+            if (container && container.children.length === 0) {
+                container.remove();
+            }
+
             if (activeNotification === notification) {
                 activeNotification = null;
             }
-            
+
             isNotificationAnimating = false;
 
             // Process next notification in queue
@@ -982,6 +1181,19 @@ RULES:
                 displayNotification(next.message, next.type);
             }
         }, 300);
+    }
+
+    // Announce status changes for screen readers
+    function announce(message) {
+        const announcer = document.getElementById('status-announcer');
+        if (announcer) {
+            announcer.textContent = message;
+
+            // Clear after announcement
+            setTimeout(() => {
+                announcer.textContent = '';
+            }, 1000);
+        }
     }
 
     // Utility functions
@@ -1105,10 +1317,31 @@ RULES:
         updateQualityScoreDisplay(inputQualityScore, inputScoreFill, score);
     }
 
+    // Animated score counter function
+    function animateScore(element, targetScore) {
+        const duration = 600;
+        const start = performance.now();
+        const startValue = parseInt(element.textContent) || 0;
+        
+        function update(currentTime) {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(startValue + (targetScore - startValue) * eased);
+            element.textContent = current;
+            
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            }
+        }
+        
+        requestAnimationFrame(update);
+    }
+
     // Update quality score display
     function updateQualityScoreDisplay(scoreElement, fillElement, score) {
         const scoreValue = scoreElement.querySelector('.score-value');
-        scoreValue.textContent = Math.round(score);
+        animateScore(scoreValue, Math.round(score));
         
         // Update fill bar
         fillElement.style.width = `${score}%`;
@@ -1282,9 +1515,19 @@ RULES:
     function toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
+
+        // Add transitioning class to disable transitions temporarily
+        document.documentElement.classList.add('theme-transitioning');
+
+        // Apply theme
         applyTheme(newTheme);
         localStorage.setItem('theme', newTheme);
+
+        // Re-enable transitions after a brief delay
+        setTimeout(() => {
+            document.documentElement.classList.remove('theme-transitioning');
+        }, 50);
+
         showNotification(`${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`, 'info');
     }
 
@@ -1454,13 +1697,20 @@ logoImg.src = newSrc;
     function openModal(modal) {
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
-        
+
+        // Create and activate focus trap
+        const focusTrap = new FocusTrap(modal);
+        focusTrap.activate();
+
+        // Store reference for cleanup
+        modal.dataset.focusTrap = JSON.stringify({ active: true });
+
         // Show auth overlay for auth modals
         if (modal === loginModal || modal === registerModal) {
             modal.style.display = 'block';
             authModalOverlay.style.display = 'block';
         }
-        
+
         // Setup password toggles for this modal
         setTimeout(() => {
             const modalToggleButtons = modal.querySelectorAll('.password-toggle-btn');
@@ -1485,32 +1735,68 @@ logoImg.src = newSrc;
     
     // Close modal
     function closeModal(modalElement) {
+        // Deactivate focus trap before closing
+        const allModals = document.querySelectorAll('.modal-backdrop.open, .modal-overlay.open');
+        allModals.forEach(modal => {
+            if (modal.dataset.focusTrap) {
+                try {
+                    const focusTrapData = JSON.parse(modal.dataset.focusTrap);
+                    if (focusTrapData.active) {
+                        const focusableElements = modal.querySelectorAll(
+                            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                        );
+                        focusableElements.forEach(el => el.removeEventListener('keydown', null));
+                    }
+                } catch (e) {
+                    // Cleanup even if parsing fails
+                }
+            }
+        });
+
         // If no parameter, close all auth modals (backward compatibility)
         if (!modalElement) {
-            authModalOverlay.style.display = 'none';
-            loginModal.style.display = 'none';
-            loginModal.classList.remove('open');
-            registerModal.style.display = 'none';
-            registerModal.classList.remove('open');
-            
-            // Clear form errors
-            clearFormErrors(loginForm);
-            clearFormErrors(registerForm);
-        } else {
-            // Remove open class from modal
-            modalElement.classList.remove('open');
-            
-            // Hide auth overlay if closing an auth modal
-            if (modalElement === loginModal || modalElement === registerModal) {
-                modalElement.style.display = 'none';
+            // Add closing class for exit animation
+            loginModal.classList.add('closing');
+            registerModal.classList.add('closing');
+
+            // Wait for animation to complete before hiding
+            setTimeout(() => {
                 authModalOverlay.style.display = 'none';
-                
+                loginModal.style.display = 'none';
+                loginModal.classList.remove('open', 'closing');
+                registerModal.style.display = 'none';
+                registerModal.classList.remove('open', 'closing');
+
                 // Clear form errors
                 clearFormErrors(loginForm);
                 clearFormErrors(registerForm);
-            }
+            }, 200);
+        } else {
+            // Add closing class for exit animation
+            modalElement.classList.add('closing');
+
+            // Wait for animation to complete before hiding
+            setTimeout(() => {
+                // Remove open and closing classes from modal
+                modalElement.classList.remove('open', 'closing');
+
+                // Hide auth overlay if closing an auth modal
+                if (modalElement === loginModal || modalElement === registerModal) {
+                    modalElement.style.display = 'none';
+                    authModalOverlay.style.display = 'none';
+
+                    // Clear form errors
+                    clearFormErrors(loginForm);
+                    clearFormErrors(registerForm);
+                }
+
+                // Hide other modals (profile, delete-confirm)
+                if (modalElement === profileModal || modalElement === deleteConfirmModal) {
+                    modalElement.setAttribute('aria-hidden', 'true');
+                }
+            }, 200);
         }
-        
+
         document.body.style.overflow = '';
     }
     
@@ -1712,11 +1998,11 @@ logoImg.src = newSrc;
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 // Check all modals
-                if (loginModal.style.display === 'block' || registerModal.style.display === 'block') {
+                if (loginModal.classList.contains('open') || registerModal.classList.contains('open')) {
                     closeModal();
-                } else if (profileModal && profileModal.style.display === 'block') {
+                } else if (profileModal && profileModal.classList.contains('open')) {
                     closeModal(profileModal);
-                } else if (deleteConfirmModal && deleteConfirmModal.style.display === 'block') {
+                } else if (deleteConfirmModal && deleteConfirmModal.classList.contains('open')) {
                     closeModal(deleteConfirmModal);
                 }
             }

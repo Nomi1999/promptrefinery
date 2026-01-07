@@ -1007,13 +1007,27 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         modalUseBtn.addEventListener('click', handleUsePrompt);
     }
 
+    // Highlight search matches in text
+    function highlightMatches(text, query) {
+        if (!query) return text;
+        const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escapedQuery})`, 'gi');
+        return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+    }
+
     // Render prompts to the grid
     function renderPrompts(prompts) {
+        const searchTerm = searchInput.value.trim();
+
         if (prompts.length === 0) {
             promptsGrid.innerHTML = `
-                <div class="no-results">
-                    <h3>No prompts found</h3>
-                    <p>Try adjusting your search or filter criteria</p>
+                <div class="empty-state">
+                    <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <h3 class="empty-state-title">No prompts found</h3>
+                    <p class="empty-state-description">Try adjusting your search or filter criteria</p>
                 </div>
             `;
             return;
@@ -1021,9 +1035,9 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
 
         promptsGrid.innerHTML = prompts.map(prompt => `
             <div class="prompt-card" data-id="${prompt.id}">
-                <div class="prompt-category">${prompt.category}</div>
-                <h3 class="prompt-title">${prompt.title}</h3>
-                <p class="prompt-description">${prompt.description}</p>
+                <div class="prompt-category" data-category="${prompt.category}">${prompt.category}</div>
+                <h3 class="prompt-title">${highlightMatches(prompt.title, searchTerm)}</h3>
+                <p class="prompt-description">${highlightMatches(prompt.description, searchTerm)}</p>
                 <div class="prompt-content">${prompt.content}</div>
                 <div class="prompt-actions">
                     <button class="prompt-btn use-prompt-btn" data-prompt="${encodeURIComponent(prompt.content)}">
@@ -1079,6 +1093,7 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         // Populate modal data
         modalTitle.textContent = prompt.title;
         modalCategory.textContent = prompt.category;
+        modalCategory.setAttribute('data-category', prompt.category);
         modalDescription.textContent = prompt.description;
         modalContent.textContent = prompt.content;
         
