@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Refine your prompts for better AI responses using UncloseAI technology">
-    <meta name="google-site-verification" content="eEbDVYEjWSwjaTDY6H11Jxa4yYaxrdB94KToqkxnVMA" />
-    <title>PromptRefinery - Refine Your AI Prompts</title>
+    <meta name="description" content="Refine your AI prompts for better responses. Use our advanced prompt engineering tool to enhance clarity, context, and structure.">
+    <title>PromptRefinery - Engineering Precision for Your Prompts</title>
     <link rel="icon" type="image/webp" href="assets/images/favicon.webp">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/landing.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script defer src="https://cloud.umami.is/script.js" data-website-id="fa192638-f75e-4692-8f1c-c3254bd7316c"></script>
     <script>
         (function() {
@@ -19,635 +19,489 @@
                 const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
                 document.documentElement.setAttribute('data-theme', theme);
-            } catch (e) {
-                console.error('Theme initialization failed:', e);
-            }
+            } catch (e) {}
         })();
     </script>
 </head>
-<body class="app-main">
-    <!-- Skip Link for Keyboard Navigation -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+<body>
+    <header class="landing-header">
+        <nav class="landing-nav">
+            <a href="#" class="landing-logo">
+                <img src="assets/images/logo-light-background.webp" alt="PromptRefinery" height="48" id="nav-logo">
+            </a>
+            <div class="landing-links">
+                <a href="#features" class="landing-link">Features</a>
+                <a href="#use-cases" class="landing-link">Use Cases</a>
+                <a href="#how-it-works" class="landing-link">How it Works</a>
+                <a href="prompt-library.html" class="landing-link">Library</a>
+                <a href="app.html" class="landing-btn landing-btn-primary">Open App</a>
+            </div>
+        </nav>
+    </header>
 
-    <!-- ARIA Live Region for Screen Reader Announcements -->
-    <div id="status-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
-
-    <div class="app-container" id="main-content">
-        <header class="app-header">
-<div class="header-content">
-                <div class="logo-container">
-                    <img id="theme-logo"
-                         class="logo-img"
-                         src="assets/images/logo-light-background.webp"
-                         alt="PromptRefinery - AI Prompt Enhancement Tool"
-                         width="180"
-                         height="40">
+    <section class="hero-section">
+        <div class="hero-content">
+            <span class="hero-badge animate-hidden animate-fade-up animate-delay-1">✨ Now Powered by UncloseAI Hermes</span>
+            <h1 class="hero-title animate-hidden animate-fade-up animate-delay-2">Engineering Precision<br><span>For Your AI Prompts</span></h1>
+            <p class="hero-subtitle animate-hidden animate-fade-up animate-delay-3">Stop guessing. Transform vague ideas into structured, high-performance prompts that extract the best results from ChatGPT, Claude, and Llama.</p>
+            
+            <div class="hero-actions animate-hidden animate-fade-up animate-delay-4">
+                <a href="app.html" class="landing-btn landing-btn-primary hero-btn-lg">Start Enhancing Free</a>
+                <a href="prompt-library.html" class="landing-btn landing-btn-outline hero-btn-lg">Browse Templates</a>
+            </div>
+        </div>
+        
+        <div class="hero-image-wrapper animate-hidden animate-scale-in animate-delay-2">
+            <div class="mockup-header">
+                <div class="mockup-dots">
+                    <div class="mockup-dot" style="background: #ef4444;"></div>
+                    <div class="mockup-dot" style="background: #eab308;"></div>
+                    <div class="mockup-dot" style="background: #22c55e;"></div>
+                </div>
+                <div class="mockup-search">promptrefinery.rf.gd</div>
+            </div>
+            <div class="mockup-body">
+                <div class="mockup-panel left">
+                    <span class="mockup-label">Original Input</span>
+                    <div class="mockup-input-box">
+                        <p class="typing-text original-prompt" style="color: var(--text-main); font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6;"></p>
+                    </div>
+                    <button class="enhance-button" id="demo-enhance-btn">
+                        <span class="btn-text">Enhance</span>
+                        <span class="loading-spinner"></span>
+                    </button>
+                </div>
+                <div class="mockup-panel">
+                    <span class="mockup-label" style="color: var(--primary);">Enhanced Output</span>
+                    <div class="mockup-output-box">
+                        <p class="typing-text enhanced-prompt" style="color: var(--text-main); font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6;"></p>
+                        <div class="enhancement-summary">
+                            <span class="checkmark">✓</span> Added Context<br>
+                            <span class="checkmark">✓</span> Specified Audience<br>
+                            <span class="checkmark">✓</span> Defined Tone
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="header-actions">
-                <div class="auth-buttons" id="auth-buttons">
-                    <button id="login-btn" class="auth-btn">Login</button>
-                    <button id="register-btn" class="auth-btn secondary">Register</button>
-                </div>
-                <div class="user-menu" id="user-menu" style="display: none;">
-                    <button id="profile-btn" class="user-menu-toggle" title="View Profile">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        <span id="user-display" class="user-display"></span>
-                    </button>
-                    <button id="logout-btn" class="icon-btn" title="Logout">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg>
-                    </button>
-                </div>
-                <button id="theme-toggle" class="icon-btn" title="Toggle theme">
-                    <!-- Sun Icon (Light Mode) -->
-                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                    <!-- Moon Icon (Dark Mode) -->
-                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                </button>
-                <button id="menu-toggle" class="icon-btn mobile-menu-btn" title="Toggle menu" style="display: none;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
+        </div>
+    </section>
+
+    <div class="trust-section">
+        <div class="trust-grid">
+            <div class="trust-item animate-hidden animate-fade-up animate-delay-1">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <span>50+ Templates</span>
             </div>
-        </header>
-
-        <div class="main-wrapper">
-            <div class="sidebar-overlay" id="sidebar-overlay"></div>
-            <aside class="sidebar">
-                <div class="sidebar-header-mobile">
-                    <button id="sidebar-close-btn" class="icon-btn" title="Close menu">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-                <nav class="sidebar-nav">
-                    <div class="nav-section sidebar-auth-section logged-out" id="sidebar-auth-section">
-                        <h3 class="sidebar-auth-title">Account</h3>
-                        <button class="sidebar-auth-btn login" id="sidebar-login-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                            Login
-                        </button>
-                        <button class="sidebar-auth-btn register" id="sidebar-register-btn">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="8.5" cy="7" r="4"></circle>
-                                <line x1="20" y1="8" x2="20" y2="14"></line>
-                                <line x1="23" y1="11" x2="17" y2="11"></line>
-                            </svg>
-                            Register
-                        </button>
-                    </div>
-
-                    <!-- Mobile User Section (shown when logged in on mobile) -->
-                    <div class="nav-section sidebar-user-section logged-out" id="sidebar-user-section">
-                        <div class="sidebar-user-info">
-                            <div class="sidebar-user-avatar">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="12" cy="7" r="4"></circle>
-                                </svg>
-                            </div>
-                            <div class="sidebar-user-details">
-                                <div class="sidebar-user-name" id="sidebar-user-name"></div>
-                                <div class="sidebar-user-label">Logged in</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="nav-section">
-                        <h3 class="sidebar-title">Prompt Library</h3>
-                        <ul class="sidebar-menu">
-                            <li class="sidebar-menu-item">
-                                <a href="prompt-library.html" class="sidebar-link active">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                                    </svg>
-                                    All Prompts
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-
-                    <div class="nav-section">
-                        <h3 class="sidebar-title">Categories</h3>
-                        <ul class="sidebar-menu">
-                            <li class="sidebar-menu-item">
-                                <a href="prompt-library.html?category=creative" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                                        <path d="M2 2l7.586 7.586"></path>
-                                        <circle cx="11" cy="11" r="2"></circle>
-                                    </svg>
-                                    Creative
-                                </a>
-                            </li>
-                            <li class="sidebar-menu-item">
-                                <a href="prompt-library.html?category=business" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                    </svg>
-                                    Business
-                                </a>
-                            </li>
-                            <li class="sidebar-menu-item">
-                                <a href="prompt-library.html?category=technical" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="16 18 22 12 16 6"></polyline>
-                                        <polyline points="8 6 2 12 8 18"></polyline>
-                                    </svg>
-                                    Technical
-                                </a>
-                            </li>
-                            <li class="sidebar-menu-item">
-                                <a href="prompt-library.html?category=education" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                    </svg>
-                                    Education
-                                </a>
-                            </li>
-                            <li class="sidebar-menu-item">
-                                <a href="prompt-library.html?category=productivity" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                    Productivity
-                                </a>
-                            </li>
-                            <li class="sidebar-menu-item">
-                                <a href="prompt-library.html?category=research" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="11" cy="11" r="8"></circle>
-                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                    </svg>
-                                    Research
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="nav-section" id="sidebar-my-account" style="display: none;">
-                        <h3 class="sidebar-title">My Account</h3>
-                        <ul class="sidebar-menu">
-                            <li class="sidebar-menu-item">
-                                <a href="saved-prompts.html" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                                    </svg>
-                                    My Saved Prompts
-                                </a>
-                            </li>
-                            <li class="sidebar-menu-item">
-                                <a href="#" id="view-profile" class="sidebar-link">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="12" cy="7" r="4"></circle>
-                                    </svg>
-                                    Profile Settings
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- Sidebar logout section at bottom (shown when logged in on mobile) -->
-                    <div class="nav-section sidebar-logout-section logged-out" id="sidebar-logout-section">
-                        <button class="sidebar-logout-btn" id="sidebar-logout-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
-                            </svg>
-                            Logout
-                        </button>
-                    </div>
-                </nav>
-            </aside>
-
-            <main class="split-view">
-            <!-- Mobile Tab Navigation -->
-            <div class="mobile-tab-nav" id="mobile-tab-nav">
-                <button class="mobile-tab active" data-tab="input" id="tab-input">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                    <span>Input</span>
-                </button>
-                <button class="mobile-tab" data-tab="output" id="tab-output">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                    </svg>
-                    <span>Enhanced</span>
-                </button>
+            <div class="trust-item animate-hidden animate-fade-up animate-delay-2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <span>Real-time Scoring</span>
             </div>
-
-            <!-- Input Panel -->
-            <section class="panel input-panel">
-<div class="panel-header">
-                    <h2>Original Prompt</h2>
-                    <div class="panel-actions">
-                        <div class="quality-score-container">
-                            <span class="quality-label">Quality</span>
-                            <div class="quality-score-box" id="input-quality-score">
-                                <span class="score-value">--</span>
-                                <div class="score-bar">
-                                    <div class="score-fill" id="input-score-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <button id="copy-input-btn" class="icon-btn" title="Copy original prompt">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="temperature-controls">
-                    <div class="temperature-header">
-                        <label class="temperature-label">AI Creativity Level</label>
-                        <span class="temperature-value" id="temperature-value">0.3</span>
-                    </div>
-                    <div class="temperature-slider-wrapper">
-                        <input type="range" id="temperature-slider" class="temperature-slider" min="0" max="100" value="30" step="1">
-                        <div class="temperature-track">
-                            <div class="temperature-fill" id="temperature-fill"></div>
-                        </div>
-                        <div class="temperature-tooltip" id="temperature-tooltip">0.3</div>
-                    </div>
-                    <div class="temperature-presets">
-                        <button class="preset-btn" data-preset="precise">Precise</button>
-                        <button class="preset-btn active" data-preset="balanced">Balanced</button>
-                        <button class="preset-btn" data-preset="creative">Creative</button>
-                        <button class="preset-btn" data-preset="max">Max</button>
-                    </div>
-                </div>
-                
-                <div class="input-form-wrapper">
-                    <div class="input-group">
-                        <label for="prompt-input" class="input-label">Core Instruction <span class="required">*</span></label>
-                        <p class="input-description">What is the main task you want the AI to perform?</p>
-                        <textarea 
-                            id="prompt-input" 
-                            class="prompt-textarea main-input" 
-                            placeholder="e.g., Write a blog post about sustainable gardening..."
-                            maxlength="5000"
-                            spellcheck="false"
-                        ></textarea>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="context-input" class="input-label">Context & Background <span class="optional">(Optional)</span></label>
-                        <p class="input-description">Provide relevant background information or data.</p>
-                        <textarea 
-                            id="context-input" 
-                            class="prompt-textarea secondary-input" 
-                            placeholder="e.g., The audience is beginner gardeners, focus on urban settings..."
-                            maxlength="2000"
-                            spellcheck="false"
-                        ></textarea>
-                    </div>
-                </div>
-
-                <div class="panel-footer">
-                    <div class="char-count-wrapper">
-                        <div class="char-progress">
-                            <div class="char-progress-fill" id="char-progress-fill"></div>
-                        </div>
-                        <div class="char-count">
-                            <span id="input-char-count">0</span> / 5000
-                        </div>
-                    </div>
-                    <div class="primary-action">
-                        <button id="reset-btn" class="reset-btn" title="Reset session">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                                <path d="M3 3v5h5"></path>
-                            </svg>
-                            Reset
-                        </button>
-                        <button id="enhance-btn" class="enhance-btn" disabled>
-                            <span class="btn-text">Enhance</span>
-                            <span class="loading-spinner" style="display: none;"></span>
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Output Panel -->
-            <section class="panel output-panel">
-                <div class="panel-header">
-                    <h2>Enhanced Version</h2>
-                    <div class="panel-actions">
-                        <div class="quality-score-container">
-                            <span class="quality-label">Quality</span>
-                            <div class="quality-score-box" id="output-quality-score">
-                                <span class="score-value">--</span>
-                                <div class="score-bar">
-                                    <div class="score-fill" id="output-score-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <button id="save-prompt-btn" class="icon-btn" title="Save this prompt" disabled>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                                <polyline points="7 3 7 8 15 8"></polyline>
-                            </svg>
-                        </button>
-                        <button id="copy-output-btn" class="icon-btn" title="Copy enhanced prompt" disabled>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="textarea-wrapper">
-                    <textarea 
-                        id="prompt-output" 
-                        class="prompt-textarea" 
-                        placeholder="Enhanced prompt will appear here..."
-                        readonly
-                        spellcheck="false"
-                    ></textarea>
-                </div>
-
-                <!-- Feedback Section -->
-                <div class="feedback-section">
-                    <button class="feedback-toggle" id="feedback-toggle" aria-expanded="false" disabled>
-                        <span class="toggle-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </span>
-                        <span class="toggle-text">Why this is better</span>
-                    </button>
-                    <div class="feedback-content" id="feedback-content" hidden>
-                        <div class="feedback-body" id="feedback-body">
-                            <!-- Feedback will be injected here -->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-footer">
-                    <div class="output-info">
-                        <span id="enhancement-time"></span>
-                    </div>
-                    <div id="status-message" class="status-message"></div>
-                </div>
-            </section>
-
-
-            </main>
+            <div class="trust-item animate-hidden animate-fade-up animate-delay-3">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Secure & Private</span>
+            </div>
         </div>
     </div>
 
-    <!-- Authentication Modals -->
-    <div id="auth-modal-overlay" class="modal-overlay" style="display: none;"></div>
-    
-    <div id="login-modal" class="auth-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Login to PromptRefinery</h3>
-                <button id="close-login-modal" class="modal-close">&times;</button>
+    <section id="features" class="features-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge animate-hidden animate-fade-in">Features</span>
+                <h2 class="section-title animate-hidden animate-fade-up animate-delay-1">Everything you need to master AI</h2>
+                <p class="section-subtitle animate-hidden animate-fade-up animate-delay-2">Built for developers, writers, and power users who demand precision from their LLMs.</p>
             </div>
-            <form id="login-form" class="auth-form">
-                <div class="form-group">
-                    <label for="login-username">Username or Email</label>
-                    <input type="text" id="login-username" name="username" required>
-                </div>
-<div class="form-group">
-                    <label for="login-password">Password</label>
-                    <div class="password-input-wrapper">
-                        <input type="password" id="login-password" name="password" required>
-                        <button type="button" class="password-toggle-btn" title="Toggle password visibility" aria-label="Toggle password visibility">
-                            <svg class="eye-icon closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                <line x1="1" y1="1" x2="23" y2="23"></line>
-                            </svg>
-                            <svg class="eye-icon open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
+            
+            <div class="bento-grid">
+                <!-- Main Feature -->
+                <div class="bento-card span-2 horizontal-layout animate-hidden animate-scale-up animate-delay-1">
+                    <div style="flex: 1; padding-right: 1.5rem;">
+                        <div class="bento-icon-wrapper">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                        </div>
+                        <h3 class="bento-title">Intelligent Enhancement</h3>
+                        <p class="bento-description">Our core engine analyzes your vague instructions and intelligently rewrites them to include necessary context, constraints, and structural elements.</p>
+                    </div>
+                    <div class="bento-visual" style="flex: 1; margin-top: 0; min-height: 100%; display: flex; align-items: center;">
+                        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); width: 100%;">
+                            <span style="color: var(--error); text-decoration: line-through;">"Fix this code"</span><br>
+                            <span style="color: var(--success); display: block; margin-top: 0.5rem;">"Analyze the following Python function for memory leaks and suggest refactoring patterns..."</span>
+                        </div>
                     </div>
                 </div>
-                <button type="submit" class="auth-submit-btn">Login</button>
-                <p class="switch-form">
-                    Don't have an account? <a href="#" id="switch-to-register">Register</a>
+
+                <div class="bento-card animate-hidden animate-fade-up animate-delay-2">
+                    <div class="bento-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                    </div>
+                    <h3 class="bento-title">Creativity Control</h3>
+                    <p class="bento-description">Switch between "Precise" for code, "Balanced" for emails, or "Creative" for storytelling.</p>
+                </div>
+
+                <div class="bento-card animate-hidden animate-fade-up animate-delay-3">
+                    <div class="bento-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h3 class="bento-title">Live Scoring</h3>
+                    <p class="bento-description">Get instant feedback on your prompt's quality as you type.</p>
+                </div>
+
+                <div class="bento-card animate-hidden animate-fade-up animate-delay-4">
+                    <div class="bento-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <h3 class="bento-title">Curated Library</h3>
+                    <p class="bento-description">Access over 50 expert-crafted templates for development and business.</p>
+                </div>
+
+                <div class="bento-card animate-hidden animate-fade-up animate-delay-5">
+                    <div class="bento-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    </div>
+                    <h3 class="bento-title">Personal Stash</h3>
+                    <p class="bento-description">Save your enhanced prompts to your private profile for quick access.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="use-cases" class="use-cases-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge animate-hidden animate-fade-in">Use Cases</span>
+                <h2 class="section-title animate-hidden animate-fade-up animate-delay-1">Who uses PromptRefinery?</h2>
+                <p class="section-subtitle animate-hidden animate-fade-up animate-delay-2">Tailored solutions for every professional workflow.</p>
+            </div>
+
+            <div class="use-cases-grid">
+                <!-- Developer Card -->
+                <div class="bento-card span-2 horizontal-layout card-developer use-case-card animate-hidden animate-fade-up animate-delay-1">
+                    <div class="use-case-dev-content">
+                        <div class="use-case-icon-wrapper">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        </div>
+                        <span class="use-case-tag tag-dev">For Developers</span>
+                        <h3 class="bento-title">Generate Clean, Bug-Free Code</h3>
+                        <p class="bento-description">Stop getting hallucinated APIs or buggy snippets. Enhance your coding prompts to specify languages, libraries, constraints, and error handling requirements automatically.</p>
+                        <ul class="use-case-benefits">
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                                Enforce specific library versions
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                                Request edge case handling
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="use-case-dev-visual">
+                        <div class="use-case-code-preview">
+                            <span class="code-comment">// Generate React component</span><br>
+                            <span class="code-keyword">interface</span> <span class="code-type">Props</span> {<br>
+                            &nbsp;&nbsp;title: <span class="code-type">string</span>;<br>
+                            }<br>
+                            <br>
+                            <span class="code-keyword">const</span> <span class="code-function">Component</span> = <span class="code-keyword">async</span> ({ title }: <span class="code-type">Props</span>) => {<br>
+                            &nbsp;&nbsp;<span class="code-keyword">try</span> {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">const</span> data = <span class="code-keyword">await</span> <span class="code-function">fetchData</span>(title);<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> &lt;<span class="code-type">div</span>&gt;{data}&lt;/<span class="code-type">div</span>&gt;;<br>
+                            &nbsp;&nbsp;} <span class="code-keyword">catch</span> (error) {<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-type">Error</span>(<span class="code-string">"Failed to load"</span>);<br>
+                            &nbsp;&nbsp;}<br>
+                            }<span class="typing-cursor"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Writer Card -->
+                <div class="bento-card card-writer use-case-card animate-hidden animate-fade-up animate-delay-2">
+                    <div class="use-case-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                    </div>
+                    <span class="use-case-tag tag-writer">For Writers</span>
+                    <h3 class="bento-title">Overcome Writer's Block</h3>
+                    <p class="bento-description">Transform "Write a story" into a rich prompt detailing tone, character arcs, and pacing.</p>
+                    <ul class="use-case-benefits">
+                        <li>
+                            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                            Define tone and voice
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                            Structure narrative arcs
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Business Card -->
+                <div class="bento-card card-business use-case-card animate-hidden animate-fade-up animate-delay-3">
+                    <div class="use-case-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </div>
+                    <span class="use-case-tag tag-biz">For Business</span>
+                    <h3 class="bento-title">Strategic Analysis</h3>
+                    <p class="bento-description">Get actionable SWOT analyses and marketing plans by enforcing structured output formats.</p>
+                    <ul class="use-case-benefits">
+                        <li>
+                            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                            Structured report formats
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                            Actionable insights
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="steps-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge animate-hidden animate-fade-in">Workflow</span>
+                <h2 class="section-title animate-hidden animate-fade-up animate-delay-1">From Vague to Precise</h2>
+                <p class="section-subtitle animate-hidden animate-fade-up animate-delay-2">The fastest path to better AI responses.</p>
+            </div>
+            
+            <div class="steps-grid">
+                <div class="step-card animate-hidden animate-scale-up animate-delay-1">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Enter Draft</h3>
+                    <p class="step-description">Type your basic idea. It can be messy, vague, or just a few keywords.</p>
+                </div>
+                <div class="step-card animate-hidden animate-scale-up animate-delay-2">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">AI Refinement</h3>
+                    <p class="step-description">Our model analyzes intent and adds the missing context and structure.</p>
+                </div>
+                <div class="step-card animate-hidden animate-scale-up animate-delay-3">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Copy & Use</h3>
+                    <p class="step-description">Deploy the enhanced prompt to any LLM and see the difference.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-container">
+            <div class="cta-background-glow"></div>
+            <div class="cta-content">
+                <h2 class="cta-title animate-hidden animate-fade-up animate-delay-1">Ready to level up your workflow?</h2>
+                <p class="cta-description animate-hidden animate-fade-up animate-delay-2">Join thousands of professionals who are getting better results from AI, faster. Start refining your prompts today.</p>
+                <div class="cta-actions animate-hidden animate-scale-up animate-delay-3">
+                    <a href="app.html" class="cta-btn">
+                        Start Enhancing Now
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="footer-col animate-hidden animate-fade-up animate-delay-1">
+                <img src="assets/images/logo-light-background.webp" alt="PromptRefinery" height="28" id="footer-logo">
+                <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                    The essential tool for the AI age. <br>Crafting better prompts, together.
                 </p>
-            </form>
-        </div>
-    </div>
-    
-    <div id="register-modal" class="auth-modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create Account</h3>
-                <button id="close-register-modal" class="modal-close">&times;</button>
             </div>
-            <form id="register-form" class="auth-form">
-                <div class="form-group">
-                    <label for="register-username">Username</label>
-                    <input type="text" id="register-username" name="username" required minlength="3" maxlength="20">
-                    <small>3-20 characters, letters, numbers, and underscores only</small>
-                </div>
-                <div class="form-group">
-                    <label for="register-email">Email</label>
-                    <input type="email" id="register-email" name="email" required>
-                </div>
-<div class="form-group">
-                    <label for="register-password">Password</label>
-                    <div class="password-input-wrapper">
-                        <input type="password" id="register-password" name="password" required minlength="8">
-                        <button type="button" class="password-toggle-btn" title="Toggle password visibility" aria-label="Toggle password visibility">
-                            <svg class="eye-icon closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                <line x1="1" y1="1" x2="23" y2="23"></line>
-                            </svg>
-                            <svg class="eye-icon open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
-                    </div>
-                    <small>At least 8 characters with uppercase, lowercase, number, and special character</small>
-                </div>
-                <button type="submit" class="auth-submit-btn">Register</button>
-                <p class="switch-form">
-                    Already have an account? <a href="#" id="switch-to-login">Login</a>
-                </p>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Saved Prompts Modal -->
-
-
-    <!-- Profile Modal -->
-    <div id="profile-modal" class="modal-backdrop" aria-hidden="true">
-        <div class="modal-container" style="max-width: 500px;">
-            <header class="modal-header">
-                <h2>Profile Settings</h2>
-                <button id="close-profile-modal" class="icon-btn" aria-label="Close modal">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </header>
-            <div class="modal-body">
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="margin-bottom: 0.75rem; font-size: 1rem; color: var(--text-main);">Account Information</h3>
-                    <div class="form-group">
-                        <label for="profile-username">Username</label>
-                        <input type="text" id="profile-username" name="username" disabled style="background: var(--bg-subtle); cursor: not-allowed;">
-                        <small style="color: var(--text-muted);">Username cannot be changed</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="profile-email">Email</label>
-                        <input type="email" id="profile-email" name="email" disabled style="background: var(--bg-subtle); cursor: not-allowed;">
-                        <small style="color: var(--text-muted);">Email cannot be changed</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="profile-created">Member Since</label>
-                        <input type="text" id="profile-created" name="created_at" disabled style="background: var(--bg-subtle); cursor: not-allowed;">
-                    </div>
-                    <div class="form-group">
-                        <label for="profile-saved-count">Saved Prompts</label>
-                        <input type="text" id="profile-saved-count" name="saved_prompts_count" disabled style="background: var(--bg-subtle); cursor: not-allowed;">
-                    </div>
-                </div>
-
-                <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);">
-                
-                <form id="password-form" class="auth-form">
-                    <h3 style="margin-bottom: 1rem; font-size: 1rem; color: var(--text-main);">Change Password</h3>
-<div class="form-group">
-                        <label for="current-password">Current Password</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" id="current-password" name="current_password" required>
-                            <button type="button" class="password-toggle-btn" title="Toggle password visibility" aria-label="Toggle password visibility">
-                                <svg class="eye-icon closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                                </svg>
-                                <svg class="eye-icon open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-<div class="form-group">
-                        <label for="new-password">New Password</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" id="new-password" name="new_password" required>
-                            <button type="button" class="password-toggle-btn" title="Toggle password visibility" aria-label="Toggle password visibility">
-                                <svg class="eye-icon closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                                </svg>
-                                <svg class="eye-icon open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </button>
-                        </div>
-                        <small>At least 8 characters with uppercase, lowercase, number, and special character</small>
-                    </div>
-                    <button type="submit" class="auth-submit-btn">Change Password</button>
-                </form>
-
-                <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);">
-                
-                <div style="margin-top: 2rem;">
-                    <h3 style="margin-bottom: 1rem; font-size: 1rem; color: var(--error);">Danger Zone</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 1rem;">Deleting your account is permanent and cannot be undone. All your saved prompts will be deleted.</p>
-                    <button id="delete-account-btn" class="auth-submit-btn" style="background: var(--error);">
-                        Delete My Account
-                    </button>
-                </div>
+            <div class="footer-col animate-hidden animate-fade-up animate-delay-2">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="app.html">Prompt Enhancer</a></li>
+                    <li><a href="prompt-library.html">Prompt Library</a></li>
+                    <li><a href="app.html">Saved Prompts</a></li>
+                </ul>
+            </div>
+            <div class="footer-col animate-hidden animate-fade-up animate-delay-3">
+                <h4>Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="prompt-library.html?category=creative">Creative Writing</a></li>
+                    <li><a href="prompt-library.html?category=technical">Technical</a></li>
+                    <li><a href="prompt-library.html?category=business">Business</a></li>
+                </ul>
+            </div>
+            <div class="footer-col animate-hidden animate-fade-up animate-delay-4">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/yourusername/prompt-refinery">GitHub Repository</a></li>
+                    <li><a href="#">Report a Bug</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
             </div>
         </div>
-    </div>
-
-    <!-- Account deletion confirmation modal -->
-    <div id="delete-confirm-modal" class="modal-backdrop" aria-hidden="true">
-        <div class="modal-container" style="max-width: 450px;">
-            <header class="modal-header">
-                <h2 style="color: var(--error);">Delete Account</h2>
-                <button id="close-delete-modal" class="icon-btn" aria-label="Close modal">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </header>
-            <div class="modal-body">
-                <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost.</p>
-                <form id="delete-account-form" class="auth-form">
-<div class="form-group">
-                        <label for="delete-password">Enter your password to confirm</label>
-                        <div class="password-input-wrapper">
-                            <input type="password" id="delete-password" name="password" required>
-                            <button type="button" class="password-toggle-btn" title="Toggle password visibility" aria-label="Toggle password visibility">
-                                <svg class="eye-icon closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                                </svg>
-                                <svg class="eye-icon open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <button type="submit" class="auth-submit-btn" style="background: var(--error);">
-                        Yes, Delete My Account
-                    </button>
-                </form>
-                <button id="cancel-delete-btn" class="auth-submit-btn" style="margin-top: 1rem; background: var(--bg-subtle); color: var(--text-main);">Cancel</button>
-            </div>
+        <div class="footer-bottom">
+            <div>&copy; 2024 PromptRefinery. All rights reserved.</div>
         </div>
-    </div>
+    </footer>
 
-    <script src="js/script.js"></script>
+    <script>
+        // Theme handling for logos
+        const navLogo = document.getElementById('nav-logo');
+        const footerLogo = document.getElementById('footer-logo');
+
+        function updateLogos() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            const src = theme === 'dark'
+                ? 'assets/images/logo-dark-baclground.webp'
+                : 'assets/images/logo-light-background.webp';
+
+            if (navLogo) navLogo.src = src;
+            if (footerLogo) footerLogo.src = src;
+        }
+
+        updateLogos();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                updateLogos();
+            }
+        });
+
+        // Landing Page Demo Animation
+        (function() {
+            const originalTextElement = document.querySelector('.original-prompt');
+            const enhancedTextElement = document.querySelector('.enhanced-prompt');
+            const enhanceButton = document.getElementById('demo-enhance-btn');
+            const btnText = enhanceButton.querySelector('.btn-text');
+            const spinner = enhanceButton.querySelector('.loading-spinner');
+            const summaryElement = document.querySelector('.enhancement-summary');
+
+            if (!originalTextElement || !enhancedTextElement || !enhanceButton) {
+                return;
+            }
+
+            const originalPrompt = "Write a blog post about gardening";
+            const enhancedPrompt = "Write a comprehensive blog post about the joys and benefits of gardening, covering topics such as plant selection, soil preparation, watering techniques, and tips for maintaining a thriving garden throughout the seasons.";
+
+            // Typewriter effect function
+            function typeWriter(element, text, callback, speed = 100) {
+                let index = 0;
+                element.textContent = '';
+
+                function type() {
+                    if (index < text.length) {
+                        element.textContent += text.charAt(index);
+                        index++;
+                        setTimeout(type, speed);
+                    } else if (callback) {
+                        callback();
+                    }
+                }
+
+                type();
+            }
+
+            // Button click animation
+            function animateButtonClick() {
+                enhanceButton.classList.add('clicking');
+                setTimeout(() => {
+                    enhanceButton.classList.remove('clicking');
+                }, 150);
+            }
+
+            // Main animation sequence
+            function runAnimationSequence() {
+                // Reset state
+                originalTextElement.textContent = '';
+                enhancedTextElement.textContent = '';
+                summaryElement.classList.remove('visible');
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+                enhanceButton.disabled = false;
+                enhanceButton.textContent = 'Enhance';
+                enhanceButton.appendChild(btnText);
+                enhanceButton.appendChild(spinner);
+
+                // Phase 1: Type original prompt
+                typeWriter(originalTextElement, originalPrompt, () => {
+                    // Phase 2: Click button after short delay
+                    setTimeout(() => {
+                        animateButtonClick();
+
+                        // Show loading state
+                        btnText.style.display = 'none';
+                        spinner.style.display = 'inline-block';
+                        enhanceButton.disabled = true;
+
+                        // Phase 3: Wait 1 second (simulate API)
+                        setTimeout(() => {
+                            // Phase 4: Type enhanced prompt
+                            typeWriter(enhancedTextElement, enhancedPrompt, () => {
+                                // Show summary
+                                summaryElement.classList.add('visible');
+
+                                // Phase 5: Wait and loop
+                                setTimeout(runAnimationSequence, 3000);
+                            }, 15); // Faster typing for longer text
+
+                        }, 1000);
+
+                    }, 500); // Short delay before button click
+                }, 50); // Typing speed
+            }
+
+            // Start animation when element is in view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        runAnimationSequence();
+                        observer.disconnect(); // Only start once
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(document.querySelector('.mockup-body'));
+        })();
+
+        // Scroll Animation System
+        (function() {
+            'use strict';
+            
+            // Observer options
+            const observerOptions = {
+                threshold: 0.15,  // Trigger when 15% of element is visible
+                rootMargin: '0px 0px -50px 0px'  // Trigger slightly before element enters viewport
+            };
+            
+            // Create observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const element = entry.target;
+                        
+                        // Remove hidden class and let animation play
+                        element.classList.remove('animate-hidden');
+                        
+                        // Stop observing after animation
+                        observer.unobserve(element);
+                    }
+                });
+            }, observerOptions);
+            
+            // Find all elements with animate-hidden class
+            const animateElements = document.querySelectorAll('.animate-hidden');
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // Special case: Hero section - animate immediately on load
+            // This ensures content is visible even if JS loads late or intersection observer fails
+            const heroElements = document.querySelectorAll('.hero-section .animate-hidden');
+            if (heroElements.length > 0) {
+                // Small delay to ensure DOM layout is settled and transitions play smoothly
+                setTimeout(() => {
+                    heroElements.forEach(element => {
+                        element.classList.remove('animate-hidden');
+                        // Unobserve hero elements since we manually triggered them
+                        observer.unobserve(element);
+                    });
+                }, 100);
+            }
+        })();
+    </script>
 </body>
 </html>

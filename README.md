@@ -76,7 +76,8 @@ PromptRefinery/
 │   ├── script.js           # Main enhancer logic
 │   ├── prompt-library.js   # Library page logic
 │   └── saved-prompts.js    # Saved prompts management
-├── index.html              # Main application entry point
+├── index.html              # Landing page
+├── app.html                # Main application entry point
 ├── prompt-library.html     # Public prompt templates page
 └── saved-prompts.html      # User's saved prompts page
 ```
@@ -84,7 +85,7 @@ PromptRefinery/
 ## Usage
 
 1.  **Enhance a Prompt:**
-    - Go to the home page (`index.html`).
+    - Go to the app page (`app.html`).
     - Enter your "Core Instruction" (e.g., "Write a blog post").
     - Optionally add "Context & Background".
     - Adjust the creativity slider if needed.

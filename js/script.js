@@ -2321,7 +2321,7 @@ logoImg.src = newSrc;
                 
                 // Redirect to home after logout
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'app.html';
                 }, 2000);
             } else {
                 showNotification(data.error || 'Failed to delete account', 'error');

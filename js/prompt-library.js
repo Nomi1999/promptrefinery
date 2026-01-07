@@ -1156,7 +1156,7 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         
         // Redirect to main app
         setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = 'app.html';
         }, 1000);
     }
 
