@@ -160,11 +160,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const footerLogo = document.getElementById('footer-logo');
         const theme = document.documentElement.getAttribute('data-theme');
         const src = theme === 'dark'
-            ? 'assets/images/logo-dark-baclground.webp'
+            ? 'assets/images/logo-dark-background.webp'
             : 'assets/images/logo-light-background.webp';
 
         if (navLogo) navLogo.src = src;
         if (footerLogo) footerLogo.src = src;
+    }
+
+    // Toggle Theme Function
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            // updateLogos will be called by the observer
+        });
     }
 
     // Initial update

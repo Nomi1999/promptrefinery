@@ -470,13 +470,7 @@
     }
 
     function updateThemeIcons(theme) {
-        if (theme === 'dark') {
-            if (sunIcon) sunIcon.style.display = 'block';
-            if (moonIcon) moonIcon.style.display = 'none';
-        } else {
-            if (sunIcon) sunIcon.style.display = 'none';
-            if (moonIcon) moonIcon.style.display = 'block';
-        }
+        // Theme icons visibility is handled by CSS based on data-theme attribute
     }
 
     // Title management functions

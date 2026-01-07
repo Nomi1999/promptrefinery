@@ -1536,16 +1536,7 @@ RULES:
         updateThemeIcons(theme);
     }
     
-function updateThemeIcons(theme) {
-        // Update theme toggle icons
-        if (theme === 'dark') {
-            sunIcon.style.display = 'block';
-            moonIcon.style.display = 'none';
-        } else {
-            sunIcon.style.display = 'none';
-            moonIcon.style.display = 'block';
-        }
-        
+    function updateThemeIcons(theme) {
         // Update logo based on theme
         updateThemeLogo(theme);
     }
@@ -1558,7 +1549,7 @@ function updateThemeIcons(theme) {
         
         // Change logo source
         const newSrc = theme === 'dark' 
-            ? 'assets/images/logo-dark-baclground.webp'
+            ? 'assets/images/logo-dark-background.webp'
             : 'assets/images/logo-light-background.webp';
         
         // Preload new image to prevent flicker
