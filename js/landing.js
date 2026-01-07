@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalTextElement = document.querySelector('.original-prompt');
         const enhancedTextElement = document.querySelector('.enhanced-prompt');
         const enhanceButton = document.getElementById('demo-enhance-btn');
+        
         // Check if elements exist before proceeding
         if (!originalTextElement || !enhancedTextElement || !enhanceButton) {
             return;
@@ -146,6 +147,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     element.classList.add('animate-visible');
                     // Unobserve hero elements since we manually triggered them
                     observer.unobserve(element);
+                });
+            }, 100);
+        }
+    })();
 
     // ==========================================
     // Theme Handling
@@ -185,8 +190,4 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(document.documentElement, {
         attributes: true //configure it to listen to attribute changes
     });
-});
-            }, 100);
-        }
-    })();
 });
