@@ -74,7 +74,7 @@
 
 .landing-btn-outline {
     background: transparent;
-    border: 1px solid var(--border);
+    border: 1px solid var(--text-muted);
     color: var(--text-main);
 }
 
@@ -119,7 +119,7 @@
     font-size: 0.85rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    border: 1px solid rgba(var(--primary-rgb), 0.3); /* Increased border opacity */
 }
 
 .hero-title {
@@ -210,7 +210,7 @@
 }
 
 .mockup-body {
-    background: #ffffff;
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-top: none;
     border-radius: 0 0 12px 12px;
@@ -459,11 +459,12 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     overflow: hidden;
     position: relative;
+    box-shadow: var(--shadow-md); /* Added default shadow for lift */
 }
 
 .bento-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-lg); /* Enhanced hover shadow */
     border-color: var(--border-hover);
 }
 
@@ -773,11 +774,12 @@
     height: 2px;
     background: linear-gradient(90deg, 
         rgba(var(--primary-rgb), 0) 0%, 
-        var(--border) 20%, 
-        var(--border) 80%, 
+        var(--text-muted) 20%, 
+        var(--text-muted) 80%, 
         rgba(var(--primary-rgb), 0) 100%
     );
     z-index: -1;
+    opacity: 0.3; /* Ensure it's not too harsh but visible */
 }
 
 .step-card {
@@ -1072,7 +1074,8 @@
         bottom: 80px; /* Stop before the end */
         left: 50%;
         width: 2px;
-        background: var(--border);
+        background: var(--text-muted);
+        opacity: 0.3;
         transform: translateX(-50%);
         z-index: -1;
     }

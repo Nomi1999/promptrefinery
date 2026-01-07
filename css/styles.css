@@ -4,18 +4,18 @@
     --primary-hover: #115e59;
     --primary-foreground: #ffffff;
 
-    --bg-body: #f2efe6; /* Soft Cream */
-    --bg-card: #f8f5ed; /* Warm Linen */
-    --bg-subtle: #e8e4db; /* Muted Sand */
-    --bg-input: #f8f5ed; /* Warm Linen */
-    --bg-sidebar: #f2efe6; /* Soft Cream */
+    --bg-body: #f1f5f9; /* Slate 100 - Provides a distinct surface */
+    --bg-card: #ffffff; /* Pure White - Maximum readability */
+    --bg-subtle: #e2e8f0; /* Slate 200 - For secondary elements */
+    --bg-input: #ffffff; /* White */
+    --bg-sidebar: #f1f5f9; /* Slate 100 */
 
     --text-main: #0f172a; /* Slate 900 */
-    --text-muted: #475569; /* Slate 600 */
-    --text-light: #94a3b8; /* Slate 400 */
+    --text-muted: #334155; /* Slate 700 - Ratio ~10:1 on White */
+    --text-light: #64748b; /* Slate 500 - Ratio ~4.8:1 on White (Passes AA) */
 
-    --border: #e2e8f0; /* Slate 200 */
-    --border-hover: #cbd5e1; /* Slate 300 */
+    --border: #94a3b8; /* Slate 400 - Higher contrast */
+    --border-hover: #64748b; /* Slate 500 */
 
     --success: #059669;
     --success-bg: #ecfdf5;
@@ -24,7 +24,7 @@
     --info: #0f766e;
 
     /* RGB versions for rgba() usage */
-    --bg-body-rgb: 242, 239, 230;
+    --bg-body-rgb: 241, 245, 249;
     --primary-rgb: 15, 118, 110;
 
     /* Animation durations */
@@ -56,7 +56,9 @@
     --radius-xl: 1rem;
     --radius-full: 9999px;
 
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.15), 0 2px 4px -2px rgb(0 0 0 / 0.15);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.15);
     --shadow-focus: 0 0 0 2px rgba(15, 118, 110, 0.2);
 
     /* Typography */
