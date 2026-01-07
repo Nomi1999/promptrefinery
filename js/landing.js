@@ -205,6 +205,77 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================
+    // Smooth Scrolling
+    // ==========================================
+    (function() {
+        // Smooth scroll function
+        function smoothScrollTo(targetElement, duration = 800) {
+            if (!targetElement) return;
+            
+            const start = window.pageYOffset;
+            const targetPosition = targetElement.getBoundingClientRect().top + start - 80; // 80px offset for header
+            const distance = targetPosition - start;
+            let startTime = null;
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                
+                // Easing function for smooth acceleration and deceleration
+                const easeInOutCubic = progress < 0.5 
+                    ? 4 * progress * progress * progress 
+                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                
+                window.scrollTo(0, start + distance * easeInOutCubic);
+                
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                }
+            }
+
+            requestAnimationFrame(animation);
+        }
+
+        // Handle smooth scrolling for anchor links
+        document.addEventListener('click', function(event) {
+            const link = event.target.closest('a[href^="#"]');
+            if (link) {
+                const targetId = link.getAttribute('href').slice(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    event.preventDefault();
+                    smoothScrollTo(targetElement);
+                    
+                    // Update URL without triggering page jump
+                    history.pushState(null, null, `#${targetId}`);
+                }
+            }
+        });
+
+        // Handle browser back/forward button for anchor navigation
+        window.addEventListener('popstate', function() {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                const targetElement = document.getElementById(hash);
+                if (targetElement) {
+                    setTimeout(() => smoothScrollTo(targetElement, 0), 0);
+                }
+            }
+        });
+
+        // Handle initial page load with anchor
+        if (window.location.hash) {
+            const hash = window.location.hash.slice(1);
+            const targetElement = document.getElementById(hash);
+            if (targetElement) {
+                setTimeout(() => smoothScrollTo(targetElement, 0), 100);
+            }
+        }
+    })();
+
+    // ==========================================
     // Mobile Menu
     // ==========================================
     (function() {
