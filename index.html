@@ -473,8 +473,9 @@
                     if (entry.isIntersecting) {
                         const element = entry.target;
                         
-                        // Remove hidden class and let animation play
+                        // Trigger animation
                         element.classList.remove('animate-hidden');
+                        element.classList.add('animate-visible');
                         
                         // Stop observing after animation
                         observer.unobserve(element);
@@ -496,6 +497,7 @@
                 setTimeout(() => {
                     heroElements.forEach(element => {
                         element.classList.remove('animate-hidden');
+                        element.classList.add('animate-visible');
                         // Unobserve hero elements since we manually triggered them
                         observer.unobserve(element);
                     });

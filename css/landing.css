@@ -670,14 +670,14 @@
     opacity: 0;
 }
 
-/* Animation Modifiers */
-.animate-fade-in { animation: fadeIn 600ms var(--ease-out) forwards; }
-.animate-fade-up { animation: fadeUp 700ms var(--ease-out) forwards; }
-.animate-fade-down { animation: fadeDown 700ms var(--ease-out) forwards; }
-.animate-fade-left { animation: fadeLeft 700ms var(--ease-out) forwards; }
-.animate-fade-right { animation: fadeRight 700ms var(--ease-out) forwards; }
-.animate-scale-in { animation: scaleIn 600ms var(--ease-out) forwards; }
-.animate-scale-up { animation: scaleUp 700ms var(--ease-out) forwards; }
+/* Animation Modifiers - Only trigger when visible */
+.animate-visible.animate-fade-in { animation: fadeIn 600ms var(--ease-out) forwards; }
+.animate-visible.animate-fade-up { animation: fadeUp 700ms var(--ease-out) forwards; }
+.animate-visible.animate-fade-down { animation: fadeDown 700ms var(--ease-out) forwards; }
+.animate-visible.animate-fade-left { animation: fadeLeft 700ms var(--ease-out) forwards; }
+.animate-visible.animate-fade-right { animation: fadeRight 700ms var(--ease-out) forwards; }
+.animate-visible.animate-scale-in { animation: scaleIn 600ms var(--ease-out) forwards; }
+.animate-visible.animate-scale-up { animation: scaleUp 700ms var(--ease-out) forwards; }
 
 /* Stagger Delays */
 .animate-delay-1 { animation-delay: 100ms; }
