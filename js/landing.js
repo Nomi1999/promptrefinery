@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btnText.style.display = 'inline';
             spinner.style.display = 'none';
             enhanceButton.disabled = false;
-            enhanceButton.textContent = 'Enhance';
+            enhanceButton.textContent = '';
             enhanceButton.appendChild(btnText);
             enhanceButton.appendChild(spinner);
 
