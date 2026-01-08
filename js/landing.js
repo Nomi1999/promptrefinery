@@ -441,12 +441,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
+                    // Reset animation to ensure it starts from beginning
+                    workflowArrow.classList.remove('animate');
+                    void workflowArrow.offsetWidth; // Force reflow
                     workflowArrow.classList.add('animate');
+                    
                     animationActive = true;
                     startTrail();
                 } else {
                     animationActive = false;
                     stopTrail();
+                    workflowArrow.classList.remove('animate');
+                    
+                    // Clear all highlights immediately
+                    const cards = stepsGrid.querySelectorAll('.step-card');
+                    cards.forEach(card => {
+                        const numberEl = card.querySelector('.step-number');
+                        if (numberEl) {
+                            numberEl.style.transform = '';
+                            numberEl.style.backgroundColor = '';
+                            numberEl.style.color = '';
+                            numberEl.style.borderColor = '';
+                            numberEl.style.boxShadow = '';
+                        }
+                    });
                 }
             });
         }, {
