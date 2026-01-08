@@ -787,6 +787,7 @@
     position: relative;
     padding-top: 3rem;
     text-align: center;
+    z-index: 3;
 }
 
 /* Remove old styling */
@@ -813,7 +814,7 @@
     font-family: var(--font-mono);
     box-shadow: 0 0 0 8px var(--bg-card); /* Creates mask effect over connector line */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 2;
+    z-index: 3;
 }
 
 .step-card:hover .step-number {
@@ -858,7 +859,7 @@
     color: var(--primary);
     z-index: 2;
     opacity: 0; /* Hidden initially */
-    filter: drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.5));
+    filter: drop-shadow(0 0 12px rgba(var(--primary-rgb), 0.8));
     transform: translate(-50%, -50%);
 }
 
@@ -889,56 +890,86 @@
 /* Desktop animation - horizontal movement with trail */
 .workflow-arrow.animate {
     opacity: 1;
-    animation: arrowMoveDesktop 4s ease-in-out infinite;
+    /* Custom bezier for snappy movement: start fast, end slow */
+    animation: arrowMoveDesktop 5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 @keyframes arrowMoveDesktop {
-    0% {
+    0%, 15% {
         left: 16.666%; /* Step 1 position */
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1.2); /* Pulse */
+    }
+    25% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    40% {
+        left: 50%; /* Step 2 position */
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
         opacity: 1;
     }
     45% {
-        left: 50%; /* Step 2 position */
-        transform: translate(-50%, -50%) rotate(0deg);
-        opacity: 1;
+        transform: translate(-50%, -50%) rotate(0deg) scale(1.2); /* Pulse */
     }
     50% {
-        left: 50%;
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 1;
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
     }
     55% {
         left: 50%;
-        transform: translate(-50%, -50%) scale(1);
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    80% {
+        left: 83.333%; /* Step 3 position */
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
         opacity: 1;
+    }
+    85% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1.2); /* Pulse */
+    }
+    90% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
     }
     95% {
-        left: 83.333%; /* Step 3 position */
-        transform: translate(-50%, -50%) rotate(0deg);
+        left: 83.333%;
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
         opacity: 1;
     }
-    96% {
+    98% {
         left: 83.333%;
-        transform: translate(-50%, -50%) rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
         opacity: 0;
     }
     100% {
         left: 16.666%; /* Jump back to step 1 */
-        transform: translate(-50%, -50%) rotate(0deg);
-        opacity: 1;
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        opacity: 0;
     }
 }
 
 /* Trail fade animation */
 @keyframes trailFade {
     0% {
-        opacity: 0.6;
+        opacity: 0.4;
         transform: translate(-50%, -50%) scale(1);
     }
     100% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.5);
+        transform: translate(-50%, -50%) scale(0.2);
+    }
+}
+
+/* Trail fade animation for mobile (rotated) */
+@keyframes trailFadeMobile {
+    0% {
+        opacity: 0.4;
+        transform: translate(-50%, -50%) rotate(90deg) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(90deg) scale(0.2);
     }
 }
 
@@ -951,51 +982,66 @@
     }
     
     .workflow-arrow.animate {
-        animation: arrowMoveMobile 4s ease-in-out infinite;
+        animation: arrowMoveMobile 5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
     }
     
     @keyframes arrowMoveMobile {
-        0% {
+        0%, 15% {
             top: var(--step-1-top, 20px);
             left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
+            opacity: 1;
+        }
+        20% {
+            transform: translate(-50%, -50%) rotate(90deg) scale(1.2);
+        }
+        25% {
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
+        }
+        40% {
+            top: var(--step-2-top, 150px);
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
             opacity: 1;
         }
         45% {
-            top: var(--step-2-top, 150px);
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
-            opacity: 1;
+            transform: translate(-50%, -50%) rotate(90deg) scale(1.2);
         }
         50% {
-            top: var(--step-2-top, 150px);
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1.2) rotate(90deg);
-            opacity: 1;
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
         }
         55% {
             top: var(--step-2-top, 150px);
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
+        }
+        80% {
+            top: var(--step-3-top, 300px);
             left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
             opacity: 1;
+        }
+        85% {
+            transform: translate(-50%, -50%) rotate(90deg) scale(1.2);
+        }
+        90% {
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
         }
         95% {
             top: var(--step-3-top, 300px);
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
             opacity: 1;
         }
-        96% {
+        98% {
             top: var(--step-3-top, 300px);
             left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
             opacity: 0;
         }
         100% {
             top: var(--step-1-top, 20px);
             left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
-            opacity: 1;
+            transform: translate(-50%, -50%) rotate(90deg) scale(1);
+            opacity: 0;
         }
     }
 }

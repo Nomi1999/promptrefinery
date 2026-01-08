@@ -359,9 +359,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Trail configuration
         const trailConfig = {
-            interval: 50, // Create trail every 50ms
-            maxTrails: 20, // Maximum number of trail elements
-            trailLifetime: 800, // How long trail lasts in ms
+            interval: 30, // Create trail every 30ms for smoother look
+            maxTrails: 25, // Increased max trails
+            trailLifetime: 600, // Shorter lifetime
             isMobile: window.innerWidth <= 640
         };
 
@@ -385,7 +385,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             trail.style.top = relativeTop + 'px';
             trail.style.left = relativeLeft + 'px';
-            trail.style.opacity = '0.6';
             
             // Add SVG to trail
             trail.innerHTML = workflowArrow.innerHTML;
@@ -394,7 +393,8 @@ document.addEventListener('DOMContentLoaded', function() {
             stepsGrid.appendChild(trail);
             
             // Animate trail fade
-            trail.style.animation = `trailFade ${trailConfig.trailLifetime}ms ease-out forwards`;
+            const animationName = trailConfig.isMobile ? 'trailFadeMobile' : 'trailFade';
+            trail.style.animation = `${animationName} ${trailConfig.trailLifetime}ms ease-out forwards`;
             
             // Store trail reference
             trails.push({
@@ -440,53 +440,75 @@ document.addEventListener('DOMContentLoaded', function() {
         // Start animation when workflow section is visible
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                console.log('[Arrow Animation] Intersection:', entry.isIntersecting, entry.target.id);
                 if (entry.isIntersecting) {
                     workflowArrow.classList.add('animate');
                     animationActive = true;
                     startTrail();
-                    console.log('[Arrow Animation] Started - Section visible');
                 } else {
                     animationActive = false;
                     stopTrail();
-                    console.log('[Arrow Animation] Stopped - Section not visible');
                 }
             });
         }, {
-            threshold: 0.3  // Trigger when 30% of section is visible
+            threshold: 0.3
         });
 
         observer.observe(stepsSection);
 
-        // Monitor arrow position during animation
+        // Monitor arrow position during animation to trigger step active state
         let positionCheckInterval = null;
         const checkArrowPosition = () => {
             if (!animationActive) return;
-            const arrowRect = workflowArrow.getBoundingClientRect();
-            const gridRect = stepsGrid.getBoundingClientRect();
-            const relativeTop = arrowRect.top - gridRect.top;
-            console.log('[Arrow Position] Relative top:', relativeTop.toFixed(1), 'px');
             
-            // Log expected positions for debugging
-            const step1Pos = 20;
-            const step2Pos = 20 + 80; // 2rem gap = ~80px
-            const step3Pos = 20 + 160; // 2 steps down
-            console.log('[Arrow Position] Expected: Step1=' + step1Pos + ', Step2=' + step2Pos + ', Step3=' + step3Pos);
+            const arrowRect = workflowArrow.getBoundingClientRect();
+            const arrowCenterX = arrowRect.left + arrowRect.width / 2;
+            const arrowCenterY = arrowRect.top + arrowRect.height / 2;
+            
+            const cards = stepsGrid.querySelectorAll('.step-card');
+            
+            cards.forEach(card => {
+                const numberEl = card.querySelector('.step-number');
+                if (!numberEl) return;
+                
+                const numRect = numberEl.getBoundingClientRect();
+                const numCenterX = numRect.left + numRect.width / 2;
+                const numCenterY = numRect.top + numRect.height / 2;
+                
+                // Calculate distance
+                const dist = Math.hypot(arrowCenterX - numCenterX, arrowCenterY - numCenterY);
+                
+                // If arrow is close to the number (within 40px), activate it
+                if (dist < 40) {
+                    numberEl.style.transform = 'translateX(-50%) scale(1.1)';
+                    numberEl.style.backgroundColor = 'var(--primary)';
+                    numberEl.style.color = 'var(--primary-foreground)';
+                    numberEl.style.borderColor = 'var(--primary)';
+                    numberEl.style.boxShadow = '0 0 0 8px var(--bg-card), 0 0 15px rgba(var(--primary-rgb), 0.5)';
+                } else {
+                    // Reset style
+                    numberEl.style.transform = '';
+                    numberEl.style.backgroundColor = '';
+                    numberEl.style.color = '';
+                    numberEl.style.borderColor = '';
+                    numberEl.style.boxShadow = '';
+                }
+            });
         };
 
         // Start position monitoring when animation begins
         workflowArrow.addEventListener('animationstart', () => {
-            console.log('[Arrow Animation] Animation started');
-            positionCheckInterval = setInterval(checkArrowPosition, 500);
+            // Use requestAnimationFrame for smoother checking
+            const loop = () => {
+                if (animationActive) {
+                    checkArrowPosition();
+                    requestAnimationFrame(loop);
+                }
+            };
+            requestAnimationFrame(loop);
         });
         
-        workflowArrow.addEventListener('animationend', () => {
-            console.log('[Arrow Animation] Animation ended');
-            if (positionCheckInterval) {
-                clearInterval(positionCheckInterval);
-                positionCheckInterval = null;
-            }
-        });
+        // No need for interval anymore, using rAF loop triggered by start
+        // cleanup is handled by animationActive flag
 
         // Clean up trails on page unload
         window.addEventListener('beforeunload', () => {
