@@ -2344,8 +2344,37 @@ logoImg.src = newSrc;
         return div.innerHTML;
     }
     
+    // Initialize page entry animations
+    function initPageAnimations() {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('animate-hidden');
+                    entry.target.classList.add('animate-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.animate-hidden').forEach(el => observer.observe(el));
+        
+        // Auto-trigger animations on page load with small delay
+        setTimeout(() => {
+            document.querySelectorAll('.animate-hidden').forEach(el => {
+                el.classList.remove('animate-hidden');
+                el.classList.add('animate-visible');
+            });
+        }, 50);
+    }
+    
     // Initialize application
     async function init() {
+        initPageAnimations();
         initTheme();
         initTemperatureControl();
         initMobileTabs(); // Initialize mobile tab navigation
