@@ -8,14 +8,15 @@
     --bg-card: #ffffff; /* Pure White - Maximum readability */
     --bg-subtle: #e2e8f0; /* Slate 200 - For secondary elements */
     --bg-input: #ffffff; /* White */
-    --bg-sidebar: #f1f5f9; /* Slate 100 */
+    --bg-sidebar: #e2e8f0; /* Slate 200 - Darker than body for hierarchy */
 
     --text-main: #0f172a; /* Slate 900 */
     --text-muted: #334155; /* Slate 700 - Ratio ~10:1 on White */
-    --text-light: #64748b; /* Slate 500 - Ratio ~4.8:1 on White (Passes AA) */
+    --text-light: #475569; /* Slate 600 - Darkened for AA compliance (Ratio ~6.5:1 on Slate 100) */
 
-    --border: #94a3b8; /* Slate 400 - Higher contrast */
-    --border-hover: #64748b; /* Slate 500 */
+    --border: #64748b; /* Slate 500 - Passes 3:1 contrast */
+    --border-hover: #475569; /* Slate 600 */
+    --border-subtle: #94a3b8; /* Slate 400 - Visible but softer than main border */
 
     --success: #059669;
     --success-bg: #ecfdf5;
@@ -56,9 +57,9 @@
     --radius-xl: 1rem;
     --radius-full: 9999px;
 
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.15), 0 2px 4px -2px rgb(0 0 0 / 0.15);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.15);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-focus: 0 0 0 2px rgba(15, 118, 110, 0.2);
 
     /* Typography */
@@ -140,7 +141,7 @@
     padding: 0.25rem 0.5rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    background: var(--bg);
+    background: var(--bg-input);
     outline: none;
 }
 
@@ -1152,9 +1153,9 @@ body.library-page {
     flex-shrink: 0;
     height: 100%;
     overflow-y: auto;
-    padding-right: var(--space-4);
-    background: transparent;
-    border: none;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    padding: var(--space-4) var(--space-2);
     box-shadow: none;
 }
 
@@ -1288,7 +1289,7 @@ body.library-page {
 
 .panel-header {
     padding: var(--space-4) var(--space-5);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1401,7 +1402,7 @@ body.library-page {
 /* Temperature Controls */
 .temperature-controls {
     padding: var(--space-5);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-subtle);
     background-color: var(--bg-card);
 }
 
@@ -1656,7 +1657,7 @@ body.library-page {
 .prompt-textarea {
     width: 100%;
     padding: var(--space-3);
-    background-color: var(--bg-subtle);
+    background-color: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     color: var(--text-main);
@@ -1712,7 +1713,7 @@ body.library-page {
 
 /* Feedback Section */
 .feedback-section {
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border-subtle);
     background-color: var(--bg-card);
     position: relative;
     z-index: 10;
@@ -1844,7 +1845,7 @@ body.library-page {
 /* Panel Footer */
 .panel-footer {
     padding: var(--space-3) var(--space-5);
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;
