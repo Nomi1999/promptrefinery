@@ -3452,6 +3452,12 @@ html.theme-transitioning * {
     transition: none !important;
 }
 
+/* Allow theme toggle icon animation during transition */
+html.theme-transitioning .sun-icon,
+html.theme-transitioning .moon-icon {
+    transition: transform 0.3s ease !important;
+}
+
 /* Animated Theme Toggle Icon */
 #theme-toggle {
     position: relative;
