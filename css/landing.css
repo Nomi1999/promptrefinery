@@ -956,43 +956,43 @@
     
     @keyframes arrowMoveMobile {
         0% {
-            top: 20px;
+            top: var(--step-1-top, 20px);
             left: 50%;
             transform: translate(-50%, -50%) rotate(90deg);
             opacity: 1;
         }
         45% {
-            top: calc(20px + 2.5rem + 2.5rem);
+            top: var(--step-2-top, 150px);
             left: 50%;
             transform: translate(-50%, -50%) rotate(90deg);
             opacity: 1;
         }
         50% {
-            top: calc(20px + 2.5rem + 2.5rem);
+            top: var(--step-2-top, 150px);
             left: 50%;
             transform: translate(-50%, -50%) scale(1.2) rotate(90deg);
             opacity: 1;
         }
         55% {
-            top: calc(20px + 2.5rem + 2.5rem);
+            top: var(--step-2-top, 150px);
             left: 50%;
             transform: translate(-50%, -50%) rotate(90deg);
             opacity: 1;
         }
         95% {
-            top: calc(20px + 2.5rem + 2.5rem + 2.5rem + 2.5rem);
+            top: var(--step-3-top, 300px);
             left: 50%;
             transform: translate(-50%, -50%) rotate(90deg);
             opacity: 1;
         }
         96% {
-            top: calc(20px + 2.5rem + 2.5rem + 2.5rem + 2.5rem);
+            top: var(--step-3-top, 300px);
             left: 50%;
             transform: translate(-50%, -50%) rotate(90deg);
             opacity: 0;
         }
         100% {
-            top: 20px;
+            top: var(--step-1-top, 20px);
             left: 50%;
             transform: translate(-50%, -50%) rotate(90deg);
             opacity: 1;
@@ -1238,8 +1238,71 @@
 }
 
 @media (max-width: 640px) {
-    .use-cases-grid {
+.use-cases-grid {
         grid-template-columns: 1fr;
+    }
+
+/* Mobile Code Preview Fix */
+    .use-case-code-preview {
+        font-size: 0.5rem; /* Smaller font for mobile */
+        padding: 0.5rem;
+        line-height: 1.4;
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
+    }
+
+    @media (max-width: 480px) {
+        .use-case-code-preview {
+            font-size: 0.45rem; /* Extra small for very small screens */
+        }
     }
 
     /* Mobile Menu Button Styling */
@@ -1249,26 +1312,25 @@
         position: relative;
     }
 
-    .mobile-menu-btn svg {
-        transition: transform 0.3s ease;
+.mobile-menu-btn svg {
+        transition: opacity 0.3s ease;
     }
 
-    /* Hamburger to X Animation */
-    .mobile-menu-btn.active svg line {
-        transition: transform 0.3s ease, opacity 0.3s ease;
-        transform-origin: center;
+    .mobile-menu-btn .cross-icon {
+        display: none;
     }
 
-    .mobile-menu-btn.active svg line:nth-child(1) {
-        transform: translateY(6px) rotate(45deg);
+    .mobile-menu-btn .hamburger-icon {
+        display: block;
     }
 
-    .mobile-menu-btn.active svg line:nth-child(2) {
-        opacity: 0;
+    /* Show cross icon, hide hamburger when active */
+    .mobile-menu-btn.active .hamburger-icon {
+        display: none;
     }
 
-    .mobile-menu-btn.active svg line:nth-child(3) {
-        transform: translateY(-6px) rotate(-45deg);
+    .mobile-menu-btn.active .cross-icon {
+        display: block;
     }
 
     /* Mobile Menu Dropdown */

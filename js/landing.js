@@ -328,6 +328,35 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Calculate and set arrow positions for mobile animation
+        function updateArrowPositions() {
+            // Only needed for mobile layout where cards are stacked
+            if (window.innerWidth > 640) return;
+
+            const cards = stepsGrid.querySelectorAll('.step-card');
+            if (cards.length < 3) return;
+
+            // Calculate center position of the number circle for each step
+            // .step-number is absolute at top:0, height:40px -> center is 20px
+            // relative to the card's top
+            const pos1 = cards[0].offsetTop + 20;
+            const pos2 = cards[1].offsetTop + 20;
+            const pos3 = cards[2].offsetTop + 20;
+
+            // Set CSS variables on the arrow element
+            workflowArrow.style.setProperty('--step-1-top', `${pos1}px`);
+            workflowArrow.style.setProperty('--step-2-top', `${pos2}px`);
+            workflowArrow.style.setProperty('--step-3-top', `${pos3}px`);
+            
+            console.log('[Arrow Position] Updated keyframes:', pos1, pos2, pos3);
+        }
+
+        // Update positions on load and resize
+        updateArrowPositions();
+        window.addEventListener('resize', updateArrowPositions);
+        // Also update after a short delay to ensure layout is settled
+        setTimeout(updateArrowPositions, 500);
+
         // Trail configuration
         const trailConfig = {
             interval: 50, // Create trail every 50ms
