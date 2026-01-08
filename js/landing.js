@@ -309,4 +309,169 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     })();
+
+    // ==========================================
+    // Workflow Arrow Animation with Trail
+    // ==========================================
+    (function() {
+        const workflowArrow = document.getElementById('workflow-arrow');
+        
+        if (!workflowArrow) {
+            return;
+        }
+
+        // Container for trail elements
+        const stepsSection = document.getElementById('how-it-works');
+        const stepsGrid = document.querySelector('.steps-grid');
+        
+        if (!stepsSection || !stepsGrid) {
+            return;
+        }
+
+        // Trail configuration
+        const trailConfig = {
+            interval: 50, // Create trail every 50ms
+            maxTrails: 20, // Maximum number of trail elements
+            trailLifetime: 800, // How long trail lasts in ms
+            isMobile: window.innerWidth <= 640
+        };
+
+        // Store trail elements
+        const trails = [];
+        let trailInterval = null;
+        let animationActive = false;
+
+        // Create a trail element
+        function createTrail() {
+            const trail = document.createElement('div');
+            trail.className = 'workflow-arrow-trail';
+            
+            // Get current arrow position
+            const arrowRect = workflowArrow.getBoundingClientRect();
+            const gridRect = stepsGrid.getBoundingClientRect();
+            
+            // Calculate position relative to the grid
+            const relativeTop = arrowRect.top - gridRect.top + (arrowRect.height / 2);
+            const relativeLeft = arrowRect.left - gridRect.left + (arrowRect.width / 2);
+            
+            trail.style.top = relativeTop + 'px';
+            trail.style.left = relativeLeft + 'px';
+            trail.style.opacity = '0.6';
+            
+            // Add SVG to trail
+            trail.innerHTML = workflowArrow.innerHTML;
+            
+            // Add to DOM
+            stepsGrid.appendChild(trail);
+            
+            // Animate trail fade
+            trail.style.animation = `trailFade ${trailConfig.trailLifetime}ms ease-out forwards`;
+            
+            // Store trail reference
+            trails.push({
+                element: trail,
+                createdAt: Date.now()
+            });
+            
+            // Remove trail after animation
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
+                // Remove from trails array
+                const index = trails.findIndex(t => t.element === trail);
+                if (index > -1) {
+                    trails.splice(index, 1);
+                }
+            }, trailConfig.trailLifetime);
+            
+            // Limit number of trails
+            if (trails.length > trailConfig.maxTrails) {
+                const oldTrail = trails.shift();
+                if (oldTrail.element.parentNode) {
+                    oldTrail.element.parentNode.removeChild(oldTrail.element);
+                }
+            }
+        }
+
+        // Start creating trails
+        function startTrail() {
+            if (trailInterval) return;
+            trailInterval = setInterval(createTrail, trailConfig.interval);
+        }
+
+        // Stop creating trails
+        function stopTrail() {
+            if (trailInterval) {
+                clearInterval(trailInterval);
+                trailInterval = null;
+            }
+        }
+
+        // Start animation when workflow section is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                console.log('[Arrow Animation] Intersection:', entry.isIntersecting, entry.target.id);
+                if (entry.isIntersecting) {
+                    workflowArrow.classList.add('animate');
+                    animationActive = true;
+                    startTrail();
+                    console.log('[Arrow Animation] Started - Section visible');
+                } else {
+                    animationActive = false;
+                    stopTrail();
+                    console.log('[Arrow Animation] Stopped - Section not visible');
+                }
+            });
+        }, {
+            threshold: 0.3  // Trigger when 30% of section is visible
+        });
+
+        observer.observe(stepsSection);
+
+        // Monitor arrow position during animation
+        let positionCheckInterval = null;
+        const checkArrowPosition = () => {
+            if (!animationActive) return;
+            const arrowRect = workflowArrow.getBoundingClientRect();
+            const gridRect = stepsGrid.getBoundingClientRect();
+            const relativeTop = arrowRect.top - gridRect.top;
+            console.log('[Arrow Position] Relative top:', relativeTop.toFixed(1), 'px');
+            
+            // Log expected positions for debugging
+            const step1Pos = 20;
+            const step2Pos = 20 + 80; // 2rem gap = ~80px
+            const step3Pos = 20 + 160; // 2 steps down
+            console.log('[Arrow Position] Expected: Step1=' + step1Pos + ', Step2=' + step2Pos + ', Step3=' + step3Pos);
+        };
+
+        // Start position monitoring when animation begins
+        workflowArrow.addEventListener('animationstart', () => {
+            console.log('[Arrow Animation] Animation started');
+            positionCheckInterval = setInterval(checkArrowPosition, 500);
+        });
+        
+        workflowArrow.addEventListener('animationend', () => {
+            console.log('[Arrow Animation] Animation ended');
+            if (positionCheckInterval) {
+                clearInterval(positionCheckInterval);
+                positionCheckInterval = null;
+            }
+        });
+
+        // Clean up trails on page unload
+        window.addEventListener('beforeunload', () => {
+            stopTrail();
+            trails.forEach(trail => {
+                if (trail.element.parentNode) {
+                    trail.element.parentNode.removeChild(trail.element);
+                }
+            });
+        });
+
+        // Handle window resize for mobile detection
+        window.addEventListener('resize', () => {
+            trailConfig.isMobile = window.innerWidth <= 640;
+        });
+    })();
 });
