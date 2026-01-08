@@ -2022,6 +2022,7 @@ body.library-page {
 
 .char-progress-fill {
     height: 100%;
+    width: 0%;
     background: var(--primary);
     transition:
         width 0.2s ease,
