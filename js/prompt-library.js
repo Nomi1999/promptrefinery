@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const sunIcon = document.querySelector('.sun-icon');
     const moonIcon = document.querySelector('.moon-icon');
 
+    // Initialize page animations
+    initPageAnimations();
+
     // Notification system state
     let activeNotification = null;
     let notificationQueue = [];
@@ -1033,8 +1036,10 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
             return;
         }
 
-        promptsGrid.innerHTML = prompts.map(prompt => `
-            <div class="prompt-card" data-id="${prompt.id}">
+promptsGrid.innerHTML = prompts.map((prompt, index) => {
+            const delayClass = `animate-delay-${(index % 6) + 1}`;
+            return `
+            <div class="prompt-card animate-hidden animate-fade-up ${delayClass}" data-id="${prompt.id}">
                 <div class="prompt-category" data-category="${prompt.category}">${prompt.category}</div>
                 <h3 class="prompt-title">${highlightMatches(prompt.title, searchTerm)}</h3>
                 <p class="prompt-description">${highlightMatches(prompt.description, searchTerm)}</p>
@@ -1059,7 +1064,8 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
                     </button>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         // Add event listeners
         document.querySelectorAll('.prompt-card').forEach(card => {
@@ -1102,13 +1108,18 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         modalCopyBtn.dataset.prompt = encodedContent;
         modalUseBtn.dataset.prompt = encodedContent;
 
-        // Show modal
+// Show modal with animation
         modalBackdrop.classList.add('open');
+        setTimeout(() => {
+            modalBackdrop.classList.remove('animate-hidden');
+            modalBackdrop.classList.add('animate-visible');
+        }, 10);
         document.body.style.overflow = 'hidden'; // Prevent background scrolling
     }
 
-    function closeModal() {
-        modalBackdrop.classList.remove('open');
+function closeModal() {
+        modalBackdrop.classList.remove('open', 'animate-visible');
+        modalBackdrop.classList.add('animate-hidden');
         document.body.style.overflow = ''; // Restore scrolling
     }
 
@@ -1355,6 +1366,33 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
 logoImg.src = newSrc;
         };
         tempImg.src = newSrc;
+    }
+
+// Animation system
+    function initPageAnimations() {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('animate-hidden');
+                    entry.target.classList.add('animate-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        // Auto-trigger all animations on load
+        setTimeout(() => {
+            document.querySelectorAll('.animate-hidden').forEach(el => {
+                el.classList.remove('animate-hidden');
+                el.classList.add('animate-visible');
+                observer.unobserve(el);
+            });
+        }, 50);
     }
 
     // Initialize the library
