@@ -1314,13 +1314,18 @@ Provide both the **In-text Citation** format and the **Reference List** entry.`
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
         
+        // Add transition class for faster theme switching
+        document.documentElement.classList.add('theme-transitioning');
+        
         applyTheme(newTheme);
         localStorage.setItem('theme', newTheme);
         
-        // No success notification for theme toggle on library page to avoid clutter, 
-        // or we could add a simple console log if needed.
-        // If we want a notification, we can use the existing showNotification function
-        showNotification(`${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`, 'info');
+        // Remove transition class after animation completes
+        setTimeout(() => {
+            document.documentElement.classList.remove('theme-transitioning');
+        }, 150);
+        
+        // No notification shown for theme toggle on prompt library page
     }
 
     function applyTheme(theme) {

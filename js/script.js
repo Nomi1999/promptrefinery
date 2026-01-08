@@ -1527,8 +1527,6 @@ RULES:
         setTimeout(() => {
             document.documentElement.classList.remove('theme-transitioning');
         }, 50);
-
-        showNotification(`${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)} mode enabled`, 'info');
     }
 
     function applyTheme(theme) {

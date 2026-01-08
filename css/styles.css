@@ -3424,19 +3424,27 @@ button:focus-visible,
     border: 0;
 }
 
-/* Theme Transition */
+/* Theme Transition - Optimized for prompt-library */
 html {
     transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+        background-color 0.15s ease,
+        color 0.15s ease;
 }
 
 html * {
     transition:
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        color 0.3s ease,
-        box-shadow 0.3s ease;
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+/* Exclude prompt cards and modal from transitions for faster response */
+html.theme-transitioning .prompt-card,
+html.theme-transitioning .prompt-card *,
+html.theme-transitioning .modal-backdrop,
+html.theme-transitioning .modal-backdrop * {
+    transition: none !important;
 }
 
 /* Disable transitions during theme switch to prevent flash */
