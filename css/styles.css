@@ -3777,6 +3777,13 @@ button:disabled {
         margin: 1rem;
         max-width: none;
         width: calc(100% - 2rem);
+        max-height: calc(100vh - 2rem);
+        height: auto;
+        border-radius: var(--radius-lg);
+    }
+
+    #custom-prompt-modal textarea#custom-prompt-content {
+        min-height: 120px;
     }
     
     .library-controls {
