@@ -58,9 +58,16 @@
             </div>
         </header>
 
-        <main class="library-main">
+<main class="library-main">
             <div id="saved-prompts-info" class="library-controls">
                 <span id="saved-prompts-count" class="library-subtitle"></span>
+                <button id="add-custom-prompt-btn" class="auth-submit-btn" style="background: var(--primary); margin-left: auto;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Custom Prompt
+                </button>
             </div>
 
             <div id="saved-prompts-list" class="prompts-grid">
@@ -73,8 +80,17 @@
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                 </svg>
                 <p style="margin-top: 1rem; color: var(--text-muted);">No saved prompts yet.</p>
-                <p style="color: var(--text-muted);">Enhance a prompt and save it to your collection!</p>
-                <a href="app.html" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--primary); color: var(--primary-foreground); text-decoration: none; border-radius: var(--radius-md); font-weight: 500;">Start Enhancing</a>
+                <p style="color: var(--text-muted);">Enhance a prompt or create your own custom prompts!</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                    <a href="app.html" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary); color: var(--primary-foreground); text-decoration: none; border-radius: var(--radius-md); font-weight: 500;">Start Enhancing</a>
+                    <button id="add-first-custom-prompt-btn" class="auth-submit-btn" style="background: var(--accent);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Create Custom Prompt
+                    </button>
+                </div>
             </div>
         </main>
     </div>
@@ -132,6 +148,85 @@
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                     Delete
+                </button>
+            </footer>
+        </div>
+</div>
+
+    <!-- Custom Prompt Creation Modal -->
+    <div id="custom-prompt-modal" class="modal-backdrop" aria-hidden="true">
+        <div class="modal-container" style="max-width: 600px;">
+            <header class="modal-header">
+                <h2>Create Custom Prompt</h2>
+                <button id="close-custom-prompt-modal" class="icon-btn" aria-label="Close modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </header>
+            <div class="modal-body">
+                <form id="custom-prompt-form">
+                    <div class="form-group">
+                        <label for="custom-prompt-content" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-main);">Prompt Content *</label>
+                        <textarea 
+                            id="custom-prompt-content" 
+                            name="prompt_content"
+                            required
+                            maxlength="10000"
+                            placeholder="Enter your custom prompt here..."
+                            style="width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 0.95rem; resize: vertical; background: var(--background); color: var(--text-main);"
+                        ></textarea>
+                        <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                            <span id="custom-prompt-char-count">0 / 10,000 characters</span>
+                            <span id="custom-prompt-warnings" style="color: var(--warning);"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label for="custom-prompt-title" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-main);">
+                            Title 
+                            <span style="color: var(--text-muted); font-weight: normal;">(optional - AI will generate if left blank)</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="custom-prompt-title" 
+                            name="title"
+                            maxlength="100"
+                            placeholder="Enter a custom title or leave blank for AI-generated title..."
+                            style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 0.95rem; background: var(--background); color: var(--text-main);"
+                        >
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label for="custom-prompt-notes" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-main);">
+                            Notes 
+                            <span style="color: var(--text-muted); font-weight: normal;">(optional)</span>
+                        </label>
+                        <textarea 
+                            id="custom-prompt-notes" 
+                            name="notes"
+                            maxlength="500"
+                            placeholder="Add any notes about this prompt (when to use it, special instructions, etc.)..."
+                            style="width: 100%; min-height: 80px; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: inherit; font-size: 0.95rem; resize: vertical; background: var(--background); color: var(--text-main);"
+                        ></textarea>
+                        <div style="text-align: right; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                            <span id="custom-prompt-notes-char-count">0 / 500 characters</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <footer class="modal-footer">
+                <button id="cancel-custom-prompt-btn" class="auth-submit-btn" style="background: var(--bg-subtle); color: var(--text-main);">
+                    Cancel
+                </button>
+                <button id="save-custom-prompt-btn" class="auth-submit-btn" style="background: var(--primary);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Save Custom Prompt
                 </button>
             </footer>
         </div>

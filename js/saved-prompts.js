@@ -18,7 +18,7 @@
     const savedModalDeleteBtn = document.getElementById('saved-modal-delete-btn');
     const savedModalCloseBtn = document.getElementById('saved-modal-close-btn');
 
-    // Track current prompt being viewed in modal
+// Track current prompt being viewed in modal
     let currentModalPromptId = null;
 
     // Notification system state
@@ -26,6 +26,21 @@
     let notificationQueue = [];
     let isNotificationAnimating = false;
     let promptToDelete = null;
+
+    // Custom prompt modal elements
+    const customPromptModal = document.getElementById('custom-prompt-modal');
+    const addCustomPromptBtn = document.getElementById('add-custom-prompt-btn');
+    const addFirstCustomPromptBtn = document.getElementById('add-first-custom-prompt-btn');
+    const closeCustomPromptModalBtn = document.getElementById('close-custom-prompt-modal');
+    const cancelCustomPromptBtn = document.getElementById('cancel-custom-prompt-btn');
+    const saveCustomPromptBtn = document.getElementById('save-custom-prompt-btn');
+    const customPromptForm = document.getElementById('custom-prompt-form');
+    const customPromptContent = document.getElementById('custom-prompt-content');
+    const customPromptTitle = document.getElementById('custom-prompt-title');
+    const customPromptNotes = document.getElementById('custom-prompt-notes');
+    const customPromptCharCount = document.getElementById('custom-prompt-char-count');
+    const customPromptNotesCharCount = document.getElementById('custom-prompt-notes-char-count');
+    const customPromptWarnings = document.getElementById('custom-prompt-warnings');
 
     // Store loaded prompts for modal access
     let savedPromptsData = [];
@@ -130,7 +145,7 @@
             }
         });
 
-        // Click on saved prompt card to open modal
+// Click on saved prompt card to open modal
         if (savedPromptsList) {
             savedPromptsList.addEventListener('click', (e) => {
                 const card = e.target.closest('.prompt-card');
@@ -148,6 +163,59 @@
                 loadAndOpenPromptModal(promptId);
             });
         }
+
+        // Custom prompt modal event listeners
+        if (addCustomPromptBtn) {
+            addCustomPromptBtn.addEventListener('click', openCustomPromptModal);
+        }
+
+        if (addFirstCustomPromptBtn) {
+            addFirstCustomPromptBtn.addEventListener('click', openCustomPromptModal);
+        }
+
+        if (closeCustomPromptModalBtn) {
+            closeCustomPromptModalBtn.addEventListener('click', closeCustomPromptModal);
+        }
+
+        if (cancelCustomPromptBtn) {
+            cancelCustomPromptBtn.addEventListener('click', closeCustomPromptModal);
+        }
+
+        if (saveCustomPromptBtn) {
+            saveCustomPromptBtn.addEventListener('click', saveCustomPrompt);
+        }
+
+        if (customPromptModal) {
+            customPromptModal.addEventListener('click', (e) => {
+                if (e.target === customPromptModal) {
+                    closeCustomPromptModal();
+                }
+            });
+        }
+
+        // Form input event listeners
+        if (customPromptContent) {
+            customPromptContent.addEventListener('input', updateCharCount);
+            customPromptContent.addEventListener('input', validatePromptContent);
+        }
+
+        if (customPromptNotes) {
+            customPromptNotes.addEventListener('input', updateNotesCharCount);
+        }
+
+        if (customPromptForm) {
+            customPromptForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveCustomPrompt();
+            });
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && customPromptModal?.classList.contains('open')) {
+                closeCustomPromptModal();
+            }
+        });
     }
 
     // Load and display saved prompts
@@ -204,7 +272,7 @@
         }
     }
 
-    // Display saved prompts in the grid (matching prompt library layout)
+// Display saved prompts in the grid (matching prompt library layout)
     function displaySavedPrompts(prompts, count) {
         savedPromptsCount.textContent = `${count} / 100 prompts saved`;
 
@@ -216,51 +284,61 @@
 
         noSavedPrompts.style.display = 'none';
 
-        savedPromptsList.innerHTML = prompts.map(prompt => `
-            <div class="prompt-card saved-prompt-item" data-prompt-id="${prompt.id}">
-                <div class="prompt-category">Saved ${formatDate(prompt.created_at)}</div>
-                <div class="saved-prompt-header">
-                    <div class="saved-prompt-title-container">
-                        <span class="saved-prompt-title" data-prompt-id="${prompt.id}">${escapeHtml(prompt.title || 'Untitled Prompt')}</span>
-                        <input type="text" class="saved-prompt-title-input hidden" data-prompt-id="${prompt.id}" value="${escapeHtml(prompt.title || '')}" maxlength="100" placeholder="Enter title...">
+        savedPromptsList.innerHTML = prompts.map(prompt => {
+            // Check if this is a custom prompt (original_prompt === enhanced_prompt)
+            const isCustomPrompt = prompt.original_prompt === prompt.enhanced_prompt;
+            
+            return `
+                <div class="prompt-card saved-prompt-item ${isCustomPrompt ? 'custom-prompt' : ''}" data-prompt-id="${prompt.id}">
+                    <div class="prompt-category">
+                        ${isCustomPrompt ? 
+                            `<span style="background: var(--accent); color: var(--background); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500;">Custom</span> ${formatDate(prompt.created_at)}` : 
+                            `Saved ${formatDate(prompt.created_at)}`
+                        }
                     </div>
-                    <div class="saved-prompt-title-actions">
-                        <button class="title-action-btn" data-action="edit-title" data-prompt-id="${prompt.id}" title="Edit title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    <div class="saved-prompt-header">
+                        <div class="saved-prompt-title-container">
+                            <span class="saved-prompt-title" data-prompt-id="${prompt.id}">${escapeHtml(prompt.title || 'Untitled Prompt')}</span>
+                            <input type="text" class="saved-prompt-title-input hidden" data-prompt-id="${prompt.id}" value="${escapeHtml(prompt.title || '')}" maxlength="100" placeholder="Enter title...">
+                        </div>
+                        <div class="saved-prompt-title-actions">
+                            <button class="title-action-btn" data-action="edit-title" data-prompt-id="${prompt.id}" title="Edit title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                            <button class="title-action-btn" data-action="regenerate-title" data-prompt-id="${prompt.id}" title="Regenerate title with AI">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 2v6h-6"></path>
+                                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+                                    <path d="M3 22v-6h6"></path>
+                                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    ${prompt.notes ? `<p class="prompt-description">${escapeHtml(prompt.notes)}</p>` : `<p class="prompt-description">${isCustomPrompt ? 'Custom prompt' : 'Enhanced prompt'}</p>`}
+                    <div class="prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
+                    <div class="prompt-actions">
+                        <button class="prompt-btn copy-prompt-btn" data-action="copy" data-prompt-id="${prompt.id}" data-enhanced-prompt="${escapeHtml(prompt.enhanced_prompt).replace(/"/g, '&quot;')}" title="Copy to clipboard">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                             </svg>
+                            Copy
                         </button>
-                        <button class="title-action-btn" data-action="regenerate-title" data-prompt-id="${prompt.id}" title="Regenerate title with AI">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 2v6h-6"></path>
-                                <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
-                                <path d="M3 22v-6h6"></path>
-                                <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+                        <button class="prompt-btn delete-prompt-btn" data-action="delete" data-prompt-id="${prompt.id}" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                             </svg>
+                            Delete
                         </button>
                     </div>
                 </div>
-                ${prompt.notes ? `<p class="prompt-description">${escapeHtml(prompt.notes)}</p>` : '<p class="prompt-description">Enhanced prompt</p>'}
-                <div class="prompt-content">${escapeHtml(prompt.enhanced_prompt)}</div>
-                <div class="prompt-actions">
-                    <button class="prompt-btn copy-prompt-btn" data-action="copy" data-prompt-id="${prompt.id}" data-enhanced-prompt="${escapeHtml(prompt.enhanced_prompt).replace(/"/g, '&quot;')}" title="Copy to clipboard">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                        Copy
-                    </button>
-                    <button class="prompt-btn delete-prompt-btn" data-action="delete" data-prompt-id="${prompt.id}" title="Delete">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                        Delete
-                    </button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     // Copy saved prompt to clipboard
@@ -641,6 +719,171 @@
             console.error('Migration error:', error);
         } finally {
             sessionStorage.setItem('titleMigrationChecked', 'true');
+        }
+    }
+
+// Custom prompt modal functions
+
+    function openCustomPromptModal() {
+        if (customPromptModal) {
+            customPromptModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                customPromptModal.classList.add('open');
+                customPromptContent?.focus();
+            }, 10);
+        }
+    }
+
+    function closeCustomPromptModal() {
+        if (customPromptModal) {
+            customPromptModal.classList.remove('open');
+            setTimeout(() => {
+                customPromptModal.style.display = 'none';
+                document.body.style.overflow = '';
+            }, 200);
+        }
+        resetCustomPromptForm();
+    }
+
+    function resetCustomPromptForm() {
+        if (customPromptForm) {
+            customPromptForm.reset();
+        }
+        if (customPromptCharCount) {
+            customPromptCharCount.textContent = '0 / 10,000 characters';
+        }
+        if (customPromptNotesCharCount) {
+            customPromptNotesCharCount.textContent = '0 / 500 characters';
+        }
+        if (customPromptWarnings) {
+            customPromptWarnings.textContent = '';
+        }
+        if (saveCustomPromptBtn) {
+            saveCustomPromptBtn.disabled = false;
+            saveCustomPromptBtn.textContent = 'Save Custom Prompt';
+            saveCustomPromptBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Save Custom Prompt
+            `;
+        }
+    }
+
+    function updateCharCount() {
+        if (customPromptContent && customPromptCharCount) {
+            const length = customPromptContent.value.length;
+            customPromptCharCount.textContent = `${length} / 10,000 characters`;
+            
+            // Update text color based on character count
+            if (length > 10000) {
+                customPromptCharCount.style.color = 'var(--error)';
+            } else if (length > 9000) {
+                customPromptCharCount.style.color = 'var(--warning)';
+            } else {
+                customPromptCharCount.style.color = 'var(--text-muted)';
+            }
+        }
+    }
+
+    function updateNotesCharCount() {
+        if (customPromptNotes && customPromptNotesCharCount) {
+            const length = customPromptNotes.value.length;
+            customPromptNotesCharCount.textContent = `${length} / 500 characters`;
+            
+            // Update text color based on character count
+            if (length > 500) {
+                customPromptNotesCharCount.style.color = 'var(--error)';
+            } else if (length > 450) {
+                customPromptNotesCharCount.style.color = 'var(--warning)';
+            } else {
+                customPromptNotesCharCount.style.color = 'var(--text-muted)';
+            }
+        }
+    }
+
+    function validatePromptContent() {
+        if (!customPromptContent || !customPromptWarnings) return;
+        
+        const content = customPromptContent.value.trim();
+        
+        if (content.length === 0) {
+            customPromptWarnings.textContent = 'Prompt content cannot be empty';
+            return false;
+        }
+        
+        if (content.length > 10000) {
+            customPromptWarnings.textContent = 'Prompt content exceeds maximum length';
+            return false;
+        }
+        
+        customPromptWarnings.textContent = '';
+        return true;
+    }
+
+    async function saveCustomPrompt() {
+        if (!validatePromptContent()) {
+            showNotification('Please fix the validation errors', 'error');
+            return;
+        }
+
+        if (!customPromptContent) return;
+
+        const promptContent = customPromptContent.value.trim();
+        const title = customPromptTitle ? customPromptTitle.value.trim() : '';
+        const notes = customPromptNotes ? customPromptNotes.value.trim() : '';
+
+        // Disable save button to prevent duplicate submissions
+        if (saveCustomPromptBtn) {
+            saveCustomPromptBtn.disabled = true;
+            saveCustomPromptBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <polyline points="17 5 12 10 7 5"></polyline>
+                </svg>
+                Saving...
+            `;
+        }
+
+        try {
+            const response = await fetch('api/save-custom-prompt.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt_content: promptContent,
+                    title: title || undefined,
+                    notes: notes || undefined
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showNotification('Custom prompt saved successfully!', 'success');
+                closeCustomPromptModal();
+                loadSavedPrompts(); // Refresh the prompts list
+            } else {
+                showNotification(data.error || 'Failed to save custom prompt', 'error');
+            }
+        } catch (error) {
+            console.error('Save custom prompt error:', error);
+            showNotification('Failed to save custom prompt', 'error');
+        } finally {
+            // Re-enable save button
+            if (saveCustomPromptBtn) {
+                saveCustomPromptBtn.disabled = false;
+                saveCustomPromptBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Save Custom Prompt
+                `;
+            }
         }
     }
 

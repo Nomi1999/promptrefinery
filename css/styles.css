@@ -3648,6 +3648,126 @@ html.theme-transitioning .moon-icon {
     .animate-hidden {
         opacity: 1;
         transform: none !important;
-        animation: none !important;
+animation: none !important;
+    }
+}
+
+/* Custom Prompt Feature Styles */
+
+/* Add accent color variable */
+:root {
+    --accent: #0891b2; /* Cyan for custom prompts */
+    --accent-hover: #0e7490;
+}
+
+/* Dark mode accent color */
+[data-theme="dark"] {
+    --accent: #06b6d4; /* Lighter cyan for dark mode */
+    --accent-hover: #0891b2;
+}
+
+/* Custom prompt card styling */
+.custom-prompt {
+    border-left: 4px solid var(--accent);
+    transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.custom-prompt:hover {
+    transform: translateY(-2px);
+}
+
+/* Custom prompt modal specific styles */
+#custom-prompt-modal .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#custom-prompt-modal textarea {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 120px;
+}
+
+#custom-prompt-modal textarea#custom-prompt-content {
+    min-height: 200px;
+    font-size: 14px;
+}
+
+/* Character count styles */
+#custom-prompt-char-count,
+#custom-prompt-notes-char-count {
+    transition: color var(--duration-normal) var(--ease-out);
+}
+
+/* Warning text styling */
+#custom-prompt-warnings {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+/* Loading state for save button */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Enhanced library controls for custom prompt button */
+.library-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Custom prompt button styling */
+#add-custom-prompt-btn,
+#add-first-custom-prompt-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+#add-custom-prompt-btn:hover {
+    background: var(--primary-hover);
+}
+
+#add-first-custom-prompt-btn:hover {
+    opacity: 0.9;
+}
+
+/* Responsive adjustments for custom prompt modal */
+@media (max-width: 640px) {
+    #custom-prompt-modal .modal-container {
+        margin: 1rem;
+        max-width: none;
+        width: calc(100% - 2rem);
+    }
+    
+    .library-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    #add-custom-prompt-btn {
+        margin-left: 0 !important;
+        margin-top: 1rem;
+    }
+}
+
+/* Custom prompt badge animation */
+.prompt-category span {
+    animation: fadeIn var(--duration-slow) var(--ease-out);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
