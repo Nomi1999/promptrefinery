@@ -2500,10 +2500,45 @@ body.library-page {
 /* Library Controls */
 .library-controls {
     display: flex;
+    align-items: center;
     gap: 1rem;
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--border);
+}
+
+.library-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    height: 40px;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    width: auto;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+#add-custom-prompt-btn {
+    margin-left: auto;
+}
+
+.library-add-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.library-add-btn:active {
+    transform: translateY(0);
 }
 
 #saved-prompts-info {
@@ -3750,7 +3785,15 @@ button:disabled {
         align-items: stretch;
     }
     
+    .library-add-btn {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-top: 1rem;
+        height: 48px; /* Slightly taller for better touch target on mobile */
+    }
+    
     #add-custom-prompt-btn {
+        /* Already handled by .library-add-btn but keeping for specificity if needed */
         margin-left: 0 !important;
         margin-top: 1rem;
     }
