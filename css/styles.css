@@ -3703,7 +3703,6 @@ animation: none !important;
 
 /* Custom prompt card styling */
 .custom-prompt {
-    border-left: 4px solid var(--accent);
     transition: transform var(--duration-normal) var(--ease-out);
 }
 
