@@ -1,0 +1,9 @@
+<Files "robots.txt">
+    Order allow,deny
+    Allow from all
+</Files>
+
+# Ensure proper handling of robots.txt and sitemap.xml
+RewriteEngine On
+RewriteRule ^robots\.txt$ - [L]
+RewriteRule ^sitemap\.xml$ - [L]
